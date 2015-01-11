@@ -1,9 +1,14 @@
 package com.rejasupotaro.octodroid.http;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.RequestBody;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -14,10 +19,26 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public abstract class AbstractClient {
+    private static final String TAG = AbstractClient.class.getSimpleName();
+    private static final String DEFAULT_CACHE_FILE_NAME = "response_cache";
+    private static final int DEFAULT_MAX_CACHE_SIZE = 3 * 1024 * 1024; // 3MB
+
     private ApiClient apiClient;
 
-    public void setAuthorization(String username, String password) {
-        apiClient.setAuthorization(username, password);
+    public void authorization(String username, String password) {
+        apiClient.authorization(username, password);
+    }
+
+    public void cache(Context context) {
+        try {
+            cache(new File(context.getCacheDir(), DEFAULT_CACHE_FILE_NAME));
+        } catch (IOException e) {
+            Log.e(TAG, "Could not create http cache", e);
+        }
+    }
+
+    public void cache(File httpCacheDirectory) throws IOException {
+        apiClient.cache(new Cache(httpCacheDirectory, DEFAULT_MAX_CACHE_SIZE));
     }
 
     public AbstractClient(ApiClient apiClient) {

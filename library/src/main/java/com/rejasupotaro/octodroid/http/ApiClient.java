@@ -4,21 +4,18 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.rejasupotaro.octodroid.BuildConfig;
-import com.squareup.okhttp.Authenticator;
+import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 
 import java.io.IOException;
-import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ApiClient {
     private static final String TAG = ApiClient.class.getSimpleName();
-    private static final String CACHE_FILE_NAME = "responses";
-    private static final int MAX_CACHE_SIZE = 3 * 1024 * 1024; // 3MB
     private static final int MAX_AGE = 3 * 60 * 60; // 3 hours
     private static final int MAX_STALE = 28 * 24 * 60 * 60; // tolerate 4-weeks stale
 
@@ -27,25 +24,19 @@ public class ApiClient {
     private String username;
     private String password;
 
-    public void setAuthorization(String username, String password) {
+    public void authorization(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    public ApiClient() {
-//        Cache cache = null;
-//        try {
-//            File httpCacheDirectory = new File(context.getCacheDir(), CACHE_FILE_NAME);
-//            cache = new Cache(httpCacheDirectory, MAX_CACHE_SIZE);
-//        } catch (IOException e) {
-//            Log.e(TAG, "Could not create http cache", e);
-//        }
-//
-//        okHttpClient = new OkHttpClient();
-//        if (cache != null) {
-//            okHttpClient.setCache(cache);
-//        }
+    public void cache(Cache cache) throws IOException {
+        if (cache == null) {
+            throw new IOException("Cache should not be null");
+        }
+        okHttpClient.setCache(cache);
+    }
 
+    public ApiClient() {
         okHttpClient = new OkHttpClient();
     }
 
