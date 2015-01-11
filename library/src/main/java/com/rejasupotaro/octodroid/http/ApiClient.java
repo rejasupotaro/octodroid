@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.rejasupotaro.octodroid.BuildConfig;
+import com.rejasupotaro.octodroid.ConnectivityObserver;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.OkHttpClient;
@@ -93,9 +94,9 @@ public class ApiClient {
         return new HashMap<String, String>() {{
             put(Header.ACCEPT, "application/json");
 //            put(Header.USER_AGENT, UserAgent.get());
-//            if (!ConnectivityObserver.isConnect()) {
-//                put(Header.CACHE_CONTROL, "only-if-cached, max-stale=" + MAX_STALE);
-//            }
+            if (!ConnectivityObserver.isConnect()) {
+                put(Header.CACHE_CONTROL, "only-if-cached, max-stale=" + MAX_STALE);
+            }
         }};
     }
 
