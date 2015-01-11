@@ -1,0 +1,119 @@
+package com.rejasupotaro.octodroid.http;
+
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.rejasupotaro.octodroid.BuildConfig;
+import com.squareup.okhttp.Authenticator;
+import com.squareup.okhttp.Credentials;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+
+import java.io.IOException;
+import java.net.Proxy;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ApiClient {
+    private static final String TAG = ApiClient.class.getSimpleName();
+    private static final String CACHE_FILE_NAME = "responses";
+    private static final int MAX_CACHE_SIZE = 3 * 1024 * 1024; // 3MB
+    private static final int MAX_AGE = 3 * 60 * 60; // 3 hours
+    private static final int MAX_STALE = 28 * 24 * 60 * 60; // tolerate 4-weeks stale
+
+    protected static OkHttpClient okHttpClient;
+
+    private String username;
+    private String password;
+
+    public void setAuthorization(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public ApiClient() {
+//        Cache cache = null;
+//        try {
+//            File httpCacheDirectory = new File(context.getCacheDir(), CACHE_FILE_NAME);
+//            cache = new Cache(httpCacheDirectory, MAX_CACHE_SIZE);
+//        } catch (IOException e) {
+//            Log.e(TAG, "Could not create http cache", e);
+//        }
+//
+//        okHttpClient = new OkHttpClient();
+//        if (cache != null) {
+//            okHttpClient.setCache(cache);
+//        }
+
+        okHttpClient = new OkHttpClient();
+    }
+
+    public com.squareup.okhttp.Response request(Method method, String path, Map<String, String> headers, RequestBody body) throws IOException {
+        Request.Builder builder = new Request.Builder();
+        setUrl(builder, path);
+        setBody(builder, method, body);
+        setHeaders(builder, headers);
+
+        Request request = builder.build();
+        com.squareup.okhttp.Response response = okHttpClient.newCall(request).execute();
+        dumpIfDebug(request, response);
+        return response;
+    }
+
+    private void setUrl(Request.Builder builder, String path) {
+        builder.url("https://api.github.com" + path);
+    }
+
+    private void setBody(Request.Builder builder, Method method, RequestBody body) {
+        switch (method) {
+            case GET:
+                builder.get();
+                break;
+            case POST:
+                builder.post(body);
+                break;
+            case PUT:
+                builder.put(body);
+                break;
+            case DELETE:
+                builder.delete();
+                break;
+        }
+    }
+
+    private void setHeaders(Request.Builder builder, Map<String, String> headers) {
+        if (headers == null) {
+            headers = new HashMap<>();
+        }
+        Map<String, String> newHeaders = baseHeader();
+        newHeaders.putAll(headers);
+        if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
+            String credential = Credentials.basic(username, password);
+            newHeaders.put(Header.AUTHORIZATION, credential);
+        }
+
+        for (String name : newHeaders.keySet()) {
+            builder.addHeader(name, newHeaders.get(name));
+        }
+    }
+
+    private Map<String, String> baseHeader() {
+        return new HashMap<String, String>() {{
+            put(Header.ACCEPT, "application/json");
+//            put(Header.USER_AGENT, UserAgent.get());
+//            if (!ConnectivityObserver.isConnect()) {
+//                put(Header.CACHE_CONTROL, "only-if-cached, max-stale=" + MAX_STALE);
+//            }
+        }};
+    }
+
+    public void dumpIfDebug(Request request, com.squareup.okhttp.Response response) {
+        if (!BuildConfig.DEBUG) {
+            return;
+        }
+        Log.i(TAG, "===> " + request.toString());
+        Log.i(TAG, "<=== " + response.toString());
+    }
+}
+
