@@ -16,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 public class GitHubClient extends AbstractClient {
     public GitHubClient(ApiClient apiClient) {
@@ -27,9 +28,15 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
-    public Observable<Response<SearchResult>> searchRepositories(String q, String sort, String order, int page, int perPage) {
+    public Observable<Response<SearchResult>> searchRepositories(final String q, final String sort, final String order, final int page, final int perPage) {
         String path = String.format("/search/repositories?q=%s&sort=%s&order=%s&page=%d&per_page=%d", encode(q), sort, order, page, perPage);
         return request(Method.GET, path, null, null, new TypeToken<SearchResult>() {
+        }).map(new Func1<Response<SearchResult>, Response<SearchResult>>() {
+            @Override
+            public Response<SearchResult> call(Response<SearchResult> r) {
+                r.next(searchRepositories(q, sort, order, page + 1, perPage));
+                return r;
+            }
         });
     }
 
