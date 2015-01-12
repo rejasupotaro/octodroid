@@ -19,22 +19,34 @@ import rx.Observable;
 import rx.functions.Func1;
 
 public class GitHubClient extends AbstractClient {
+    private static final int PER_PAGE = 20;
+
     public GitHubClient(ApiClient apiClient) {
         super(apiClient);
     }
 
-    public Observable<Response<User>> myself() {
+    public Observable<Response<User>> user() {
         return request(Method.GET, "/user", null, null, new TypeToken<User>() {
         });
     }
 
-    public Observable<Response<SearchResult>> searchRepositories(final String q, final String sort, final String order, final int page, final int perPage) {
-        String path = String.format("/search/repositories?q=%s&sort=%s&order=%s&page=%d&per_page=%d", encode(q), sort, order, page, perPage);
+    public Observable<Response<User>> user(String username) {
+        String path = String.format("/users/%s", username);
+        return request(Method.GET, path, null, null, new TypeToken<User>() {
+        });
+    }
+
+    public Observable<Response<SearchResult>> searchRepositories(final String q, final String sort, final String order) {
+        return searchRepositories(q, sort, order, 1);
+    }
+
+    public Observable<Response<SearchResult>> searchRepositories(final String q, final String sort, final String order, final int page) {
+        String path = String.format("/search/repositories?q=%s&sort=%s&order=%s&page=%d&per_page=%d", encode(q), sort, order, page, PER_PAGE);
         return request(Method.GET, path, null, null, new TypeToken<SearchResult>() {
         }).map(new Func1<Response<SearchResult>, Response<SearchResult>>() {
             @Override
             public Response<SearchResult> call(Response<SearchResult> r) {
-                r.next(searchRepositories(q, sort, order, page + 1, perPage));
+                r.next(searchRepositories(q, sort, order, page + 1));
                 return r;
             }
         });

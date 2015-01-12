@@ -24,11 +24,11 @@ public class MainActivity extends ActionBarActivity {
         GitHubClient client = GitHub.client();
         client.authorization("rejasupotaro", "xxxxx");
         client.cache(this);
-        subscription.add(AppObservable.bindActivity(this, client.myself())
+        subscription.add(AppObservable.bindActivity(this, client.user())
                 .map(r -> r.entity())
                 .subscribe(user -> Log.e("debugging", user.toJson())));
 
-        subscription.add(AppObservable.bindActivity(this, client.searchRepositories("android", "stars", "desc", 1, 20))
+        subscription.add(AppObservable.bindActivity(this, client.searchRepositories("android", "stars", "desc"))
                 .map(r -> r.entity())
                 .subscribe(searchResult -> {
                     for (Repository repository : searchResult.getItems()) {
