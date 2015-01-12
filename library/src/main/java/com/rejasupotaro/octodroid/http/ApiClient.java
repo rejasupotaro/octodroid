@@ -17,13 +17,19 @@ import java.util.Map;
 
 public class ApiClient {
     private static final String TAG = ApiClient.class.getSimpleName();
+    private static final String DEFAULT_ENDPOINT = "https://api.github.com";
     private static final int MAX_AGE = 3 * 60 * 60; // 3 hours
     private static final int MAX_STALE = 28 * 24 * 60 * 60; // tolerate 4-weeks stale
 
     protected static OkHttpClient okHttpClient;
 
+    private String endpoint = DEFAULT_ENDPOINT;
     private String username;
     private String password;
+
+    public void endpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
 
     public void authorization(String username, String password) {
         this.username = username;
@@ -54,7 +60,7 @@ public class ApiClient {
     }
 
     private void setUrl(Request.Builder builder, String path) {
-        builder.url("https://api.github.com" + path);
+        builder.url(endpoint + path);
     }
 
     private void setBody(Request.Builder builder, Method method, RequestBody body) {
