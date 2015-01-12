@@ -9,7 +9,11 @@ GitHub.client().user("rejasupotaro")
         .map(r -> r.entity())
         .subscribe(user -> ...);
 
-GitHub.client().search("Android", "stars", "desc", 1, 20)
+GitHub.client().searchRepositories("Android", "stars", "desc", 1, 20)
+        .map(r -> r.entity())
+        .subscribe(repositories -> ...);
+
+GitHub.client().hottestRepositories()
         .map(r -> r.entity())
         .subscribe(repositories -> ...);
 ```
