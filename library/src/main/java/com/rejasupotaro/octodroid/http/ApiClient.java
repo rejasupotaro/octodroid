@@ -24,16 +24,18 @@ public class ApiClient {
     protected static OkHttpClient okHttpClient;
 
     private String endpoint = DEFAULT_ENDPOINT;
-    private String username;
-    private String password;
+    private String authorization;
 
     public void endpoint(String endpoint) {
         this.endpoint = endpoint;
     }
 
     public void authorization(String username, String password) {
-        this.username = username;
-        this.password = password;
+        this.authorization = Credentials.basic(username, password);
+    }
+
+    public void authorization(String accessToken) {
+        this.authorization = accessToken;
     }
 
     public void cache(Cache cache) throws IOException {
@@ -86,9 +88,8 @@ public class ApiClient {
         }
         Map<String, String> newHeaders = baseHeader();
         newHeaders.putAll(headers);
-        if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
-            String credential = Credentials.basic(username, password);
-            newHeaders.put(Header.AUTHORIZATION, credential);
+        if (!TextUtils.isEmpty(authorization)) {
+            newHeaders.put(Header.AUTHORIZATION, authorization);
         }
 
         for (String name : newHeaders.keySet()) {
