@@ -18,9 +18,12 @@ GitHub.client().hottestRepositories()
         .subscribe(repositories -> ...);
 ```
 
-### User basic authentication
+### Authentication
 
 ```java
+// You can give access token OAuth2
+GitHub.client().authorize("access_token");
+// or use basic authentication
 GitHub.client().authorize("username", "password");
 
 GitHub.client().user()

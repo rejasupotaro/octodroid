@@ -22,9 +22,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         GitHubClient client = GitHub.client();
-        client.authorization("rejasupotaro", "xxxxx");
         client.cache(this);
-        subscription.add(AppObservable.bindActivity(this, client.user())
+        subscription.add(AppObservable.bindActivity(this, client.user("rejasupotaro"))
                 .map(r -> r.entity())
                 .subscribe(user -> Log.e("debugging", user.toJson())));
 
