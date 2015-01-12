@@ -11,6 +11,7 @@ import com.rejasupotaro.octodroid.models.SearchResult;
 import com.rejasupotaro.octodroid.models.User;
 
 import org.apache.http.protocol.HTTP;
+import org.joda.time.DateTime;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -41,7 +42,8 @@ public class GitHubClient extends AbstractClient {
     }
 
     public Observable<Response<SearchResult>> searchRepositories(final String q, final String sort, final String order, final int page) {
-        String path = String.format("/search/repositories?q=%s&sort=%s&order=%s&page=%d&per_page=%d", encode(q), sort, order, page, PER_PAGE);
+        String path = String.format("/search/repositories?q=%s&sort=%s&order=%s&page=%d&per_page=%d",
+                encode(q), sort, order, page, PER_PAGE);
         return request(Method.GET, path, null, null, new TypeToken<SearchResult>() {
         }).map(new Func1<Response<SearchResult>, Response<SearchResult>>() {
             @Override
@@ -49,6 +51,18 @@ public class GitHubClient extends AbstractClient {
                 r.next(searchRepositories(q, sort, order, page + 1));
                 return r;
             }
+        });
+    }
+
+    // Find the hottest repositories created in the last week
+    // `date -v-7d '+%Y-%m-%d'`
+    public Observable<Response<SearchResult>> hottestRepositories() {
+        DateTime dateTime = new DateTime();
+        String date = dateTime.minusDays(7).toString("yyyy-MM-dd");
+
+        String path = String.format("/search/repositories?q=%s&sort=%s&order=%s&page=%d&per_page=%d",
+                encode("created:>" + date), "stars", "desc", 1, 10);
+        return request(Method.GET, path, null, null, new TypeToken<SearchResult>() {
         });
     }
 

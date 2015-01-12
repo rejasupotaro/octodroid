@@ -28,7 +28,7 @@ public class MainActivity extends ActionBarActivity {
                 .map(r -> r.entity())
                 .subscribe(user -> Log.e("debugging", user.toJson())));
 
-        subscription.add(AppObservable.bindActivity(this, client.searchRepositories("android", "stars", "desc"))
+        subscription.add(AppObservable.bindActivity(this, client.hottestRepositories())
                 .map(r -> r.entity())
                 .subscribe(searchResult -> {
                     for (Repository repository : searchResult.getItems()) {
