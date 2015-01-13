@@ -1,4 +1,4 @@
-package com.example.octodroid;
+package com.example.octodroid.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;

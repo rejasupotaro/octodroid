@@ -1,4 +1,4 @@
-package com.example.octodroid;
+package com.example.octodroid.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -9,10 +9,11 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.octodroid.R;
+import com.example.octodroid.views.MoreLoadScrollListener;
+import com.example.octodroid.adapters.RepositoryAdapter;
 import com.rejasupotaro.octodroid.GitHub;
-import com.rejasupotaro.octodroid.http.Order;
 import com.rejasupotaro.octodroid.http.Response;
-import com.rejasupotaro.octodroid.http.Sort;
 import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.SearchResult;
 
@@ -21,7 +22,6 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.Observable;
-import rx.android.app.AppObservable;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
 

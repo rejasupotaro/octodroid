@@ -1,9 +1,11 @@
-package com.example.octodroid;
+package com.example.octodroid.views.holders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.octodroid.R;
 
 public class ProgressViewHolder extends RecyclerView.ViewHolder {
     public static ProgressViewHolder create(ViewGroup parent) {

@@ -1,8 +1,11 @@
-package com.example.octodroid;
+package com.example.octodroid.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.example.octodroid.views.DividerItemDecoration;
+import com.example.octodroid.views.holders.ProgressViewHolder;
+import com.example.octodroid.views.holders.RepositoryItemViewHolder;
 import com.rejasupotaro.octodroid.models.Repository;
 
 import java.util.ArrayList;

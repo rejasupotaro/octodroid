@@ -1,4 +1,4 @@
-package com.example.octodroid;
+package com.example.octodroid.views;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
