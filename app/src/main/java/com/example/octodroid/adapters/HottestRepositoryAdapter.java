@@ -5,10 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.example.octodroid.views.DividerItemDecoration;
-import com.example.octodroid.views.holders.ProgressViewHolder;
+import com.example.octodroid.views.holders.HottestRepositoryHeaderViewHolder;
 import com.example.octodroid.views.holders.RepositoryItemViewHolder;
 import com.rejasupotaro.octodroid.GitHub;
-import com.rejasupotaro.octodroid.http.Response;
 import com.rejasupotaro.octodroid.models.Repository;
 
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class HottestRepositoryAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == ViewType.HEADER) {
-            return ProgressViewHolder.create(parent);
+            return HottestRepositoryHeaderViewHolder.create(parent);
         } else {
             return RepositoryItemViewHolder.create(parent);
         }
