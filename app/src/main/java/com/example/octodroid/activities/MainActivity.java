@@ -40,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
     private SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
-            submit(query);
+            repositoryAdapter.submit(query);
             return false;
         }
 
@@ -61,6 +61,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onDestroy() {
         subscription.unsubscribe();
+        repositoryAdapter.destroy();
         super.onDestroy();
     }
 
@@ -93,41 +94,10 @@ public class MainActivity extends ActionBarActivity {
                 .map(Response::entity)
                 .subscribe(searchResult -> {
                     repositoryAdapter.clear();
-                    repositoryAdapter.addRepositories(searchResult.getItems());
+//                    repositoryAdapter.addRepositories(searchResult.getItems());
                 }));
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        repositoryAdapter = new RepositoryAdapter(repositoryListView, layoutManager);
+        repositoryAdapter = new RepositoryAdapter(repositoryListView);
         repositoryListView.setAdapter(repositoryAdapter);
-        repositoryListView.setOnScrollListener(new MoreLoadScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore(int current_page) {
-                if (pagedResponse != null) {
-                    responseSubject.onNext(pagedResponse);
-                }
-            }
-        });
-    }
-
-    private void submit(String query) {
-        if (TextUtils.isEmpty(query)) {
-            return;
-        }
-
-        repositoryAdapter.clear();
-
-        responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query, STARS, DESC));
-        subscription.add(bindActivity(this, responseSubject)
-                .flatMap(r -> r)
-                .subscribe(r -> {
-                    if (r.entity().getItems() == null || r.entity().getItems().isEmpty()) {
-                        return;
-                    }
-
-                    List<Repository> repositories = r.entity().getItems();
-                    repositoryAdapter.addRepositories(repositories);
-
-                    pagedResponse = r.next();
-                }));
     }
 }

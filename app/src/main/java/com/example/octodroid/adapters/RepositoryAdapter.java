@@ -1,15 +1,28 @@
 package com.example.octodroid.adapters;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.ViewGroup;
 
 import com.example.octodroid.views.DividerItemDecoration;
+import com.example.octodroid.views.MoreLoadScrollListener;
 import com.example.octodroid.views.holders.ProgressViewHolder;
 import com.example.octodroid.views.holders.RepositoryItemViewHolder;
+import com.rejasupotaro.octodroid.GitHub;
+import com.rejasupotaro.octodroid.http.Order;
+import com.rejasupotaro.octodroid.http.Response;
+import com.rejasupotaro.octodroid.http.Sort;
 import com.rejasupotaro.octodroid.models.Repository;
+import com.rejasupotaro.octodroid.models.SearchResult;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
+import rx.android.view.ViewObservable;
+import rx.subjects.BehaviorSubject;
+import rx.subscriptions.CompositeSubscription;
 
 public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static class ViewType {
@@ -17,9 +30,23 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private static final int FOOTER = 2;
     }
 
+    private RecyclerView recyclerView;
     private List<Repository> repositories = new ArrayList<>();
+    private CompositeSubscription subscription = new CompositeSubscription();
+    private BehaviorSubject<Observable<Response<SearchResult>>> responseSubject;
+    private Observable<Response<SearchResult>> pagedResponse;
 
-    public RepositoryAdapter(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager) {
+    public RepositoryAdapter(RecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
+        LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
+        recyclerView.setOnScrollListener(new MoreLoadScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int current_page) {
+                if (pagedResponse != null) {
+                    responseSubject.onNext(pagedResponse);
+                }
+            }
+        });
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext()));
@@ -68,8 +95,34 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
-    public void addRepositories(List<Repository> repositories) {
+    private void addRepositories(List<Repository> repositories) {
         this.repositories.addAll(repositories);
         notifyDataSetChanged();
+    }
+
+    public void submit(String query) {
+        if (TextUtils.isEmpty(query)) {
+            return;
+        }
+
+        clear();
+
+        responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query, Sort.STARS, Order.DESC));
+        subscription.add(ViewObservable.bindView(recyclerView, responseSubject)
+                .flatMap(r -> r)
+                .subscribe(r -> {
+                    if (r.entity().getItems() == null || r.entity().getItems().isEmpty()) {
+                        return;
+                    }
+
+                    List<Repository> repositories = r.entity().getItems();
+                    addRepositories(repositories);
+
+                    pagedResponse = r.next();
+                }));
+    }
+
+    public void destroy() {
+        subscription.unsubscribe();
     }
 }
