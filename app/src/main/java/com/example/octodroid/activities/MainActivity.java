@@ -2,45 +2,40 @@ package com.example.octodroid.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.octodroid.R;
-import com.example.octodroid.views.MoreLoadScrollListener;
-import com.example.octodroid.adapters.RepositoryAdapter;
+import com.example.octodroid.adapters.HottestRepositoryAdapter;
+import com.example.octodroid.adapters.SearchResultAdapter;
 import com.rejasupotaro.octodroid.GitHub;
-import com.rejasupotaro.octodroid.http.Response;
-import com.rejasupotaro.octodroid.models.Repository;
-import com.rejasupotaro.octodroid.models.SearchResult;
-
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import rx.Observable;
-import rx.subjects.BehaviorSubject;
-import rx.subscriptions.CompositeSubscription;
-
-import static com.rejasupotaro.octodroid.http.Order.DESC;
-import static com.rejasupotaro.octodroid.http.Sort.STARS;
-import static rx.android.app.AppObservable.*;
 
 public class MainActivity extends ActionBarActivity {
+    @InjectView(R.id.hottest_repository_list)
+    RecyclerView hottestRepositoryListView;
     @InjectView(R.id.repository_list)
-    RecyclerView repositoryListView;
+    RecyclerView searchResultListView;
 
-    private RepositoryAdapter repositoryAdapter;
-    private CompositeSubscription subscription = new CompositeSubscription();
-    private BehaviorSubject<Observable<Response<SearchResult>>> responseSubject;
-    private Observable<Response<SearchResult>> pagedResponse;
+    private HottestRepositoryAdapter hottestRepositoryAdapter;
+    private SearchResultAdapter searchResultAdapter;
     private SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
-            repositoryAdapter.submit(query);
+            if (TextUtils.isEmpty(query)) {
+                hottestRepositoryListView.setVisibility(View.VISIBLE);
+                searchResultListView.setVisibility(View.GONE);
+            } else {
+                hottestRepositoryListView.setVisibility(View.GONE);
+                searchResultListView.setVisibility(View.VISIBLE);
+                searchResultAdapter.submit(query);
+            }
             return false;
         }
 
@@ -60,8 +55,8 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onDestroy() {
-        subscription.unsubscribe();
-        repositoryAdapter.destroy();
+        hottestRepositoryAdapter.destroy();
+        searchResultAdapter.destroy();
         super.onDestroy();
     }
 
@@ -90,14 +85,11 @@ public class MainActivity extends ActionBarActivity {
 
     private void setupViews() {
         GitHub.client().cache(this);
-        subscription.add(bindActivity(this, GitHub.client().hottestRepositories())
-                .map(Response::entity)
-                .subscribe(searchResult -> {
-                    repositoryAdapter.clear();
-//                    repositoryAdapter.addRepositories(searchResult.getItems());
-                }));
 
-        repositoryAdapter = new RepositoryAdapter(repositoryListView);
-        repositoryListView.setAdapter(repositoryAdapter);
+        hottestRepositoryAdapter = new HottestRepositoryAdapter(hottestRepositoryListView);
+        hottestRepositoryListView.setAdapter(hottestRepositoryAdapter);
+
+        searchResultAdapter = new SearchResultAdapter(searchResultListView);
+        searchResultListView.setAdapter(searchResultAdapter);
     }
 }

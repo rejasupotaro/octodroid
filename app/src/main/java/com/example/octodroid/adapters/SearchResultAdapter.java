@@ -2,7 +2,6 @@ package com.example.octodroid.adapters;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.ViewGroup;
 
 import com.example.octodroid.views.DividerItemDecoration;
@@ -24,7 +23,7 @@ import rx.android.view.ViewObservable;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
 
-public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static class ViewType {
         private static final int ITEM = 1;
         private static final int FOOTER = 2;
@@ -36,7 +35,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private BehaviorSubject<Observable<Response<SearchResult>>> responseSubject;
     private Observable<Response<SearchResult>> pagedResponse;
 
-    public RepositoryAdapter(RecyclerView recyclerView) {
+    public SearchResultAdapter(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
         LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
         recyclerView.setOnScrollListener(new MoreLoadScrollListener(layoutManager) {
@@ -74,7 +73,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if (position == repositories.size()) {
+        if (repositories.size() == 0 || position == repositories.size()) {
             return ViewType.FOOTER;
         } else {
             return ViewType.ITEM;
@@ -83,11 +82,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        if (repositories.size() == 0) {
-            return 0;
-        } else {
-            return repositories.size() + 1;
-        }
+        return repositories.size() + 1;
     }
 
     public void clear() {
@@ -101,10 +96,6 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void submit(String query) {
-        if (TextUtils.isEmpty(query)) {
-            return;
-        }
-
         clear();
 
         responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query, Sort.STARS, Order.DESC));
