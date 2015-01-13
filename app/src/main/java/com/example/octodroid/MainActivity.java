@@ -10,7 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.rejasupotaro.octodroid.GitHub;
+import com.rejasupotaro.octodroid.http.Order;
 import com.rejasupotaro.octodroid.http.Response;
+import com.rejasupotaro.octodroid.http.Sort;
 import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.SearchResult;
 
@@ -23,6 +25,8 @@ import rx.android.app.AppObservable;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.rejasupotaro.octodroid.http.Order.DESC;
+import static com.rejasupotaro.octodroid.http.Sort.STARS;
 import static rx.android.app.AppObservable.*;
 
 public class MainActivity extends ActionBarActivity {
@@ -112,7 +116,7 @@ public class MainActivity extends ActionBarActivity {
 
         repositoryAdapter.clear();
 
-        responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query, "stars", "desc"));
+        responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query, STARS, DESC));
         subscription.add(bindActivity(this, responseSubject)
                 .flatMap(r -> r)
                 .subscribe(r -> {

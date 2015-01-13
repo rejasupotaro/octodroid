@@ -6,7 +6,9 @@ import com.google.gson.reflect.TypeToken;
 import com.rejasupotaro.octodroid.http.AbstractClient;
 import com.rejasupotaro.octodroid.http.ApiClient;
 import com.rejasupotaro.octodroid.http.Method;
+import com.rejasupotaro.octodroid.http.Order;
 import com.rejasupotaro.octodroid.http.Response;
+import com.rejasupotaro.octodroid.http.Sort;
 import com.rejasupotaro.octodroid.models.SearchResult;
 import com.rejasupotaro.octodroid.models.User;
 
@@ -37,13 +39,13 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
-    public Observable<Response<SearchResult>> searchRepositories(final String q, final String sort, final String order) {
+    public Observable<Response<SearchResult>> searchRepositories(final String q, final Sort sort, final Order order) {
         return searchRepositories(q, sort, order, 1);
     }
 
-    public Observable<Response<SearchResult>> searchRepositories(final String q, final String sort, final String order, final int page) {
+    public Observable<Response<SearchResult>> searchRepositories(final String q, final Sort sort, final Order order, final int page) {
         String path = String.format("/search/repositories?q=%s&sort=%s&order=%s&page=%d&per_page=%d",
-                encode(q), sort, order, page, PER_PAGE);
+                encode(q), sort.toString(), order.toString(), page, PER_PAGE);
         return request(Method.GET, path, null, null, new TypeToken<SearchResult>() {
         }).map(new Func1<Response<SearchResult>, Response<SearchResult>>() {
             @Override
