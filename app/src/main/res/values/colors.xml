@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="camel">#b7b3aa</color>
+    <color name="progress">@color/camel</color>
+</resources>

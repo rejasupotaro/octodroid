@@ -1,6 +1,5 @@
 package com.example.octodroid;
 
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,10 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static class ViewType {
+        private static final int ITEM = 1;
+        private static final int FOOTER = 2;
+    }
     private List<Repository> repositories = new ArrayList<>();
 
     public RepositoryAdapter(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager) {
@@ -26,18 +29,40 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return RepositoryItemViewHolder.create(parent);
+        if (viewType == ViewType.FOOTER) {
+            return ProgressViewHolder.create(parent);
+        } else {
+            return RepositoryItemViewHolder.create(parent);
+        }
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
-        Repository repository = repositories.get(i);
-        ((RepositoryItemViewHolder) viewHolder).bind(repository);
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        int viewType = getItemViewType(position);
+        if (viewType == ViewType.FOOTER) {
+            // do nothing
+        } else {
+            Repository repository = repositories.get(position);
+            ((RepositoryItemViewHolder) viewHolder).bind(repository);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == repositories.size()) {
+            return ViewType.FOOTER;
+        } else {
+            return ViewType.ITEM;
+        }
     }
 
     @Override
     public int getItemCount() {
-        return repositories.size();
+        if (repositories.size() == 0) {
+            return 0;
+        } else {
+            return repositories.size() + 1;
+        }
     }
 
     public void clear() {
