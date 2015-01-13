@@ -19,25 +19,14 @@ public class Response<T> {
     private int code;
     private String body;
     private Observable<Response<T>> next;
-
-    private void entity(T entity) {
-        this.entity = entity;
-    }
+    private Pagination pagination;
 
     public T entity() {
         return entity;
     }
 
-    private void headers(Headers headers) {
-        this.headers = headers;
-    }
-
     public Headers headers() {
         return headers;
-    }
-
-    private void code(int code) {
-        this.code = code;
     }
 
     public int code() {
@@ -48,25 +37,20 @@ public class Response<T> {
         return code >= 200 && code < 300;
     }
 
-    private void body(String body) {
-        this.body = body;
-    }
-
     public String body() {
         return body;
     }
 
-//    public int nextPage() {
-//        return extra.getLinks().getNext().getPage();
-//    }
+    public int nextPage() {
+        return pagination.getNextLink().getPage();
+    }
 
     public Observable<Response<T>> next() {
         return next;
     }
 
     public boolean hasNext() {
-        return false; // TODO
-//        return (extra != null) && (extra.getLinks() != null) && (extra.getLinks().hasNext());
+        return pagination.hasNext();
     }
 
     public void next(Observable<Response<T>> next) {
@@ -87,15 +71,17 @@ public class Response<T> {
 
     public static <T> Response<T> parse(com.squareup.okhttp.Response r, TypeToken<T> type) throws IOException {
         String bodyString = r.body().string();
+        Headers headers = r.headers();
 
         Response<T> response = new Response<>();
         T entity = GsonProvider.get().fromJson(
                 bodyString,
                 type.getType());
-        response.entity(entity);
-        response.headers(r.headers());
-        response.code(r.code());
-        response.body(bodyString);
+        response.entity = entity;
+        response.headers = headers;
+        response.code = r.code();
+        response.body = bodyString;
+        response.pagination = PaginationHeaderParser.parse(response);
 
         return response;
     }
