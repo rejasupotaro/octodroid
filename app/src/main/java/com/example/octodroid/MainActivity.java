@@ -23,6 +23,8 @@ import rx.android.app.AppObservable;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
 
+import static rx.android.app.AppObservable.*;
+
 public class MainActivity extends ActionBarActivity {
     @InjectView(R.id.repository_list)
     RecyclerView repositoryListView;
@@ -83,8 +85,8 @@ public class MainActivity extends ActionBarActivity {
 
     private void setupViews() {
         GitHub.client().cache(this);
-        subscription.add(AppObservable.bindActivity(this, GitHub.client().hottestRepositories())
-                .map(r -> r.entity())
+        subscription.add(bindActivity(this, GitHub.client().hottestRepositories())
+                .map(Response::entity)
                 .subscribe(searchResult -> {
                     repositoryAdapter.clear();
                     repositoryAdapter.addRepositories(searchResult.getItems());
@@ -111,7 +113,7 @@ public class MainActivity extends ActionBarActivity {
         repositoryAdapter.clear();
 
         responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query, "stars", "desc"));
-        subscription.add(AppObservable.bindActivity(this, responseSubject)
+        subscription.add(bindActivity(this, responseSubject)
                 .flatMap(r -> r)
                 .subscribe(r -> {
                     if (r.entity().getItems() == null || r.entity().getItems().isEmpty()) {
