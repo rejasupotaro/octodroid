@@ -64,9 +64,10 @@ public class Response<T> {
         return next;
     }
 
-//    public boolean hasNext() {
+    public boolean hasNext() {
+        return false; // TODO
 //        return (extra != null) && (extra.getLinks() != null) && (extra.getLinks().hasNext());
-//    }
+    }
 
     public void next(Observable<Response<T>> next) {
         this.next = next;
