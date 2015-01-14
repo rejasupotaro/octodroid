@@ -50,12 +50,6 @@ public class SearchResultActivity extends ActionBarActivity {
     }
 
     @Override
-    public void onDestroy() {
-        searchResultAdapter.destroy();
-        super.onDestroy();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_result, menu);
 

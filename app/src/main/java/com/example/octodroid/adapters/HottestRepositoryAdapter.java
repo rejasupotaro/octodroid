@@ -13,18 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.android.view.ViewObservable;
-import rx.subscriptions.CompositeSubscription;
 
 public class HottestRepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Repository> repositories = new ArrayList<>();
-    private CompositeSubscription subscription = new CompositeSubscription();
 
     public HottestRepositoryAdapter(RecyclerView recyclerView) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(layoutManager);
 
-        subscription.add(ViewObservable.bindView(recyclerView, GitHub.client().hottestRepositories())
+        ViewObservable.bindView(recyclerView, GitHub.client().hottestRepositories())
                 .map(Response::entity)
                 .subscribe(searchResult -> {
                     if (searchResult.getItems() == null || searchResult.getItems().isEmpty()) {
@@ -33,7 +31,7 @@ public class HottestRepositoryAdapter extends RecyclerView.Adapter<RecyclerView.
 
                     List<Repository> repositories = searchResult.getItems();
                     addRepositories(repositories);
-                }));
+                });
     }
 
     @Override
@@ -55,10 +53,6 @@ public class HottestRepositoryAdapter extends RecyclerView.Adapter<RecyclerView.
     private void addRepositories(List<Repository> repositories) {
         this.repositories.addAll(repositories);
         notifyDataSetChanged();
-    }
-
-    public void destroy() {
-        subscription.unsubscribe();
     }
 }
 

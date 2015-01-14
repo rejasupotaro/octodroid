@@ -8,7 +8,6 @@ import android.view.MenuItem;
 
 import com.example.octodroid.R;
 import com.example.octodroid.adapters.HottestRepositoryAdapter;
-import com.rejasupotaro.octodroid.GitHub;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -25,12 +24,6 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         setupViews();
-    }
-
-    @Override
-    public void onDestroy() {
-        hottestRepositoryAdapter.destroy();
-        super.onDestroy();
     }
 
     @Override

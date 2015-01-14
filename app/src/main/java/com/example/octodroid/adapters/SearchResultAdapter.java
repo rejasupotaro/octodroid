@@ -22,7 +22,6 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.view.ViewObservable;
 import rx.subjects.BehaviorSubject;
-import rx.subscriptions.CompositeSubscription;
 import rx.subscriptions.Subscriptions;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -116,9 +115,5 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     pagedResponse = r.next();
                 });
-    }
-
-    public void destroy() {
-        subscription.unsubscribe();
     }
 }
