@@ -12,7 +12,10 @@ public class PaginationHeaderParser {
             return new Pagination();
         }
 
-        Headers headers = response.headers();
+        return parse(response.headers());
+    }
+
+    public static Pagination parse(Headers headers) {
         if (headers == null) {
             return new Pagination();
         }
