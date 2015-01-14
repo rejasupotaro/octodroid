@@ -18,13 +18,12 @@ import java.util.Map;
 public class ApiClient {
     private static final String TAG = ApiClient.class.getSimpleName();
     private static final String DEFAULT_ENDPOINT = "https://api.github.com";
-    private static final int MAX_AGE = 3 * 60 * 60; // 3 hours
-    private static final int MAX_STALE = 28 * 24 * 60 * 60; // tolerate 4-weeks stale
 
     protected static OkHttpClient okHttpClient;
 
     private String endpoint = DEFAULT_ENDPOINT;
     private String authorization;
+    private CacheControl cacheControl;
 
     public void endpoint(String endpoint) {
         this.endpoint = endpoint;
@@ -38,11 +37,14 @@ public class ApiClient {
         this.authorization = accessToken;
     }
 
-    public void cache(Cache cache) throws IOException {
-        if (cache == null) {
-            throw new IOException("Cache should not be null");
+    public void cache(CacheControl cacheControl) {
+        try {
+            Cache cache = new Cache(cacheControl.getFile(), cacheControl.getMaxCacheSize());
+            okHttpClient.setCache(cache);
+            this.cacheControl = cacheControl;
+        } catch (IOException e) {
+            Log.e(TAG, "Can't create cache: " + e.toString());
         }
-        okHttpClient.setCache(cache);
     }
 
     public ApiClient() {
@@ -101,8 +103,8 @@ public class ApiClient {
         return new HashMap<String, String>() {{
             put(Header.ACCEPT, "application/json");
 //            put(Header.USER_AGENT, UserAgent.get());
-            if (!ConnectivityObserver.isConnect()) {
-                put(Header.CACHE_CONTROL, "only-if-cached, max-stale=" + MAX_STALE);
+            if (!ConnectivityObserver.isConnect() && cacheControl != null) {
+                put(Header.CACHE_CONTROL, "only-if-cached, max-stale=" + cacheControl.getMaxStale());
             }
         }};
     }
