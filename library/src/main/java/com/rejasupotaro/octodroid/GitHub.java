@@ -1,5 +1,6 @@
 package com.rejasupotaro.octodroid;
 
+import com.google.gson.Gson;
 import com.rejasupotaro.octodroid.http.ApiClient;
 
 public class GitHub {
@@ -10,5 +11,9 @@ public class GitHub {
             client = new GitHubClient(new ApiClient());
         }
         return client;
+    }
+
+    public static void gson(Gson gson) {
+        GsonProvider.set(gson);
     }
 }
