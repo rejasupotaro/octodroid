@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.octodroid.R;
+import com.makeramen.RoundedImageView;
 import com.rejasupotaro.octodroid.models.Repository;
 
 import butterknife.ButterKnife;
@@ -17,6 +19,10 @@ public class RepositoryItemViewHolder extends RecyclerView.ViewHolder {
     TextView nameTextView;
     @InjectView(R.id.description)
     TextView descriptionTextView;
+    @InjectView(R.id.user_image)
+    RoundedImageView userImageView;
+    @InjectView(R.id.user_name)
+    TextView userNameTextView;
 
     public static RepositoryItemViewHolder create(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_repository, parent, false);
@@ -31,6 +37,10 @@ public class RepositoryItemViewHolder extends RecyclerView.ViewHolder {
     public void bind(final Repository repository) {
         nameTextView.setText(repository.getName());
         descriptionTextView.setText(repository.getDescription());
+        Glide.with(userImageView.getContext())
+                .load(repository.getOwner().getAvatarUrl())
+                .into(userImageView);
+        userNameTextView.setText(repository.getOwner().getLogin());
     }
 }
 
