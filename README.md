@@ -12,24 +12,24 @@ I will upload to jcenter sooner or later.
 
 ```java
 GitHub.client().user("rejasupotaro")
-        .map(r -> r.entity())
+        .map(Response::entity)
         .subscribe(user -> ...);
 
 // You can access myself if you have authenticated
 GitHub.client().user()
-        .map(r -> r.entity())
+        .map(Response::entity)
         .subscribe(user -> ...);
 ```
 
 ### Repositories
 
 ```java
-GitHub.client().searchRepositories("Android", "stars", "desc", 1, 20)
-        .map(r -> r.entity())
+GitHub.client().searchRepositories("Android", Sort.STARS, Order.DESC, 1, 20)
+        .map(Response::entity)
         .subscribe(repositories -> ...);
 
 GitHub.client().hottestRepositories()
-        .map(r -> r.entity())
+        .map(Response::entity)
         .subscribe(repositories -> ...);
 ```
 
@@ -42,7 +42,7 @@ GitHub.client().authorize("access_token");
 GitHub.client().authorize("username", "password");
 
 GitHub.client().user()
-        .map(r -> r.entity())
+        .map(Response::entity)
         .subscribe(user -> ...);
 ```
 
