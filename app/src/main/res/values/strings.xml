@@ -4,5 +4,6 @@
     <string name="app_name">Octodroid</string>
     <string name="repositories">Repositories</string>
     <string name="action_settings">Settings</string>
+    <string name="search">search</string>
 
 </resources>
