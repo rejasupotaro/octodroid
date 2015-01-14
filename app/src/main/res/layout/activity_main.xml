@@ -14,7 +14,7 @@
 
         <TextView
             android:text="The hottest repositories\ncreated in the last week"
-            android:textSize="28sp"
+            android:textSize="@dimen/abc_text_size_large_material"
             android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

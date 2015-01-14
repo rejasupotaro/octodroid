@@ -2,6 +2,7 @@ package com.example.octodroid.adapters;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.octodroid.views.MoreLoadScrollListener;
@@ -38,6 +39,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public SearchResultAdapter(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
+        recyclerView.setVisibility(View.GONE);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
         recyclerView.setOnScrollListener(new MoreLoadScrollListener(layoutManager) {
             @Override
@@ -97,6 +100,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public void submit(String query) {
         clear();
+        recyclerView.setVisibility(View.VISIBLE);
 
         responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query, Sort.STARS, Order.DESC));
         subscription.unsubscribe();

@@ -62,7 +62,7 @@ public class SearchResultActivity extends ActionBarActivity {
         MenuItem menuItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
         searchView.setIconifiedByDefault(true);
-        searchView.setSubmitButtonEnabled(true);
+        searchView.setSubmitButtonEnabled(false);
         searchView.setQueryHint(getString(R.string.repositories));
         searchView.setOnQueryTextListener(onQueryTextListener);
 
