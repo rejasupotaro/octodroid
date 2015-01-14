@@ -22,11 +22,16 @@ public class ApiClient {
     protected static OkHttpClient okHttpClient;
 
     private String endpoint = DEFAULT_ENDPOINT;
+    private String userAgent;
     private String authorization;
     private CacheControl cacheControl;
 
     public void endpoint(String endpoint) {
         this.endpoint = endpoint;
+    }
+
+    public void userAgent(String userAgent) {
+        this.userAgent = userAgent;
     }
 
     public void authorization(String username, String password) {

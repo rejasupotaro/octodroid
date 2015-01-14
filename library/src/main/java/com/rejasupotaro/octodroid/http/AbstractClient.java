@@ -16,6 +16,10 @@ import rx.schedulers.Schedulers;
 public abstract class AbstractClient {
     private ApiClient apiClient;
 
+    public void userAgent(String userAgent) {
+        apiClient.userAgent(userAgent);
+    }
+
     public void authorization(String username, String password) {
         apiClient.authorization(username, password);
     }
