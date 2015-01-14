@@ -18,9 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.android.view.ViewObservable;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
+import rx.subscriptions.Subscriptions;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static class ViewType {
@@ -30,7 +32,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private RecyclerView recyclerView;
     private List<Repository> repositories = new ArrayList<>();
-    private CompositeSubscription subscription = new CompositeSubscription();
+    private Subscription subscription = Subscriptions.empty();
     private BehaviorSubject<Observable<Response<SearchResult>>> responseSubject;
     private Observable<Response<SearchResult>> pagedResponse;
 
@@ -97,7 +99,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         clear();
 
         responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query, Sort.STARS, Order.DESC));
-        subscription.add(ViewObservable.bindView(recyclerView, responseSubject)
+        subscription.unsubscribe();
+        subscription = ViewObservable.bindView(recyclerView, responseSubject)
                 .flatMap(r -> r)
                 .subscribe(r -> {
                     if (r.entity().getItems() == null || r.entity().getItems().isEmpty()) {
@@ -108,7 +111,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     addRepositories(repositories);
 
                     pagedResponse = r.next();
-                }));
+                });
     }
 
     public void destroy() {
