@@ -46,9 +46,23 @@ GitHub.client().user()
         .subscribe(user -> ...);
 ```
 
+### Set User-Agent
+
+```java
+GitHub.client().userAgent(userAgent);
+```
+
 ### Enable Cache-Control
 
-```
-GitHub.client().cache(this)
-```
+```java
+CacheControl cacheControl = new CacheControl.Builder()
+        // cache file is required
+        .file(context)                 // use /data/data/package.name/cache/octodroid_response_cache when given context
+//        .file(dir, "file_name")      // or give dir and file name
+//        .file(file)                  // or give file
+        .maxCacheSize(3 * 1024 * 1024) // default max cache size is 3MB
+        .maxStale(28 * 24 * 60 * 60)   // default max stale is 3 weeks
+        .build();
 
+GitHub.client().cache(cacheControl);
+```
