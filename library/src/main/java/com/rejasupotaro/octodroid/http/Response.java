@@ -74,10 +74,9 @@ public class Response<T> {
         Headers headers = r.headers();
 
         Response<T> response = new Response<>();
-        T entity = GsonProvider.get().fromJson(
+        response.entity = GsonProvider.get().fromJson(
                 bodyString,
                 type.getType());
-        response.entity = entity;
         response.headers = headers;
         response.code = r.code();
         response.body = bodyString;
