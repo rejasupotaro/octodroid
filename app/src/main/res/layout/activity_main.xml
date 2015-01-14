@@ -1,10 +1,30 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/spacing_small"
+        android:paddingTop="@dimen/spacing_large"
+        android:paddingRight="@dimen/spacing_large"
+        android:paddingLeft="@dimen/spacing_large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="The hottest repositories\ncreated in the last week"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/hottest_repository_list"
+        android:paddingBottom="@dimen/spacing_medium"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:scrollbars="vertical" />
-</FrameLayout>
+</LinearLayout>

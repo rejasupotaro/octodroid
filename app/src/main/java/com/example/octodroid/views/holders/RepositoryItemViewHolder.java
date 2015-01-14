@@ -15,6 +15,8 @@ import butterknife.InjectView;
 public class RepositoryItemViewHolder extends RecyclerView.ViewHolder {
     @InjectView(R.id.name)
     TextView nameTextView;
+    @InjectView(R.id.description)
+    TextView descriptionTextView;
 
     public static RepositoryItemViewHolder create(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_repository, parent, false);
@@ -28,6 +30,7 @@ public class RepositoryItemViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(final Repository repository) {
         nameTextView.setText(repository.getName());
+        descriptionTextView.setText(repository.getDescription());
     }
 }
 

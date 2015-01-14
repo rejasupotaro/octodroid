@@ -4,7 +4,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.example.octodroid.views.DividerItemDecoration;
 import com.example.octodroid.views.MoreLoadScrollListener;
 import com.example.octodroid.views.holders.ProgressViewHolder;
 import com.example.octodroid.views.holders.RepositoryItemViewHolder;
@@ -48,7 +47,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         });
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext()));
     }
 
     @Override
