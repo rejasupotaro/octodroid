@@ -50,8 +50,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void setupViews() {
-        GitHub.client().cache(this);
-
         hottestRepositoryAdapter = new HottestRepositoryAdapter(hottestRepositoryListView);
         hottestRepositoryListView.setAdapter(hottestRepositoryAdapter);
     }
