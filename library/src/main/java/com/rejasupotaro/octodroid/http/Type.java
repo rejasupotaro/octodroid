@@ -1,10 +1,11 @@
 package com.rejasupotaro.octodroid.http;
 
-public enum Sort {
-    STARS,
-    CREATED,
-    UPDATED,
-    PUSHED;
+public enum Type {
+    ALL,
+    OWNER,
+    PUBLIC,
+    PRIVATE,
+    MEMBER;
 
     @Override
     public String toString() {

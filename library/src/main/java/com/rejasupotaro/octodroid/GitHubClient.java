@@ -9,6 +9,8 @@ import com.rejasupotaro.octodroid.http.Method;
 import com.rejasupotaro.octodroid.http.Order;
 import com.rejasupotaro.octodroid.http.Response;
 import com.rejasupotaro.octodroid.http.Sort;
+import com.rejasupotaro.octodroid.http.Type;
+import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.SearchResult;
 import com.rejasupotaro.octodroid.models.User;
 
@@ -17,6 +19,7 @@ import org.joda.time.DateTime;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -36,6 +39,13 @@ public class GitHubClient extends AbstractClient {
     public Observable<Response<User>> user(String username) {
         String path = String.format("/users/%s", username);
         return request(Method.GET, path, null, null, new TypeToken<User>() {
+        });
+    }
+
+    public Observable<Response<List<Repository>>> userRepos(Type type, Sort sort, Order order) {
+        String path = String.format("/user/repos?type=%s&sort=%s&direction=%s",
+                type.toString(), sort.toString(), order.toString());
+        return request(Method.GET, path, null, null, new TypeToken<List<Repository>>() {
         });
     }
 
