@@ -1,4 +1,4 @@
-package com.rejasupotaro.octodroid.http;
+package com.rejasupotaro.octodroid.http.params;
 
 public enum Type {
     ALL,
