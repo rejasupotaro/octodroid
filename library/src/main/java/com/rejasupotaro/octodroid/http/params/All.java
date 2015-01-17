@@ -1,11 +1,8 @@
 package com.rejasupotaro.octodroid.http.params;
 
-public enum Sort {
-    STARS,
-    CREATED,
-    UPDATED,
-    PUSHED,
-    FULL_NAME;
+public enum All {
+    TRUE,
+    FALSE;
 
     @Override
     public String toString() {

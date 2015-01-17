@@ -6,8 +6,10 @@ import com.google.gson.reflect.TypeToken;
 import com.rejasupotaro.octodroid.http.AbstractClient;
 import com.rejasupotaro.octodroid.http.ApiClient;
 import com.rejasupotaro.octodroid.http.Method;
+import com.rejasupotaro.octodroid.http.params.All;
 import com.rejasupotaro.octodroid.http.params.Order;
 import com.rejasupotaro.octodroid.http.Response;
+import com.rejasupotaro.octodroid.http.params.Participating;
 import com.rejasupotaro.octodroid.http.params.Sort;
 import com.rejasupotaro.octodroid.http.params.Type;
 import com.rejasupotaro.octodroid.models.Notification;
@@ -38,7 +40,12 @@ public class GitHubClient extends AbstractClient {
     }
 
     public Observable<Response<List<Notification>>> notifications() {
-        return request(Method.GET, "/notifications", null, null, new TypeToken<List<Notification>>() {
+        return notifications(All.FALSE, Participating.FALSE);
+    }
+
+    public Observable<Response<List<Notification>>> notifications(All all, Participating participating) {
+        String path = String.format("/notifications?all=%s&participating=%s", all.toString(), participating.toString());
+        return request(Method.GET, path, null, null, new TypeToken<List<Notification>>() {
         });
     }
 
@@ -46,6 +53,10 @@ public class GitHubClient extends AbstractClient {
         String path = String.format("/users/%s", username);
         return request(Method.GET, path, null, null, new TypeToken<User>() {
         });
+    }
+
+    public Observable<Response<List<Repository>>> userRepos() {
+        return userRepos(Type.ALL, Sort.FULL_NAME, Order.DESC);
     }
 
     public Observable<Response<List<Repository>>> userRepos(Type type, Sort sort, Order order) {
