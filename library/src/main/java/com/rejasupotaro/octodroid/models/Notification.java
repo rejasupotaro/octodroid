@@ -19,4 +19,36 @@ public class Notification extends Resource {
     private String lastReadAt;
     @SerializedName("url")
     private String url;
+
+    public String getId() {
+        return id;
+    }
+
+    public Repository getRepository() {
+        return repository;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public boolean isUnread() {
+        return unread;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public String getLastReadAt() {
+        return lastReadAt;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 }
