@@ -10,6 +10,7 @@ import com.rejasupotaro.octodroid.http.params.Order;
 import com.rejasupotaro.octodroid.http.Response;
 import com.rejasupotaro.octodroid.http.params.Sort;
 import com.rejasupotaro.octodroid.http.params.Type;
+import com.rejasupotaro.octodroid.models.Notification;
 import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.SearchResult;
 import com.rejasupotaro.octodroid.models.User;
@@ -33,6 +34,11 @@ public class GitHubClient extends AbstractClient {
 
     public Observable<Response<User>> user() {
         return request(Method.GET, "/user", null, null, new TypeToken<User>() {
+        });
+    }
+
+    public Observable<Response<List<Notification>>> notifications() {
+        return request(Method.GET, "/notifications", null, null, new TypeToken<List<Notification>>() {
         });
     }
 
