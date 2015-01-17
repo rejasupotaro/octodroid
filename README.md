@@ -21,6 +21,14 @@ GitHub.client().user()
         .subscribe(user -> ...);
 ```
 
+### Notifications
+
+```java
+GitHub.client().notifications()
+        .map(Response::entity)
+        .subscribe(notifications -> ...);
+```
+
 ### Repositories
 
 ```java
@@ -29,6 +37,10 @@ GitHub.client().searchRepositories("Android", Sort.STARS, Order.DESC, 1, 20)
         .subscribe(repositories -> ...);
 
 GitHub.client().hottestRepositories()
+        .map(Response::entity)
+        .subscribe(repositories -> ...);
+
+GitHub.client().userRepos()
         .map(Response::entity)
         .subscribe(repositories -> ...);
 ```
