@@ -39,6 +39,13 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
+    public Observable<Response<Notification>> notification(String id) {
+        String path = String.format("/notifications/threads/%s",
+                id);
+        return request(Method.GET, path, null, null, new TypeToken<Notification>() {
+        });
+    }
+
     public Observable<Response<List<Notification>>> notifications() {
         return notifications(All.FALSE, Participating.FALSE);
     }
