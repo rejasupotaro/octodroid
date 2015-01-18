@@ -39,8 +39,8 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
-    public Observable<Response<Notification>> notification(String id) {
-        String path = String.format("/notifications/threads/%s",
+    public Observable<Response<Notification>> notification(int id) {
+        String path = String.format("/notifications/threads/%d",
                 id);
         return request(Method.GET, path, null, null, new TypeToken<Notification>() {
         });
@@ -78,6 +78,13 @@ public class GitHubClient extends AbstractClient {
         String path = String.format("/repos/%s/%s/notifications",
                 owner, repo);
         return request(Method.PUT, path, null, null, new TypeToken<Void>() {
+        });
+    }
+
+    public Observable<Response<Void>> markThreadAsRead(int id) {
+        String path = String.format("/notifications/threads/%d",
+                id);
+        return request(Method.PATCH, path, null, null, new TypeToken<Void>() {
         });
     }
 

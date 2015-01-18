@@ -83,6 +83,9 @@ public class ApiClient {
             case PUT:
                 builder.put(body);
                 break;
+            case PATCH:
+                builder.patch(body);
+                break;
             case DELETE:
                 builder.delete();
                 break;
