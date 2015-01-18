@@ -61,6 +61,12 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
+    public Observable<Response<Void>> markAsRead() {
+        String path = "/notifications";
+        return request(Method.PUT, path, null, null, new TypeToken<Void>() {
+        });
+    }
+
     public Observable<Response<User>> user(String username) {
         String path = String.format("/users/%s", username);
         return request(Method.GET, path, null, null, new TypeToken<User>() {
