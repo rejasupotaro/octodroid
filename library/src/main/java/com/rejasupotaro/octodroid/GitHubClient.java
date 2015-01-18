@@ -44,7 +44,19 @@ public class GitHubClient extends AbstractClient {
     }
 
     public Observable<Response<List<Notification>>> notifications(All all, Participating participating) {
-        String path = String.format("/notifications?all=%s&participating=%s", all.toString(), participating.toString());
+        String path = String.format("/notifications?all=%s&participating=%s",
+                all.toString(), participating.toString());
+        return request(Method.GET, path, null, null, new TypeToken<List<Notification>>() {
+        });
+    }
+
+    public Observable<Response<List<Notification>>> reposNotifications(String owner, String repo) {
+        return reposNotifications(owner, repo, All.FALSE, Participating.FALSE);
+    }
+
+    public Observable<Response<List<Notification>>> reposNotifications(String owner, String repo, All all, Participating participating) {
+        String path = String.format("/repos/%s/%s/notifications?all=%s&participating=%s",
+                owner, repo, all.toString(), participating.toString());
         return request(Method.GET, path, null, null, new TypeToken<List<Notification>>() {
         });
     }
