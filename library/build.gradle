@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion 21
@@ -34,4 +36,72 @@ dependencies {
 
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
+}
+
+task androidJar(type: Jar) {
+    from 'build/intermediates/classes/release'
+}
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives androidJar
+    archives androidSourcesJar
+}
+
+version = "0.0.1"
+
+publishing {
+    publications {
+        mavenAndroid(MavenPublication) {
+            groupId 'com.rejasupotaro'
+            artifactId 'octodroid'
+            version version
+            artifact androidJar
+            artifact androidSourcesJar
+            pom.withXml {
+                Node root = asNode()
+                root.appendNode('name', 'octodroid')
+                root.appendNode('description', 'Android toolkit for the GitHub API.')
+                root.appendNode('url', 'https://github.com/rejasupotaro/octodroid')
+
+                def issues = root.appendNode('issueManagement')
+                issues.appendNode('system', 'github')
+                issues.appendNode('url', 'https://github.com/rejasupotaro/octodroid/issues')
+
+                def scm = root.appendNode('scm')
+                scm.appendNode('url', 'scm:https://github.com/rejasupotaro/octodroid')
+                scm.appendNode('connection', 'scm:git@github.com:rejasupotaro/octodroid.git')
+                scm.appendNode('developerConnection', 'scm:git@github.com:rejasupotaro/octodroid.git')
+
+                def license = root.appendNode('licenses').appendNode('license')
+                license.appendNode('name', 'MIT')
+                license.appendNode('url', 'https://raw.githubusercontent.com/rejasupotaro/octodroid/master/LICENSE.txt')
+                license.appendNode('distribution', 'repo')
+            }
+        }
+    }
+}
+
+def getBintrayUserProperty() {
+    return hasProperty('bintrayUser') ? bintrayUser : ""
+}
+
+def getBintrayApiKeyProperty() {
+    return hasProperty('bintrayApiKey') ? bintrayApiKey : ""
+}
+
+bintray {
+    user = bintrayUserProperty
+    key = bintrayApiKeyProperty
+    publications = ['mavenAndroid']
+    dryRun = false
+    pkg {
+        repo = 'maven'
+        name = 'octodroid'
+        licenses = ['MIT']
+    }
 }
