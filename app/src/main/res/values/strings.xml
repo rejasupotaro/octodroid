@@ -1,11 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Octodroid</string>
     <string name="repositories">Repositories</string>
     <string name="action_settings">Settings</string>
     <string name="search">search</string>
     <string name="search_repositories">Search Repositories</string>
-    <string name="hottest_repositories">Hottest repositories</string>
-
+    <string name="hottest_repositories">Hottest Repositories</string>
+    <string name="login">Sign In</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="login_failed">We couldn\'t log you in. Sure you had the right email and password?</string>
+    <string name="loading">Loading…</string>
+    <string name="error">An error occurred. Please try again later.</string>
 </resources>
