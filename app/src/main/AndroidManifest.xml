@@ -23,6 +23,8 @@
         <activity
             android:name=".activities.SearchResultActivity"
             android:label="@string/search_repositories" />
+        <activity
+            android:name=".activities.LoginActivity"
+            android:label="@string/search_repositories" />
     </application>
-
 </manifest>

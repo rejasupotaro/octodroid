@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.octodroid.R;
+import com.example.octodroid.SessionPrefs;
+import com.example.octodroid.SessionPrefsSchema;
 import com.example.octodroid.adapters.HottestRepositoryAdapter;
 
 import butterknife.ButterKnife;
@@ -20,8 +22,15 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.inject(this);
-        setupViews();
+
+        SessionPrefs prefs = SessionPrefsSchema.get(this);
+        if (prefs.hasEmail() && prefs.hasPassword()) {
+            ButterKnife.inject(this);
+            setupViews();
+        } else {
+            LoginActivity.launch(this);
+            finish();
+        }
     }
 
     @Override

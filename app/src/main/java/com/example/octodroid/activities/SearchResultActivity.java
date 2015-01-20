@@ -1,6 +1,7 @@
 package com.example.octodroid.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -37,9 +38,9 @@ public class SearchResultActivity extends ActionBarActivity {
         }
     };
 
-    public static void launch(Activity activity) {
-        Intent intent = new Intent(activity, SearchResultActivity.class);
-        activity.startActivity(intent);
+    public static void launch(Context context) {
+        Intent intent = new Intent(context, SearchResultActivity.class);
+        context.startActivity(intent);
     }
 
     @Override
