@@ -9,16 +9,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.example.octodroid.R;
 import com.example.octodroid.SessionPrefs;
 import com.example.octodroid.SessionPrefsSchema;
 import com.example.octodroid.adapters.HottestRepositoryAdapter;
+import com.example.octodroid.views.UserView;
+import com.rejasupotaro.octodroid.GitHub;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -27,7 +26,7 @@ public class MainActivity extends ActionBarActivity {
     @InjectView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     @InjectView(R.id.navigation_drawer)
-    LinearLayout navigationDrawerView;
+    UserView navigationDrawerView;
     @InjectView(R.id.hottest_repository_list)
     RecyclerView hottestRepositoryListView;
 
@@ -45,6 +44,7 @@ public class MainActivity extends ActionBarActivity {
 
         SessionPrefs prefs = SessionPrefsSchema.get(this);
         if (prefs.hasUsername() && prefs.hasPassword()) {
+            GitHub.client().authorization(prefs.getUsername(), prefs.getPassword());
             ButterKnife.inject(this);
             setupViews();
         } else {
@@ -91,13 +91,13 @@ public class MainActivity extends ActionBarActivity {
 
     private void setupViews() {
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.app_name, R.string.app_name);
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerListener(drawerToggle);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        navigationDrawerView.setup();
 
         HottestRepositoryAdapter hottestRepositoryAdapter = new HottestRepositoryAdapter(hottestRepositoryListView);
         hottestRepositoryListView.setAdapter(hottestRepositoryAdapter);

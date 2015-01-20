@@ -10,12 +10,9 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical" />
 
-    <LinearLayout
+    <com.example.octodroid.views.UserView
         android:id="@+id/navigation_drawer"
-        android:background="@android:color/white"
-        android:orientation="vertical"
         android:layout_gravity="start"
         android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical" />
+        android:layout_height="match_parent" />
 </android.support.v4.widget.DrawerLayout>
