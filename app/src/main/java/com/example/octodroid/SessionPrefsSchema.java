@@ -29,8 +29,8 @@ public class SessionPrefsSchema extends PrefSchema {
 
     private static SessionPrefs prefs;
 
-    @Key("email")
-    protected String email;
+    @Key("username")
+    protected String username;
     @Key("password")
     protected String password;
 
