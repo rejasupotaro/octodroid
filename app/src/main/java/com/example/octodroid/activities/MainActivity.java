@@ -16,7 +16,7 @@ import com.example.octodroid.R;
 import com.example.octodroid.SessionPrefs;
 import com.example.octodroid.SessionPrefsSchema;
 import com.example.octodroid.adapters.HottestRepositoryAdapter;
-import com.example.octodroid.views.UserView;
+import com.example.octodroid.views.ProfileView;
 import com.rejasupotaro.octodroid.GitHub;
 
 import butterknife.ButterKnife;
@@ -26,7 +26,7 @@ public class MainActivity extends ActionBarActivity {
     @InjectView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     @InjectView(R.id.navigation_drawer)
-    UserView navigationDrawerView;
+    ProfileView navigationDrawerView;
     @InjectView(R.id.hottest_repository_list)
     RecyclerView hottestRepositoryListView;
 

@@ -16,26 +16,26 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.android.view.ViewObservable;
 
-public class UserView extends FrameLayout {
+public class ProfileView extends FrameLayout {
     @InjectView(R.id.user_image)
     ImageView userImageView;
     @InjectView(R.id.user_name)
     TextView userNameTextView;
 
-    public UserView(Context context) {
+    public ProfileView(Context context) {
         super(context);
     }
 
-    public UserView(Context context, AttributeSet attrs) {
+    public ProfileView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public UserView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ProfileView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     public void setup() {
-        View view = View.inflate(getContext(), R.layout.view_user, null);
+        View view = View.inflate(getContext(), R.layout.view_profile, null);
         addView(view);
         ButterKnife.inject(this);
 
