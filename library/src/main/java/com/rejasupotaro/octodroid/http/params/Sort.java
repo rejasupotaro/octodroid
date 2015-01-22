@@ -5,7 +5,10 @@ public enum Sort {
     CREATED,
     UPDATED,
     PUSHED,
-    FULL_NAME;
+    FULL_NAME,
+    FOLLOWERS,
+    REPOSITORIES,
+    JOINED;
 
     @Override
     public String toString() {
