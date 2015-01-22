@@ -110,7 +110,9 @@ public class ApiClient {
     private Map<String, String> baseHeader() {
         return new HashMap<String, String>() {{
             put(Header.ACCEPT, "application/json");
-//            put(Header.USER_AGENT, UserAgent.get());
+            if (!TextUtils.isEmpty(userAgent)) {
+                put(Header.USER_AGENT, userAgent);
+            }
             if (!ConnectivityObserver.isConnect() && cacheControl != null) {
                 put(Header.CACHE_CONTROL, "only-if-cached, max-stale=" + cacheControl.getMaxStale());
             }
