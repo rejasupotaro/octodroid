@@ -4,7 +4,11 @@ Android toolkit for the [GitHub API](https://developer.github.com/v3).
 
 ## Quick start
 
-I will upload to jcenter sooner or later.
+Download the latest JAR or grab via gradle:
+
+```groovy
+compile 'com.rejasupotaro:octodroid:0.0.1'
+```
 
 ## How to use
 
