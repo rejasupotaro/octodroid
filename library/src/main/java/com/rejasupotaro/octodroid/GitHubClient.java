@@ -39,6 +39,12 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
+    public Observable<Response<User>> user(String username) {
+        String path = String.format("/users/%s", username);
+        return request(Method.GET, path, null, null, new TypeToken<User>() {
+        });
+    }
+
     public Observable<Response<Notification>> notification(int id) {
         String path = String.format("/notifications/threads/%d",
                 id);
@@ -88,12 +94,6 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
-    public Observable<Response<User>> user(String username) {
-        String path = String.format("/users/%s", username);
-        return request(Method.GET, path, null, null, new TypeToken<User>() {
-        });
-    }
-
     public Observable<Response<List<Repository>>> userRepos() {
         return userRepos(Type.ALL, Sort.FULL_NAME, Order.DESC);
     }
@@ -131,6 +131,18 @@ public class GitHubClient extends AbstractClient {
         String path = String.format("/search/repositories?q=%s&sort=%s&order=%s&page=%d&per_page=%d",
                 encode("created:>" + date), "stars", "desc", 1, 10);
         return request(Method.GET, path, null, null, new TypeToken<SearchResult>() {
+        });
+    }
+
+    public Observable<Response<List<Repository>>> starredRepositories() {
+        String path = "/user/starred";
+        return request(Method.GET, path, null, null, new TypeToken<List<Repository>>() {
+        });
+    }
+
+    public Observable<Response<List<Repository>>> starredRepositories(String username) {
+        String path = String.format("/users/%s/starred", username);
+        return request(Method.GET, path, null, null, new TypeToken<List<Repository>>() {
         });
     }
 
