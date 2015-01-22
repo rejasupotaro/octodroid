@@ -7,7 +7,7 @@ Android toolkit for the [GitHub API](https://developer.github.com/v3).
 Download the latest JAR or grab via gradle:
 
 ```groovy
-compile 'com.rejasupotaro:octodroid:0.1.1'
+compile 'com.rejasupotaro:octodroid:0.1.2'
 ```
 
 ## How to use
