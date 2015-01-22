@@ -131,6 +131,23 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
+    public Observable<Response<SearchResult<User>>> searchUsers(final String q, final Sort sort, final Order order) {
+        return searchUsers(q, sort, order, 1);
+    }
+
+    public Observable<Response<SearchResult<User>>> searchUsers(final String q, final Sort sort, final Order order, final int page) {
+        String path = String.format("/search/users?q=%s&sort=%s&order=%s&page=%d&per_page=%d",
+                encode(q), sort.toString(), order.toString(), page, PER_PAGE);
+        return request(Method.GET, path, null, null, new TypeToken<SearchResult<User>>() {
+        }).map(new Func1<Response<SearchResult<User>>, Response<SearchResult<User>>>() {
+            @Override
+            public Response<SearchResult<User>> call(Response<SearchResult<User>> r) {
+                r.next(searchUsers(q, sort, order, page + 1));
+                return r;
+            }
+        });
+    }
+
     // Find the hottest repositories created in the last week
     // `date -v-7d '+%Y-%m-%d'`
     public Observable<Response<SearchResult<Repository>>> hottestRepositories() {
