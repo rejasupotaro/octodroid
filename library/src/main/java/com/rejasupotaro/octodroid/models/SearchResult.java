@@ -4,13 +4,13 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class SearchResult extends Resource {
+public class SearchResult<T> extends Resource {
     @SerializedName("total_count")
     private int totalCount;
     @SerializedName("incomplete_results")
     private boolean incompleteResults;
     @SerializedName("items")
-    private List<Repository> items;
+    private List<T> items;
 
     public int getTotalCount() {
         return totalCount;
@@ -20,7 +20,7 @@ public class SearchResult extends Resource {
         return incompleteResults;
     }
 
-    public List<Repository> getItems() {
+    public List<T> getItems() {
         return items;
     }
 }

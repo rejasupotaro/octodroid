@@ -114,17 +114,17 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
-    public Observable<Response<SearchResult>> searchRepositories(final String q, final Sort sort, final Order order) {
+    public Observable<Response<SearchResult<Repository>>> searchRepositories(final String q, final Sort sort, final Order order) {
         return searchRepositories(q, sort, order, 1);
     }
 
-    public Observable<Response<SearchResult>> searchRepositories(final String q, final Sort sort, final Order order, final int page) {
+    public Observable<Response<SearchResult<Repository>>> searchRepositories(final String q, final Sort sort, final Order order, final int page) {
         String path = String.format("/search/repositories?q=%s&sort=%s&order=%s&page=%d&per_page=%d",
                 encode(q), sort.toString(), order.toString(), page, PER_PAGE);
-        return request(Method.GET, path, null, null, new TypeToken<SearchResult>() {
-        }).map(new Func1<Response<SearchResult>, Response<SearchResult>>() {
+        return request(Method.GET, path, null, null, new TypeToken<SearchResult<Repository>>() {
+        }).map(new Func1<Response<SearchResult<Repository>>, Response<SearchResult<Repository>>>() {
             @Override
-            public Response<SearchResult> call(Response<SearchResult> r) {
+            public Response<SearchResult<Repository>> call(Response<SearchResult<Repository>> r) {
                 r.next(searchRepositories(q, sort, order, page + 1));
                 return r;
             }
@@ -133,13 +133,13 @@ public class GitHubClient extends AbstractClient {
 
     // Find the hottest repositories created in the last week
     // `date -v-7d '+%Y-%m-%d'`
-    public Observable<Response<SearchResult>> hottestRepositories() {
+    public Observable<Response<SearchResult<Repository>>> hottestRepositories() {
         DateTime dateTime = new DateTime();
         String date = dateTime.minusDays(7).toString("yyyy-MM-dd");
 
         String path = String.format("/search/repositories?q=%s&sort=%s&order=%s&page=%d&per_page=%d",
                 encode("created:>" + date), "stars", "desc", 1, 10);
-        return request(Method.GET, path, null, null, new TypeToken<SearchResult>() {
+        return request(Method.GET, path, null, null, new TypeToken<SearchResult<Repository>>() {
         });
     }
 

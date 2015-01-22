@@ -33,8 +33,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private RecyclerView recyclerView;
     private List<Repository> repositories = new ArrayList<>();
     private Subscription subscription = Subscriptions.empty();
-    private BehaviorSubject<Observable<Response<SearchResult>>> responseSubject;
-    private Observable<Response<SearchResult>> pagedResponse;
+    private BehaviorSubject<Observable<Response<SearchResult<Repository>>>> responseSubject;
+    private Observable<Response<SearchResult<Repository>>> pagedResponse;
 
     public SearchResultAdapter(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
