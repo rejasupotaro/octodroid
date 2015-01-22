@@ -2,6 +2,7 @@ package com.rejasupotaro.octodroid.http;
 
 import android.text.TextUtils;
 
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.rejasupotaro.octodroid.GsonProvider;
 import com.squareup.okhttp.Headers;
@@ -74,9 +75,13 @@ public class Response<T> {
         Headers headers = r.headers();
 
         Response<T> response = new Response<>();
-        response.entity = GsonProvider.get().fromJson(
-                bodyString,
-                type.getType());
+        try {
+            response.entity = GsonProvider.get().fromJson(
+                    bodyString,
+                    type.getType());
+        } catch (JsonSyntaxException e) {
+            throw new JsonSyntaxException("Can't instantiate " + type.getRawType().getName() + " from " + bodyString);
+        }
         response.headers = headers;
         response.code = r.code();
         response.body = bodyString;
