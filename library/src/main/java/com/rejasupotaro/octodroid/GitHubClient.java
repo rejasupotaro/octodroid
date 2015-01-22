@@ -34,6 +34,7 @@ public class GitHubClient extends AbstractClient {
         super(apiClient);
     }
 
+    @AuthenticationRequired
     public Observable<Response<User>> user() {
         return request(Method.GET, "/user", null, null, new TypeToken<User>() {
         });
@@ -45,6 +46,7 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
+    @AuthenticationRequired
     public Observable<Response<Notification>> notification(int id) {
         String path = String.format("/notifications/threads/%d",
                 id);
@@ -52,10 +54,12 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
+    @AuthenticationRequired
     public Observable<Response<List<Notification>>> notifications() {
         return notifications(All.FALSE, Participating.FALSE);
     }
 
+    @AuthenticationRequired
     public Observable<Response<List<Notification>>> notifications(All all, Participating participating) {
         String path = String.format("/notifications?all=%s&participating=%s",
                 all.toString(), participating.toString());
@@ -74,12 +78,14 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
+    @AuthenticationRequired
     public Observable<Response<Void>> markAsRead() {
         String path = "/notifications";
         return request(Method.PUT, path, null, null, new TypeToken<Void>() {
         });
     }
 
+    @AuthenticationRequired
     public Observable<Response<Void>> markNotificationsAsReadInRepository(String owner, String repo) {
         String path = String.format("/repos/%s/%s/notifications",
                 owner, repo);
@@ -87,6 +93,7 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
+    @AuthenticationRequired
     public Observable<Response<Void>> markThreadAsRead(int id) {
         String path = String.format("/notifications/threads/%d",
                 id);
@@ -94,10 +101,12 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
+    @AuthenticationRequired
     public Observable<Response<List<Repository>>> userRepos() {
         return userRepos(Type.ALL, Sort.FULL_NAME, Order.DESC);
     }
 
+    @AuthenticationRequired
     public Observable<Response<List<Repository>>> userRepos(Type type, Sort sort, Order order) {
         String path = String.format("/user/repos?type=%s&sort=%s&direction=%s",
                 type.toString(), sort.toString(), order.toString());
@@ -134,12 +143,14 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
+    @AuthenticationRequired
     public Observable<Response<List<Repository>>> starredRepositories() {
         String path = "/user/starred";
         return request(Method.GET, path, null, null, new TypeToken<List<Repository>>() {
         });
     }
 
+    @AuthenticationRequired
     public Observable<Response<List<Repository>>> starredRepositories(String username) {
         String path = String.format("/users/%s/starred", username);
         return request(Method.GET, path, null, null, new TypeToken<List<Repository>>() {
