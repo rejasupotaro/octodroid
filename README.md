@@ -7,7 +7,7 @@ Android toolkit for the [GitHub API](https://developer.github.com/v3).
 Download the latest JAR or grab via gradle:
 
 ```groovy
-compile 'com.rejasupotaro:octodroid:0.0.1'
+compile 'com.rejasupotaro:octodroid:0.1.0'
 ```
 
 ## How to use
@@ -23,6 +23,11 @@ GitHub.client().user("rejasupotaro")
 GitHub.client().user()
         .map(Response::entity)
         .subscribe(user -> ...);
+
+GitHub.client().search()
+        .map(Response::entity)
+        .map(SearchResult::getItems)
+        ,subscribe(users -> ...);
 ```
 
 ### Notifications
@@ -38,10 +43,12 @@ GitHub.client().notifications()
 ```java
 GitHub.client().searchRepositories("Android", Sort.STARS, Order.DESC, 1, 20)
         .map(Response::entity)
+        .map(SearchResult::getItems)
         .subscribe(repositories -> ...);
 
 GitHub.client().hottestRepositories()
         .map(Response::entity)
+        .map(SearchResult::getItems)
         .subscribe(repositories -> ...);
 
 GitHub.client().userRepos()
