@@ -6,9 +6,9 @@ import com.google.gson.reflect.TypeToken;
 import com.rejasupotaro.octodroid.http.AbstractClient;
 import com.rejasupotaro.octodroid.http.ApiClient;
 import com.rejasupotaro.octodroid.http.Method;
+import com.rejasupotaro.octodroid.http.Response;
 import com.rejasupotaro.octodroid.http.params.All;
 import com.rejasupotaro.octodroid.http.params.Order;
-import com.rejasupotaro.octodroid.http.Response;
 import com.rejasupotaro.octodroid.http.params.Participating;
 import com.rejasupotaro.octodroid.http.params.Sort;
 import com.rejasupotaro.octodroid.http.params.Type;
@@ -114,13 +114,27 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
+    public Observable<Response<SearchResult<Repository>>> searchRepositories(final String q) {
+        return searchRepositories(q, null, null);
+    }
+
     public Observable<Response<SearchResult<Repository>>> searchRepositories(final String q, final Sort sort, final Order order) {
         return searchRepositories(q, sort, order, 1);
     }
 
     public Observable<Response<SearchResult<Repository>>> searchRepositories(final String q, final Sort sort, final Order order, final int page) {
-        String path = String.format("/search/repositories?q=%s&sort=%s&order=%s&page=%d&per_page=%d",
-                encode(q), sort.toString(), order.toString(), page, PER_PAGE);
+        StringBuilder builder = new StringBuilder();
+        builder.append("/search/repositories?q=").append(encode(q));
+        builder.append("&page=").append(page);
+        builder.append("&per_page").append(PER_PAGE);
+        if (sort != null) {
+            builder.append("&sort=").append(sort.toString());
+        }
+        if (order != null) {
+            builder.append("&order=").append(order.toString());
+        }
+
+        String path = builder.toString();
         return request(Method.GET, path, null, null, new TypeToken<SearchResult<Repository>>() {
         }).map(new Func1<Response<SearchResult<Repository>>, Response<SearchResult<Repository>>>() {
             @Override
@@ -131,13 +145,27 @@ public class GitHubClient extends AbstractClient {
         });
     }
 
+    public Observable<Response<SearchResult<User>>> searchUsers(final String q) {
+        return searchUsers(q, null, null);
+    }
+
     public Observable<Response<SearchResult<User>>> searchUsers(final String q, final Sort sort, final Order order) {
         return searchUsers(q, sort, order, 1);
     }
 
     public Observable<Response<SearchResult<User>>> searchUsers(final String q, final Sort sort, final Order order, final int page) {
-        String path = String.format("/search/users?q=%s&sort=%s&order=%s&page=%d&per_page=%d",
-                encode(q), sort.toString(), order.toString(), page, PER_PAGE);
+        StringBuilder builder = new StringBuilder();
+        builder.append("/search/users?q=").append(encode(q));
+        builder.append("&page=").append(page);
+        builder.append("&per_page").append(PER_PAGE);
+        if (sort != null) {
+            builder.append("&sort=").append(sort.toString());
+        }
+        if (order != null) {
+            builder.append("&order=").append(order.toString());
+        }
+
+        String path = builder.toString();
         return request(Method.GET, path, null, null, new TypeToken<SearchResult<User>>() {
         }).map(new Func1<Response<SearchResult<User>>, Response<SearchResult<User>>>() {
             @Override

@@ -101,7 +101,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         clear();
         recyclerView.setVisibility(View.VISIBLE);
 
-        responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query, Sort.STARS, Order.DESC));
+        responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query));
         subscription.unsubscribe();
         subscription = ViewObservable.bindView(recyclerView, responseSubject)
                 .flatMap(r -> r)
