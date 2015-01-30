@@ -56,11 +56,11 @@ public class ApiClient {
         okHttpClient = new OkHttpClient();
     }
 
-    public com.squareup.okhttp.Response request(Method method, String path, Map<String, String> headers, RequestBody body) throws IOException {
+    public com.squareup.okhttp.Response request(RequestCreator requestCreator) throws IOException {
         Request.Builder builder = new Request.Builder();
-        setUrl(builder, path);
-        setBody(builder, method, body);
-        setHeaders(builder, headers);
+        setUrl(builder, requestCreator);
+        setBody(builder, requestCreator);
+        setHeaders(builder, requestCreator);
 
         Request request = builder.build();
         com.squareup.okhttp.Response response = okHttpClient.newCall(request).execute();
@@ -68,23 +68,25 @@ public class ApiClient {
         return response;
     }
 
-    private void setUrl(Request.Builder builder, String path) {
-        builder.url(endpoint + path);
+    private void setUrl(Request.Builder builder, RequestCreator requestCreator) {
+        builder.url(endpoint + requestCreator.getPath());
     }
 
-    private void setBody(Request.Builder builder, Method method, RequestBody body) {
+    private void setBody(Request.Builder builder, RequestCreator requestCreator) {
+        Method method = requestCreator.getMethod();
+
         switch (method) {
             case GET:
                 builder.get();
                 break;
             case POST:
-                builder.post(body);
+                builder.post(requestCreator.getBody());
                 break;
             case PUT:
-                builder.put(body);
+                builder.put(requestCreator.getBody());
                 break;
             case PATCH:
-                builder.patch(body);
+                builder.patch(requestCreator.getBody());
                 break;
             case DELETE:
                 builder.delete();
@@ -92,11 +94,13 @@ public class ApiClient {
         }
     }
 
-    private void setHeaders(Request.Builder builder, Map<String, String> headers) {
+    private void setHeaders(Request.Builder builder, RequestCreator requestCreator) {
+        Map<String, String> headers = requestCreator.getHeaders();
+
         if (headers == null) {
             headers = new HashMap<>();
         }
-        Map<String, String> newHeaders = baseHeader();
+        Map<String, String> newHeaders = baseHeader(requestCreator);
         newHeaders.putAll(headers);
         if (!TextUtils.isEmpty(authorization)) {
             newHeaders.put(Header.AUTHORIZATION, authorization);
@@ -107,7 +111,10 @@ public class ApiClient {
         }
     }
 
-    private Map<String, String> baseHeader() {
+    private Map<String, String> baseHeader(RequestCreator requestCreator) {
+        final boolean noCache = requestCreator.isNoCache();
+        final boolean noStore = requestCreator.isNoStore();
+
         return new HashMap<String, String>() {{
             put(Header.ACCEPT, "application/json");
             if (!TextUtils.isEmpty(userAgent)) {
@@ -115,6 +122,12 @@ public class ApiClient {
             }
             if (!ConnectivityObserver.isConnect() && cacheControl != null) {
                 put(Header.CACHE_CONTROL, "only-if-cached, max-stale=" + cacheControl.getMaxStale());
+            } else if (noCache && noStore) {
+                put(Header.CACHE_CONTROL, "no-cache, no-store");
+            } else if (noCache) {
+                put(Header.CACHE_CONTROL, "no-cache");
+            } else if (noStore) {
+                put(Header.CACHE_CONTROL, "no-store");
             }
         }};
     }
