@@ -27,7 +27,7 @@ GitHub.client().user()
 GitHub.client().search()
         .map(Response::entity)
         .map(SearchResult::getItems)
-        ,subscribe(users -> ...);
+        .subscribe(users -> ...);
 ```
 
 ### Notifications
