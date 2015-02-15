@@ -1,62 +1,52 @@
 # Octodroid
 
-Android toolkit for the [GitHub API](https://developer.github.com/v3).
+Android toolkit for the [GitHub API](https://developer.github.com/v3) using RxJava and RxAndroid.
 
-## Quick start
+## Getting Started
 
-Download the latest JAR or grab via gradle:
+Let's start with a tangible example of how this library works.
 
-```groovy
-compile 'com.rejasupotaro:octodroid:0.1.2'
+```java
+GitHub.client().searchRepositories("Android")
+        .map(Response::entity)
+        .map(SearchResult::getItems)
+        .subscribe(repositories -> ...);
 ```
 
-## How to use
+As you can see, we lose the callbacks. Fundamentally, RxJava is the Observer pattern, with for manipulating and transforming the stream of data our Observables emit. The Observable emits events, while the Observer subscribes and receives them. In the example above, The `.subscribe()` call adds an Observer to the Observable and the requests are made.
 
-### Users
+You should unsubscribe it when Activity is destroyed.
+
+```java
+@Override
+public void onDestroy() {
+    subscription.unsubscribe();
+    super.onDestroy();
+}
+```
+
+If you use ViewObservable of RxAndroid, you don't need to call `unsubscribe()` explicitly. ViewObservable calls `unsubscribe()` automatically when view is detached.
+
+```java
+ViewObservable.bindView(view, GitHub.client().user())
+        .subscribe(user -> ...);
+```
+
+## APIs
 
 ```java
 GitHub.client().user("rejasupotaro")
-        .map(Response::entity)
-        .subscribe(user -> ...);
-
-// You can access myself if you have authenticated
-GitHub.client().user()
-        .map(Response::entity)
-        .subscribe(user -> ...);
-
 GitHub.client().search()
-        .map(Response::entity)
-        .map(SearchResult::getItems)
-        .subscribe(users -> ...);
-```
-
-### Notifications
-
-```java
-GitHub.client().notifications()
-        .map(Response::entity)
-        .subscribe(notifications -> ...);
-```
-
-### Repositories
-
-```java
-GitHub.client().searchRepositories("Android", Sort.STARS, Order.DESC, 1, 20)
-        .map(Response::entity)
-        .map(SearchResult::getItems)
-        .subscribe(repositories -> ...);
-
+GitHub.client().searchRepositories("Android")
 GitHub.client().hottestRepositories()
-        .map(Response::entity)
-        .map(SearchResult::getItems)
-        .subscribe(repositories -> ...);
-
 GitHub.client().userRepos()
-        .map(Response::entity)
-        .subscribe(repositories -> ...);
+
+// You can access these API if you have authenticated
+GitHub.client().user()
+GitHub.client().notifications()
 ```
 
-### Authentication
+## Authentication
 
 ```java
 // You can give access token OAuth2
@@ -69,13 +59,13 @@ GitHub.client().user()
         .subscribe(user -> ...);
 ```
 
-### Set User-Agent
+## Set User-Agent
 
 ```java
 GitHub.client().userAgent(userAgent);
 ```
 
-### Enable Cache-Control
+## Enable Cache-Control
 
 ```java
 CacheControl cacheControl = new CacheControl.Builder()
@@ -88,4 +78,13 @@ CacheControl cacheControl = new CacheControl.Builder()
         .build();
 
 GitHub.client().cache(cacheControl);
+```
+
+
+## Download
+
+Download the latest JAR or grab via gradle:
+
+```groovy
+compile 'com.rejasupotaro:octodroid:0.1.2'
 ```
