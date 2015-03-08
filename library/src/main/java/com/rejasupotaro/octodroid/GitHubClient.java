@@ -3,7 +3,6 @@ package com.rejasupotaro.octodroid;
 import android.text.TextUtils;
 
 import com.google.gson.reflect.TypeToken;
-import com.rejasupotaro.octodroid.http.AbstractClient;
 import com.rejasupotaro.octodroid.http.ApiClient;
 import com.rejasupotaro.octodroid.http.Method;
 import com.rejasupotaro.octodroid.http.Response;
@@ -27,22 +26,32 @@ import java.util.List;
 import rx.Observable;
 import rx.functions.Func1;
 
-public class GitHubClient extends AbstractClient {
+public class GitHubClient {
     private static final int PER_PAGE = 20;
 
+    private ApiClient apiClient;
+
     public GitHubClient(ApiClient apiClient) {
-        super(apiClient);
+        this.apiClient = apiClient;
+    }
+
+    public void authorization(String username, String password) {
+        apiClient.authorization(username, password);
+    }
+
+    public void authorization(String accessToken) {
+        apiClient.authorization(accessToken);
     }
 
     @AuthenticationRequired
     public Observable<Response<User>> user() {
-        return request(Method.GET, "/user").to(new TypeToken<User>() {
+        return apiClient.request(Method.GET, "/user").to(new TypeToken<User>() {
         });
     }
 
     public Observable<Response<User>> user(String username) {
         String path = String.format("/users/%s", username);
-        return request(Method.GET, path).to(new TypeToken<User>() {
+        return apiClient.request(Method.GET, path).to(new TypeToken<User>() {
         });
     }
 
@@ -50,7 +59,7 @@ public class GitHubClient extends AbstractClient {
     public Observable<Response<Notification>> notification(int id) {
         String path = String.format("/notifications/threads/%d",
                 id);
-        return request(Method.GET, path).to(new TypeToken<Notification>() {
+        return apiClient.request(Method.GET, path).to(new TypeToken<Notification>() {
         });
     }
 
@@ -63,7 +72,7 @@ public class GitHubClient extends AbstractClient {
     public Observable<Response<List<Notification>>> notifications(All all, Participating participating) {
         String path = String.format("/notifications?all=%s&participating=%s",
                 all.toString(), participating.toString());
-        return request(Method.GET, path).to(new TypeToken<List<Notification>>() {
+        return apiClient.request(Method.GET, path).to(new TypeToken<List<Notification>>() {
         });
     }
 
@@ -74,14 +83,14 @@ public class GitHubClient extends AbstractClient {
     public Observable<Response<List<Notification>>> reposNotifications(String owner, String repo, All all, Participating participating) {
         String path = String.format("/repos/%s/%s/notifications?all=%s&participating=%s",
                 owner, repo, all.toString(), participating.toString());
-        return request(Method.GET, path).to(new TypeToken<List<Notification>>() {
+        return apiClient.request(Method.GET, path).to(new TypeToken<List<Notification>>() {
         });
     }
 
     @AuthenticationRequired
     public Observable<Response<Void>> markAsRead() {
         String path = "/notifications";
-        return request(Method.PUT, path).to(new TypeToken<Void>() {
+        return apiClient.request(Method.PUT, path).to(new TypeToken<Void>() {
         });
     }
 
@@ -89,7 +98,7 @@ public class GitHubClient extends AbstractClient {
     public Observable<Response<Void>> markNotificationsAsReadInRepository(String owner, String repo) {
         String path = String.format("/repos/%s/%s/notifications",
                 owner, repo);
-        return request(Method.PUT, path).to(new TypeToken<Void>() {
+        return apiClient.request(Method.PUT, path).to(new TypeToken<Void>() {
         });
     }
 
@@ -97,7 +106,7 @@ public class GitHubClient extends AbstractClient {
     public Observable<Response<Void>> markThreadAsRead(int id) {
         String path = String.format("/notifications/threads/%d",
                 id);
-        return request(Method.PATCH, path).to(new TypeToken<Void>() {
+        return apiClient.request(Method.PATCH, path).to(new TypeToken<Void>() {
         });
     }
 
@@ -110,7 +119,7 @@ public class GitHubClient extends AbstractClient {
     public Observable<Response<List<Repository>>> userRepos(Type type, Sort sort, Order order) {
         String path = String.format("/user/repos?type=%s&sort=%s&direction=%s",
                 type.toString(), sort.toString(), order.toString());
-        return request(Method.GET, path).to(new TypeToken<List<Repository>>() {
+        return apiClient.request(Method.GET, path).to(new TypeToken<List<Repository>>() {
         });
     }
 
@@ -135,7 +144,7 @@ public class GitHubClient extends AbstractClient {
         }
 
         String path = builder.toString();
-        return request(Method.GET, path).to(new TypeToken<SearchResult<Repository>>() {
+        return apiClient.request(Method.GET, path).to(new TypeToken<SearchResult<Repository>>() {
         }).map(new Func1<Response<SearchResult<Repository>>, Response<SearchResult<Repository>>>() {
             @Override
             public Response<SearchResult<Repository>> call(Response<SearchResult<Repository>> r) {
@@ -166,7 +175,7 @@ public class GitHubClient extends AbstractClient {
         }
 
         String path = builder.toString();
-        return request(Method.GET, path).to(new TypeToken<SearchResult<User>>() {
+        return apiClient.request(Method.GET, path).to(new TypeToken<SearchResult<User>>() {
         }).map(new Func1<Response<SearchResult<User>>, Response<SearchResult<User>>>() {
             @Override
             public Response<SearchResult<User>> call(Response<SearchResult<User>> r) {
@@ -184,21 +193,21 @@ public class GitHubClient extends AbstractClient {
 
         String path = String.format("/search/repositories?q=%s&sort=%s&order=%s&page=%d&per_page=%d",
                 encode("created:>" + date), "stars", "desc", 1, 10);
-        return request(Method.GET, path).to(new TypeToken<SearchResult<Repository>>() {
+        return apiClient.request(Method.GET, path).to(new TypeToken<SearchResult<Repository>>() {
         });
     }
 
     @AuthenticationRequired
     public Observable<Response<List<Repository>>> starredRepositories() {
         String path = "/user/starred";
-        return request(Method.GET, path).to(new TypeToken<List<Repository>>() {
+        return apiClient.request(Method.GET, path).to(new TypeToken<List<Repository>>() {
         });
     }
 
     @AuthenticationRequired
     public Observable<Response<List<Repository>>> starredRepositories(String username) {
         String path = String.format("/users/%s/starred", username);
-        return request(Method.GET, path).to(new TypeToken<List<Repository>>() {
+        return apiClient.request(Method.GET, path).to(new TypeToken<List<Repository>>() {
         });
     }
 

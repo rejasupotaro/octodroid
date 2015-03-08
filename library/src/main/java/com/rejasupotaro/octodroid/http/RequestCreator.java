@@ -80,7 +80,7 @@ public class RequestCreator {
     }
 
     public <T> Observable<Response<T>> to(final TypeToken<T> type) {
-        return Observable.create(new AbstractClient.RequestSubscriber(apiClient, this))
+        return Observable.create(new ApiClient.RequestSubscriber(apiClient, this))
                 .map(new Func1<com.squareup.okhttp.Response, Response<T>>() {
                     @Override
                     public Response<T> call(com.squareup.okhttp.Response response) {

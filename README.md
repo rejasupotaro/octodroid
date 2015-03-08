@@ -77,7 +77,10 @@ CacheControl cacheControl = new CacheControl.Builder()
         .maxStale(28 * 24 * 60 * 60)   // default max stale is 3 weeks
         .build();
 
-GitHub.client().cache(cacheControl);
+ApiClient apiClient = new ApiClient();
+apiClient.cache(cacheControl);
+
+GitHub.initialize(apiClient);
 ```
 
 

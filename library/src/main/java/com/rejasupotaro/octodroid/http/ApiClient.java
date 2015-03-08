@@ -5,15 +5,14 @@ import android.util.Log;
 
 import com.rejasupotaro.octodroid.BuildConfig;
 import com.rejasupotaro.octodroid.ConnectivityObserver;
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.Credentials;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.*;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import rx.Observable;
+import rx.Subscriber;
 
 public class ApiClient {
     private static final String TAG = ApiClient.class.getSimpleName();
@@ -54,18 +53,6 @@ public class ApiClient {
 
     public ApiClient() {
         okHttpClient = new OkHttpClient();
-    }
-
-    public com.squareup.okhttp.Response request(RequestCreator requestCreator) throws IOException {
-        Request.Builder builder = new Request.Builder();
-        setUrl(builder, requestCreator);
-        setBody(builder, requestCreator);
-        setHeaders(builder, requestCreator);
-
-        Request request = builder.build();
-        com.squareup.okhttp.Response response = okHttpClient.newCall(request).execute();
-        dumpIfDebug(request, response);
-        return response;
     }
 
     private void setUrl(Request.Builder builder, RequestCreator requestCreator) {
@@ -132,12 +119,48 @@ public class ApiClient {
         }};
     }
 
+    public RequestCreator request(final Method method, final String path) {
+        return new RequestCreator(this, method, path);
+    }
+
+    public com.squareup.okhttp.Response requestInternal(RequestCreator requestCreator) throws IOException {
+        Request.Builder builder = new Request.Builder();
+        setUrl(builder, requestCreator);
+        setBody(builder, requestCreator);
+        setHeaders(builder, requestCreator);
+
+        Request request = builder.build();
+        com.squareup.okhttp.Response response = okHttpClient.newCall(request).execute();
+        dumpIfDebug(request, response);
+        return response;
+    }
+
     public void dumpIfDebug(Request request, com.squareup.okhttp.Response response) {
         if (!BuildConfig.DEBUG) {
             return;
         }
         Log.i(TAG, "===> " + request.toString());
         Log.i(TAG, "<=== " + response.toString());
+    }
+
+    public static class RequestSubscriber implements Observable.OnSubscribe<com.squareup.okhttp.Response> {
+        private ApiClient apiClient;
+        private RequestCreator requestCreator;
+
+        public RequestSubscriber(ApiClient apiClient, RequestCreator requestCreator) {
+            this.apiClient = apiClient;
+            this.requestCreator = requestCreator;
+        }
+
+        @Override
+        public void call(Subscriber<? super com.squareup.okhttp.Response> subscriber) {
+            try {
+                com.squareup.okhttp.Response response = apiClient.requestInternal(requestCreator);
+                subscriber.onNext(response);
+            } catch (IOException e) {
+                subscriber.onError(e);
+            }
+        }
     }
 }
 
