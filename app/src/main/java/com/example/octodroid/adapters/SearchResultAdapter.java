@@ -6,12 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.octodroid.views.MoreLoadScrollListener;
+import com.example.octodroid.views.helpers.ToastHelper;
 import com.example.octodroid.views.holders.ProgressViewHolder;
 import com.example.octodroid.views.holders.RepositoryItemViewHolder;
 import com.rejasupotaro.octodroid.GitHub;
 import com.rejasupotaro.octodroid.http.Response;
-import com.rejasupotaro.octodroid.http.params.Order;
-import com.rejasupotaro.octodroid.http.params.Sort;
 import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.SearchResult;
 
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.view.ViewObservable;
 import rx.subjects.BehaviorSubject;
@@ -92,11 +92,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         notifyDataSetChanged();
     }
 
-    private void addRepositories(List<Repository> repositories) {
-        this.repositories.addAll(repositories);
-        notifyDataSetChanged();
-    }
-
     public void submit(String query) {
         clear();
         recyclerView.setVisibility(View.VISIBLE);
@@ -105,15 +100,37 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         subscription.unsubscribe();
         subscription = ViewObservable.bindView(recyclerView, responseSubject)
                 .flatMap(r -> r)
-                .subscribe(r -> {
-                    if (r.entity().getItems() == null || r.entity().getItems().isEmpty()) {
-                        return;
-                    }
+                .subscribe(new ResponseSubscriber());
+    }
 
-                    List<Repository> repositories = r.entity().getItems();
-                    addRepositories(repositories);
+    private void showError() {
+        ToastHelper.showError(recyclerView.getContext());
+    }
 
-                    pagedResponse = r.next();
-                });
+    private class ResponseSubscriber extends Subscriber<Response<SearchResult<Repository>>> {
+
+        @Override
+        public void onCompleted() {
+            unsubscribe();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            showError();
+        }
+
+        @Override
+        public void onNext(Response<SearchResult<Repository>> r) {
+            if (r.entity().getItems() == null || r.entity().getItems().isEmpty()) {
+                return;
+            }
+
+            List<Repository> items = r.entity().getItems();
+            int startPosition = repositories.size();
+            repositories.addAll(items);
+            notifyItemRangeInserted(startPosition, items.size());
+
+            pagedResponse = r.next();
+        }
     }
 }
