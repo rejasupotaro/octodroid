@@ -40,9 +40,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':library')
 
-    apt 'com.rejasupotaro:kvs-schema-compiler:0.1.2:fat'
-    compile 'com.rejasupotaro:kvs-schema-core:0.1.2'
-    compile 'com.rejasupotaro:kvs-schema:0.1.2'
+    apt 'com.rejasupotaro:kvs-schema-compiler:1.1.0'
+    compile 'com.rejasupotaro:kvs-schema:1.1.0'
 
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.google.code.gson:gson:2.3.1'

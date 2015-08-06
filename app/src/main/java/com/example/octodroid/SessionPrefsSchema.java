@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 
 import com.github.gfx.util.encrypt.EncryptedSharedPreferences;
 import com.rejasupotaro.android.kvs.PrefSchema;
-import com.rejaupotaro.android.kvs.annotations.Key;
-import com.rejaupotaro.android.kvs.annotations.Table;
+import com.rejasupotaro.android.kvs.annotations.Key;
+import com.rejasupotaro.android.kvs.annotations.Table;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
