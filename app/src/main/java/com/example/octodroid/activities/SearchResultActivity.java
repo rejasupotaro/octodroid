@@ -1,11 +1,10 @@
 package com.example.octodroid.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -18,7 +17,7 @@ import com.example.octodroid.adapters.SearchResultAdapter;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class SearchResultActivity extends ActionBarActivity {
+public class SearchResultActivity extends AppCompatActivity {
     @InjectView(R.id.repository_list)
     RecyclerView searchResultListView;
 
@@ -50,6 +49,12 @@ public class SearchResultActivity extends ActionBarActivity {
         ButterKnife.inject(this);
         setupActionBar();
         setupViews();
+    }
+
+    @Override
+    public void onDestroy() {
+        searchResultAdapter.destroy();
+        super.onDestroy();
     }
 
     @Override

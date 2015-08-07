@@ -3,7 +3,7 @@ package com.example.octodroid.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -19,10 +19,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import rx.Subscription;
-import rx.android.app.AppObservable;
 import rx.subscriptions.Subscriptions;
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends AppCompatActivity {
     @InjectView(R.id.username_edit_text)
     EditText usernameEditText;
     @InjectView(R.id.password_edit_text)
@@ -75,7 +74,7 @@ public class LoginActivity extends ActionBarActivity {
     private void login(String username, String password) {
         progressDialogHelper.show();
         GitHub.client().authorization(username, password);
-        subscription = AppObservable.bindActivity(this, GitHub.client().user())
+        subscription = GitHub.client().user()
                 .subscribe(r -> {
                     progressDialogHelper.dismiss();
                     if (r.isSuccessful()) {

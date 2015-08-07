@@ -20,7 +20,6 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.android.view.ViewObservable;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.Subscriptions;
 
@@ -97,10 +96,13 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         recyclerView.setVisibility(View.VISIBLE);
 
         responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query));
-        subscription.unsubscribe();
-        subscription = ViewObservable.bindView(recyclerView, responseSubject)
+        subscription = responseSubject
                 .flatMap(r -> r)
                 .subscribe(new ResponseSubscriber());
+    }
+
+    public void destroy() {
+        subscription.unsubscribe();
     }
 
     private void showError() {

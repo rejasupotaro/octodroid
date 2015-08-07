@@ -6,8 +6,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,8 +21,10 @@ import com.rejasupotaro.octodroid.GitHub;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     @InjectView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     @InjectView(R.id.navigation_drawer)
@@ -31,6 +33,10 @@ public class MainActivity extends ActionBarActivity {
     RecyclerView hottestRepositoryListView;
 
     private ActionBarDrawerToggle drawerToggle;
+
+    private Subscription subscription = Subscriptions.empty();
+
+    private HottestRepositoryAdapter hottestRepositoryAdapter;
 
     public static void launch(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -51,6 +57,13 @@ public class MainActivity extends ActionBarActivity {
             LoginActivity.launch(this);
             finish();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        subscription.unsubscribe();
+        hottestRepositoryAdapter.destroy();
+        super.onDestroy();
     }
 
     @Override
@@ -99,7 +112,20 @@ public class MainActivity extends ActionBarActivity {
 
         navigationDrawerView.setup();
 
-        HottestRepositoryAdapter hottestRepositoryAdapter = new HottestRepositoryAdapter(hottestRepositoryListView);
+        hottestRepositoryAdapter = new HottestRepositoryAdapter(hottestRepositoryListView);
         hottestRepositoryListView.setAdapter(hottestRepositoryAdapter);
+
+        requestProfile();
+    }
+
+    private void requestProfile() {
+        subscription = GitHub.client().user()
+                .cache()
+                .subscribe(r -> {
+                    if (!r.isSuccessful()) {
+                        return;
+                    }
+                    navigationDrawerView.setUser(r.entity());
+                });
     }
 }

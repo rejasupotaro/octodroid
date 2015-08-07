@@ -9,12 +9,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.octodroid.R;
-import com.rejasupotaro.octodroid.GitHub;
 import com.rejasupotaro.octodroid.models.User;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import rx.android.view.ViewObservable;
 
 public class ProfileView extends FrameLayout {
     @InjectView(R.id.user_image)
@@ -38,18 +36,9 @@ public class ProfileView extends FrameLayout {
         View view = View.inflate(getContext(), R.layout.view_profile, null);
         addView(view);
         ButterKnife.inject(this);
-
-        ViewObservable.bindView(this, GitHub.client().user())
-                .cache()
-                .subscribe(r -> {
-                    if (!r.isSuccessful()) {
-                        return;
-                    }
-                    setUser(r.entity());
-                });
     }
 
-    private void setUser(User user) {
+    public void setUser(User user) {
         Glide.with(userImageView.getContext())
                 .load(user.getAvatarUrl())
                 .into(userImageView);
