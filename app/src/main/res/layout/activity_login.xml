@@ -1,28 +1,35 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="@dimen/spacing_large"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/spacing_large">
 
     <EditText
         android:id="@+id/username_edit_text"
-        android:inputType="textEmailAddress"
-        android:hint="@string/email"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:id="@+id/password_edit_text"
-        android:layout_marginTop="@dimen/spacing_medium"
-        android:inputType="textPassword"
-        android:hint="@string/password"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:hint="@string/password"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_small"
+        android:text="@string/notice_for_sign_in"
+        android:textColor="@color/text_color_tertiary" />
 
     <Button
         android:id="@+id/login_button"
-        android:text="@string/login"
-        android:layout_marginTop="@dimen/spacing_medium"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:text="@string/login" />
 </LinearLayout>

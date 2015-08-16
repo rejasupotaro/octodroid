@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="black">#484432</color>
+    <color name="dark_gray">#7b7769</color>
+    <color name="gray">#a3a090</color>
     <color name="camel">#b7b3aa</color>
+
+    <color name="text_color_primary">@color/black</color>
+    <color name="text_color_secondary">@color/dark_gray</color>
+    <color name="text_color_tertiary">@color/gray</color>
+
     <color name="progress">@color/camel</color>
 </resources>

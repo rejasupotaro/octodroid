@@ -12,4 +12,5 @@
     <string name="loading">Loading…</string>
     <string name="error">An error occurred. Please try again later.</string>
     <string name="sign_in">Sign in</string>
+    <string name="notice_for_sign_in">Username and Password are saved encrypted to shared preferences.</string>
 </resources>
