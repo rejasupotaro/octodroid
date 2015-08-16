@@ -11,4 +11,5 @@
     <string name="login_failed">We couldn\'t log you in. Sure you had the right email and password?</string>
     <string name="loading">Loading…</string>
     <string name="error">An error occurred. Please try again later.</string>
+    <string name="sign_in">Sign in</string>
 </resources>

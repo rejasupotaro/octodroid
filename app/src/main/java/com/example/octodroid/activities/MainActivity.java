@@ -19,17 +19,17 @@ import com.example.octodroid.adapters.HottestRepositoryAdapter;
 import com.example.octodroid.views.ProfileView;
 import com.rejasupotaro.octodroid.GitHub;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 
 public class MainActivity extends AppCompatActivity {
-    @InjectView(R.id.drawer_layout)
+    @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
-    @InjectView(R.id.navigation_drawer)
+    @Bind(R.id.navigation_drawer)
     ProfileView navigationDrawerView;
-    @InjectView(R.id.hottest_repository_list)
+    @Bind(R.id.hottest_repository_list)
     RecyclerView hottestRepositoryListView;
 
     private ActionBarDrawerToggle drawerToggle;
@@ -47,16 +47,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        SessionPrefs prefs = SessionPrefsSchema.get(this);
-        if (prefs.hasUsername() && prefs.hasPassword()) {
-            GitHub.client().authorization(prefs.getUsername(), prefs.getPassword());
-            ButterKnife.inject(this);
-            setupViews();
-        } else {
-            LoginActivity.launch(this);
-            finish();
-        }
+        ButterKnife.bind(this);
+        setupViews();
     }
 
     @Override
@@ -121,13 +113,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestProfile() {
-        subscription = GitHub.client().user()
-                .cache()
-                .subscribe(r -> {
-                    if (!r.isSuccessful()) {
-                        return;
-                    }
-                    navigationDrawerView.setUser(r.entity());
-                });
+        SessionPrefs prefs = SessionPrefsSchema.create(this);
+        if (prefs.hasUsername() && prefs.hasPassword()) {
+            GitHub.client().authorization(prefs.getUsername(), prefs.getPassword());
+            subscription = GitHub.client().user()
+                    .cache()
+                    .subscribe(r -> {
+                        if (!r.isSuccessful()) {
+                            return;
+                        }
+                        navigationDrawerView.setUser(r.entity());
+                    });
+        } else {
+            navigationDrawerView.setUser(null);
+        }
+
     }
 }
