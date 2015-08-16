@@ -11,17 +11,17 @@ import com.example.octodroid.R;
 import com.makeramen.RoundedImageView;
 import com.rejasupotaro.octodroid.models.Repository;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class RepositoryItemViewHolder extends RecyclerView.ViewHolder {
-    @InjectView(R.id.name)
+    @Bind(R.id.name)
     TextView nameTextView;
-    @InjectView(R.id.description)
+    @Bind(R.id.description)
     TextView descriptionTextView;
-    @InjectView(R.id.user_image)
+    @Bind(R.id.user_image)
     RoundedImageView userImageView;
-    @InjectView(R.id.user_name)
+    @Bind(R.id.user_name)
     TextView userNameTextView;
 
     public static RepositoryItemViewHolder create(ViewGroup parent) {
@@ -31,7 +31,7 @@ public class RepositoryItemViewHolder extends RecyclerView.ViewHolder {
 
     public RepositoryItemViewHolder(View view) {
         super(view);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
     }
 
     public void bind(final Repository repository) {

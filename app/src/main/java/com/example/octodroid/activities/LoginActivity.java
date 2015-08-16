@@ -15,16 +15,16 @@ import com.example.octodroid.views.helpers.ProgressDialogHelper;
 import com.example.octodroid.views.helpers.ToastHelper;
 import com.rejasupotaro.octodroid.GitHub;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 
 public class LoginActivity extends AppCompatActivity {
-    @InjectView(R.id.username_edit_text)
+    @Bind(R.id.username_edit_text)
     EditText usernameEditText;
-    @InjectView(R.id.password_edit_text)
+    @Bind(R.id.password_edit_text)
     EditText passwordEditText;
 
     private Subscription subscription = Subscriptions.empty();
@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         setupViews();
     }
 

@@ -14,18 +14,18 @@ import com.example.octodroid.R;
 import com.example.octodroid.activities.LoginActivity;
 import com.rejasupotaro.octodroid.models.User;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class ProfileView extends FrameLayout {
-    @InjectView(R.id.sign_in_button)
+    @Bind(R.id.sign_in_button)
     Button signInButton;
-    @InjectView(R.id.container)
+    @Bind(R.id.container)
     ViewGroup container;
-    @InjectView(R.id.user_image)
+    @Bind(R.id.user_image)
     ImageView userImageView;
-    @InjectView(R.id.user_name)
+    @Bind(R.id.user_name)
     TextView userNameTextView;
 
     public ProfileView(Context context) {
@@ -42,7 +42,7 @@ public class ProfileView extends FrameLayout {
 
     public void setup() {
         View.inflate(getContext(), R.layout.view_profile, this);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     public void setUser(User user) {

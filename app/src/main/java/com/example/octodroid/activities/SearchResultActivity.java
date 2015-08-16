@@ -14,11 +14,11 @@ import android.view.MenuItem;
 import com.example.octodroid.R;
 import com.example.octodroid.adapters.SearchResultAdapter;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class SearchResultActivity extends AppCompatActivity {
-    @InjectView(R.id.repository_list)
+    @Bind(R.id.repository_list)
     RecyclerView searchResultListView;
 
     private SearchResultAdapter searchResultAdapter;
@@ -46,7 +46,7 @@ public class SearchResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         setupActionBar();
         setupViews();
     }
