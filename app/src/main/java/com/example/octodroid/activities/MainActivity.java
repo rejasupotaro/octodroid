@@ -62,7 +62,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         subscription.unsubscribe();
-        hottestRepositoryAdapter.destroy();
+        if (hottestRepositoryAdapter != null) {
+            hottestRepositoryAdapter.destroy();
+        }
         super.onDestroy();
     }
 
