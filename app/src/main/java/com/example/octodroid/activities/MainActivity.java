@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,13 +17,15 @@ import com.example.octodroid.SessionPrefsSchema;
 import com.example.octodroid.adapters.HottestRepositoryAdapter;
 import com.example.octodroid.views.ProfileView;
 import com.rejasupotaro.octodroid.GitHub;
+import com.rejasupotaro.octodroid.http.Response;
+import com.rejasupotaro.octodroid.models.User;
+import com.trello.rxlifecycle.ActivityEvent;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends RxAppCompatActivity {
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     @Bind(R.id.navigation_drawer)
@@ -33,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView hottestRepositoryListView;
 
     private ActionBarDrawerToggle drawerToggle;
-
-    private Subscription subscription = Subscriptions.empty();
 
     private HottestRepositoryAdapter hottestRepositoryAdapter;
 
@@ -53,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        subscription.unsubscribe();
         if (hottestRepositoryAdapter != null) {
             hottestRepositoryAdapter.destroy();
         }
@@ -116,8 +114,9 @@ public class MainActivity extends AppCompatActivity {
         SessionPrefs prefs = SessionPrefsSchema.create(this);
         if (prefs.hasUsername() && prefs.hasPassword()) {
             GitHub.client().authorization(prefs.getUsername(), prefs.getPassword());
-            subscription = GitHub.client().user()
+            GitHub.client().user()
                     .cache()
+                    .compose(this.<Response<User>>bindUntilEvent(ActivityEvent.DESTROY))
                     .subscribe(r -> {
                         if (!r.isSuccessful()) {
                             return;
