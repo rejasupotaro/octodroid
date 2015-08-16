@@ -47,16 +47,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        SessionPrefs prefs = SessionPrefsSchema.get(this);
-        if (prefs.hasUsername() && prefs.hasPassword()) {
-            GitHub.client().authorization(prefs.getUsername(), prefs.getPassword());
-            ButterKnife.inject(this);
-            setupViews();
-        } else {
-            LoginActivity.launch(this);
-            finish();
-        }
+        ButterKnife.inject(this);
+        setupViews();
     }
 
     @Override
@@ -121,13 +113,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestProfile() {
-        subscription = GitHub.client().user()
-                .cache()
-                .subscribe(r -> {
-                    if (!r.isSuccessful()) {
-                        return;
-                    }
-                    navigationDrawerView.setUser(r.entity());
-                });
+        SessionPrefs prefs = SessionPrefsSchema.create(this);
+        if (prefs.hasUsername() && prefs.hasPassword()) {
+            GitHub.client().authorization(prefs.getUsername(), prefs.getPassword());
+            subscription = GitHub.client().user()
+                    .cache()
+                    .subscribe(r -> {
+                        if (!r.isSuccessful()) {
+                            return;
+                        }
+                        navigationDrawerView.setUser(r.entity());
+                    });
+        } else {
+            navigationDrawerView.setUser(null);
+        }
+
     }
 }

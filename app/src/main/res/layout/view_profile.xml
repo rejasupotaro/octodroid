@@ -1,16 +1,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@android:color/white"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:padding="@dimen/spacing_large"
-        android:layout_gravity="left|center_vertical"
-        android:orientation="horizontal"
-        android:background="@drawable/bg_profile"
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:background="@drawable/bg_profile"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_large">
 
         <com.makeramen.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/user_image"
@@ -21,12 +22,20 @@
 
         <TextView
             android:id="@id/user_name"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/spacing_medium"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/sign_in_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_medium"
+        android:text="@string/sign_in"
+        android:visibility="gone" />
 </LinearLayout>

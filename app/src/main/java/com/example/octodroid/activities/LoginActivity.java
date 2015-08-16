@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginSucceeded(String username, String password) {
-        SessionPrefs prefs = SessionPrefsSchema.get(this);
+        SessionPrefs prefs = SessionPrefsSchema.create(this);
         prefs.putUsername(username);
         prefs.putPassword(password);
 
