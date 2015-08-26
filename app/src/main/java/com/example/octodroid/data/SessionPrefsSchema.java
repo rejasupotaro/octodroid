@@ -1,4 +1,4 @@
-package com.example.octodroid;
+package com.example.octodroid.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;

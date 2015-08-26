@@ -13,7 +13,7 @@ import android.view.MenuItem;
 
 import com.example.octodroid.R;
 import com.example.octodroid.SessionPrefs;
-import com.example.octodroid.SessionPrefsSchema;
+import com.example.octodroid.data.SessionPrefsSchema;
 import com.example.octodroid.adapters.HottestRepositoryAdapter;
 import com.example.octodroid.views.ProfileView;
 import com.rejasupotaro.octodroid.GitHub;
