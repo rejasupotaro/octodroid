@@ -2,7 +2,7 @@ package com.example.octodroid;
 
 import android.app.Application;
 
-import com.rejasupotaro.octodroid.GitHub;
+import com.example.octodroid.data.GitHub;
 import com.rejasupotaro.octodroid.http.ApiClient;
 import com.rejasupotaro.octodroid.http.CacheControl;
 

@@ -12,11 +12,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.octodroid.R;
-import com.example.octodroid.SessionPrefs;
-import com.example.octodroid.data.SessionPrefsSchema;
 import com.example.octodroid.adapters.HottestRepositoryAdapter;
+import com.example.octodroid.data.GitHub;
+import com.example.octodroid.data.SessionPrefs;
+import com.example.octodroid.data.SessionPrefsSchema;
 import com.example.octodroid.views.ProfileView;
-import com.rejasupotaro.octodroid.GitHub;
 import com.rejasupotaro.octodroid.http.Response;
 import com.rejasupotaro.octodroid.models.User;
 import com.trello.rxlifecycle.ActivityEvent;

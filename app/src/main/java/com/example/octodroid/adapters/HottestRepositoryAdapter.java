@@ -5,9 +5,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.example.octodroid.data.GitHub;
 import com.example.octodroid.views.helpers.ToastHelper;
 import com.example.octodroid.views.holders.RepositoryItemViewHolder;
-import com.rejasupotaro.octodroid.GitHub;
 import com.rejasupotaro.octodroid.http.Response;
 import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.SearchResult;

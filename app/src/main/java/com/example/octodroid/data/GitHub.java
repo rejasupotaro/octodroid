@@ -1,6 +1,8 @@
-package com.rejasupotaro.octodroid;
+package com.example.octodroid.data;
 
 import com.google.gson.Gson;
+import com.rejasupotaro.octodroid.GitHubClient;
+import com.rejasupotaro.octodroid.GsonProvider;
 import com.rejasupotaro.octodroid.http.ApiClient;
 
 public class GitHub {

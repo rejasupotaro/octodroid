@@ -10,11 +10,11 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.example.octodroid.R;
-import com.example.octodroid.SessionPrefs;
+import com.example.octodroid.data.GitHub;
+import com.example.octodroid.data.SessionPrefs;
 import com.example.octodroid.data.SessionPrefsSchema;
 import com.example.octodroid.views.helpers.ProgressDialogHelper;
 import com.example.octodroid.views.helpers.ToastHelper;
-import com.rejasupotaro.octodroid.GitHub;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
