@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 public class Link {
-    public static enum Rel {
+    public enum Rel {
         FIRST,
         PREV,
         NEXT,
@@ -78,7 +78,7 @@ public class Link {
         if (source != null) {
             for (Rel rel : Rel.values()) {
                 String pattern = "rel=\"" + rel.name().toLowerCase() + "\"";
-                if (source.indexOf(pattern) != -1) {
+                if (source.contains(pattern)) {
                     return rel;
                 }
             }
