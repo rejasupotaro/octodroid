@@ -12,7 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.octodroid.R;
-import com.example.octodroid.adapters.SearchResultAdapter;
+import com.example.octodroid.views.adapters.SearchResultAdapter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

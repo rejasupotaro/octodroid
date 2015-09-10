@@ -1,4 +1,4 @@
-package com.example.octodroid.views;
+package com.example.octodroid.views.components;
 
 import android.content.Context;
 import android.util.AttributeSet;

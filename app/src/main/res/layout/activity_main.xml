@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical" />
 
-    <com.example.octodroid.views.ProfileView
+    <com.example.octodroid.views.components.ProfileView
         android:id="@+id/navigation_drawer"
         android:layout_gravity="start"
         android:layout_width="240dp"
