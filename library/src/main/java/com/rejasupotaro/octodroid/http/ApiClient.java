@@ -3,9 +3,12 @@ package com.rejasupotaro.octodroid.http;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.rejasupotaro.octodroid.BuildConfig;
 import com.rejasupotaro.octodroid.ConnectivityObserver;
-import com.squareup.okhttp.*;
+import com.rejasupotaro.octodroid.http.interceptors.LoggingInterceptor;
+import com.squareup.okhttp.Cache;
+import com.squareup.okhttp.Credentials;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -53,6 +56,7 @@ public class ApiClient {
 
     public ApiClient() {
         okHttpClient = new OkHttpClient();
+        okHttpClient.interceptors().add(new LoggingInterceptor());
     }
 
     private void setUrl(Request.Builder builder, RequestCreator requestCreator) {
@@ -130,17 +134,7 @@ public class ApiClient {
         setHeaders(builder, requestCreator);
 
         Request request = builder.build();
-        com.squareup.okhttp.Response response = okHttpClient.newCall(request).execute();
-        dumpIfDebug(request, response);
-        return response;
-    }
-
-    public void dumpIfDebug(Request request, com.squareup.okhttp.Response response) {
-        if (!BuildConfig.DEBUG) {
-            return;
-        }
-        Log.i(TAG, "===> " + request.toString());
-        Log.i(TAG, "<=== " + response.toString());
+        return okHttpClient.newCall(request).execute();
     }
 
     public static class RequestSubscriber implements Observable.OnSubscribe<com.squareup.okhttp.Response> {
