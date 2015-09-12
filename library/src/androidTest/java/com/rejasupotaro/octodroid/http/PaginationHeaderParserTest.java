@@ -7,11 +7,7 @@ import com.squareup.okhttp.Headers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class PaginationHeaderParserTest {
@@ -20,11 +16,11 @@ public class PaginationHeaderParserTest {
     public void parse() throws Exception {
         {
             Pagination pagination = PaginationHeaderParser.parse((Response<?>) null);
-            assertNotNull(pagination);
+            assertThat(pagination).isNotNull();
         }
         {
             Pagination pagination = PaginationHeaderParser.parse((Headers) null);
-            assertNotNull(pagination);
+            assertThat(pagination).isNotNull();
         }
         {
             String link = "</resource?page=2&per_page=50>; rel=\"prev\"";
@@ -33,22 +29,23 @@ public class PaginationHeaderParserTest {
                     .build();
 
             Pagination pagination = PaginationHeaderParser.parse(headers);
-            assertNotNull(pagination);
-            assertTrue(pagination.hasPrev());
-            assertFalse(pagination.hasNext());
-            assertFalse(pagination.hasLast());
+            assertThat(pagination).isNotNull();
+            assertThat(pagination.hasPrev()).isTrue();
+            assertThat(pagination.hasPrev()).isTrue();
+            assertThat(pagination.hasNext()).isFalse();
+            assertThat(pagination.hasLast()).isFalse();
 
             Link prevLink = pagination.getPrevLink();
-            assertNotNull(prevLink);
-            assertEquals(Link.Rel.PREV, prevLink.getRel());
-            assertEquals(2, prevLink.getPage());
-            assertEquals(50, prevLink.getPerPage());
+            assertThat(prevLink).isNotNull();
+            assertThat(Link.Rel.PREV).isEqualTo(prevLink.getRel());
+            assertThat(2).isEqualTo(prevLink.getPage());
+            assertThat(50).isEqualTo(prevLink.getPerPage());
 
             Link nextLink = pagination.getNextLink();
-            assertNull(nextLink);
+            assertThat(nextLink).isNull();
 
             Link lastLink = pagination.getLastLink();
-            assertNull(lastLink);
+            assertThat(lastLink).isNull();
         }
         {
             String link = "</resource?page=1&per_page=100>; rel=\"first\"; page=\"1\", "
@@ -60,34 +57,34 @@ public class PaginationHeaderParserTest {
                     .build();
 
             Pagination pagination = PaginationHeaderParser.parse(headers);
-            assertNotNull(pagination);
-            assertTrue(pagination.hasPrev());
-            assertTrue(pagination.hasNext());
-            assertTrue(pagination.hasLast());
+            assertThat(pagination).isNotNull();
+            assertThat(pagination.hasPrev()).isTrue();
+            assertThat(pagination.hasNext()).isTrue();
+            assertThat(pagination.hasLast()).isTrue();
 
             Link firstLink = pagination.getFirstLink();
-            assertNotNull(firstLink);
-            assertEquals(Link.Rel.FIRST, firstLink.getRel());
-            assertEquals(1, firstLink.getPage());
-            assertEquals(100, firstLink.getPerPage());
+            assertThat(firstLink).isNotNull();
+            assertThat(Link.Rel.FIRST).isEqualTo(firstLink.getRel());
+            assertThat(1).isEqualTo(firstLink.getPage());
+            assertThat(100).isEqualTo(firstLink.getPerPage());
 
             Link prevLink = pagination.getPrevLink();
-            assertNotNull(prevLink);
-            assertEquals(Link.Rel.PREV, prevLink.getRel());
-            assertEquals(3, prevLink.getPage());
-            assertEquals(100, prevLink.getPerPage());
+            assertThat(prevLink).isNotNull();
+            assertThat(Link.Rel.PREV).isEqualTo(prevLink.getRel());
+            assertThat(3).isEqualTo(prevLink.getPage());
+            assertThat(100).isEqualTo(prevLink.getPerPage());
 
             Link nextLink = pagination.getNextLink();
-            assertNotNull(nextLink);
-            assertEquals(Link.Rel.NEXT, nextLink.getRel());
-            assertEquals(5, nextLink.getPage());
-            assertEquals(100, nextLink.getPerPage());
+            assertThat(nextLink).isNotNull();
+            assertThat(Link.Rel.NEXT).isEqualTo(nextLink.getRel());
+            assertThat(5).isEqualTo(nextLink.getPage());
+            assertThat(100).isEqualTo(nextLink.getPerPage());
 
             Link lastLink = pagination.getLastLink();
-            assertNotNull(lastLink);
-            assertEquals(Link.Rel.LAST, lastLink.getRel());
-            assertEquals(50, lastLink.getPage());
-            assertEquals(100, lastLink.getPerPage());
+            assertThat(lastLink).isNotNull();
+            assertThat(Link.Rel.LAST).isEqualTo(lastLink.getRel());
+            assertThat(50).isEqualTo(lastLink.getPage());
+            assertThat(100).isEqualTo(lastLink.getPerPage());
         }
     }
 }
