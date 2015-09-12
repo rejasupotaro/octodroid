@@ -1,7 +1,5 @@
 package com.rejasupotaro.octodroid;
 
-import android.text.TextUtils;
-
 import com.google.gson.reflect.TypeToken;
 import com.rejasupotaro.octodroid.http.ApiClient;
 import com.rejasupotaro.octodroid.http.Method;
@@ -15,12 +13,10 @@ import com.rejasupotaro.octodroid.models.Notification;
 import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.SearchResult;
 import com.rejasupotaro.octodroid.models.User;
+import com.rejasupotaro.octodroid.utils.UrlUtils;
 
-import org.apache.http.protocol.HTTP;
 import org.joda.time.DateTime;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
 import rx.Observable;
@@ -133,7 +129,7 @@ public class GitHubClient {
 
     public Observable<Response<SearchResult<Repository>>> searchRepositories(final String q, final Sort sort, final Order order, final int page) {
         StringBuilder builder = new StringBuilder();
-        builder.append("/search/repositories?q=").append(encode(q));
+        builder.append("/search/repositories?q=").append(UrlUtils.encode(q));
         builder.append("&page=").append(page);
         builder.append("&per_page").append(PER_PAGE);
         if (sort != null) {
@@ -164,7 +160,7 @@ public class GitHubClient {
 
     public Observable<Response<SearchResult<User>>> searchUsers(final String q, final Sort sort, final Order order, final int page) {
         StringBuilder builder = new StringBuilder();
-        builder.append("/search/users?q=").append(encode(q));
+        builder.append("/search/users?q=").append(UrlUtils.encode(q));
         builder.append("&page=").append(page);
         builder.append("&per_page").append(PER_PAGE);
         if (sort != null) {
@@ -192,7 +188,7 @@ public class GitHubClient {
         String date = dateTime.minusDays(7).toString("yyyy-MM-dd");
 
         String path = String.format("/search/repositories?q=%s&sort=%s&order=%s&page=%d&per_page=%d",
-                encode("created:>" + date), "stars", "desc", 1, 10);
+                UrlUtils.encode("created:>" + date), "stars", "desc", 1, 10);
         return apiClient.request(Method.GET, path).to(new TypeToken<SearchResult<Repository>>() {
         });
     }
@@ -209,18 +205,6 @@ public class GitHubClient {
         String path = String.format("/users/%s/starred", username);
         return apiClient.request(Method.GET, path).to(new TypeToken<List<Repository>>() {
         });
-    }
-
-    private static String encode(String str) {
-        if (TextUtils.isEmpty(str)) {
-            return "";
-        }
-        try {
-            return URLEncoder.encode(str, HTTP.UTF_8);
-        } catch (UnsupportedEncodingException e) {
-            // Should not occur
-            return "";
-        }
     }
 }
 
