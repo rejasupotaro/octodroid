@@ -53,8 +53,7 @@ public class GitHubClient {
 
     @AuthenticationRequired
     public Observable<Response<Notification>> notification(int id) {
-        String path = String.format("/notifications/threads/%d",
-                id);
+        String path = String.format("/notifications/threads/%d", id);
         return apiClient.request(Method.GET, path).to(new TypeToken<Notification>() {
         });
     }
