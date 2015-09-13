@@ -2,6 +2,7 @@ package com.example.octodroid.views.adapters;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -11,6 +12,7 @@ import com.example.octodroid.views.helpers.ToastHelper;
 import com.example.octodroid.views.holders.ProgressViewHolder;
 import com.example.octodroid.views.holders.RepositoryItemViewHolder;
 import com.rejasupotaro.octodroid.http.Response;
+import com.rejasupotaro.octodroid.http.params.Params;
 import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.SearchResult;
 
@@ -24,6 +26,8 @@ import rx.subjects.BehaviorSubject;
 import rx.subscriptions.Subscriptions;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = SearchResultAdapter.class.getSimpleName();
+
     private static class ViewType {
         private static final int ITEM = 1;
         private static final int FOOTER = 2;
@@ -95,7 +99,9 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         clear();
         recyclerView.setVisibility(View.VISIBLE);
 
-        responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query));
+        Params params = new Params()
+                .add("q", query);
+        responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(params));
         subscription = responseSubject
                 .flatMap(r -> r)
                 .subscribe(new ResponseSubscriber());
@@ -118,6 +124,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @Override
         public void onError(Throwable e) {
+            Log.e(TAG, e.toString());
             showError();
         }
 

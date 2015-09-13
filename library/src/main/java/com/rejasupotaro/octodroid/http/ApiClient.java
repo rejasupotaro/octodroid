@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.rejasupotaro.octodroid.ConnectivityObserver;
 import com.rejasupotaro.octodroid.http.interceptors.LoggingInterceptor;
+import com.rejasupotaro.octodroid.http.params.Params;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.OkHttpClient;
@@ -125,6 +126,10 @@ public class ApiClient {
 
     public RequestCreator request(final Method method, final String path) {
         return new RequestCreator(this, method, path);
+    }
+
+    public RequestCreator request(final Method method, final String path, final Params params) {
+        return new RequestCreator(this, method, String.format("%s?%s", path, params.toString()));
     }
 
     public com.squareup.okhttp.Response requestInternal(RequestCreator requestCreator) throws IOException {
