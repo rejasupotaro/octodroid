@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.rejasupotaro.octodroid.ConnectivityObserver;
 import com.rejasupotaro.octodroid.http.interceptors.LoggingInterceptor;
-import com.rejasupotaro.octodroid.http.params.Params;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.OkHttpClient;

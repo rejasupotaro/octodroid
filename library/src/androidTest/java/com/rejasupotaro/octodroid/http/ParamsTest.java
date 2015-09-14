@@ -1,8 +1,9 @@
-package com.rejasupotaro.octodroid.http.params;
+package com.rejasupotaro.octodroid.http;
 
 import android.support.test.runner.AndroidJUnit4;
 
-import org.assertj.core.api.Assertions;
+import com.rejasupotaro.octodroid.http.Params;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

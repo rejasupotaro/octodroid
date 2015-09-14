@@ -9,7 +9,7 @@ import com.example.octodroid.data.GitHub;
 import com.example.octodroid.views.helpers.ToastHelper;
 import com.example.octodroid.views.holders.RepositoryItemViewHolder;
 import com.rejasupotaro.octodroid.http.Response;
-import com.rejasupotaro.octodroid.http.params.Params;
+import com.rejasupotaro.octodroid.http.Params;
 import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.SearchResult;
 

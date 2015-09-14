@@ -4,14 +4,11 @@ import com.google.gson.reflect.TypeToken;
 import com.rejasupotaro.octodroid.http.ApiClient;
 import com.rejasupotaro.octodroid.http.Method;
 import com.rejasupotaro.octodroid.http.Response;
-import com.rejasupotaro.octodroid.http.params.Params;
+import com.rejasupotaro.octodroid.http.Params;
 import com.rejasupotaro.octodroid.models.Notification;
 import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.SearchResult;
 import com.rejasupotaro.octodroid.models.User;
-import com.rejasupotaro.octodroid.utils.UrlUtils;
-
-import org.joda.time.DateTime;
 
 import java.util.List;
 

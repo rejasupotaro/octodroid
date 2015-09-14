@@ -1,4 +1,4 @@
-package com.rejasupotaro.octodroid.http.params;
+package com.rejasupotaro.octodroid.http;
 
 import android.text.TextUtils;
 
