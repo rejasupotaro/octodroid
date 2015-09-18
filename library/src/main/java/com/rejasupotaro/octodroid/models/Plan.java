@@ -11,4 +11,20 @@ public class Plan extends Resource {
     private int privateRepos;
     @SerializedName("collaborators")
     private int collaborators;
+
+    public String getName() {
+        return name;
+    }
+
+    public int getSpace() {
+        return space;
+    }
+
+    public int getPrivateRepos() {
+        return privateRepos;
+    }
+
+    public int getCollaborators() {
+        return collaborators;
+    }
 }
