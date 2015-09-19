@@ -71,20 +71,21 @@ public class Response<T> {
     }
 
     public static <T> Response<T> parse(com.squareup.okhttp.Response r, TypeToken<T> type) throws IOException {
-        String bodyString = r.body().string();
-        Headers headers = r.headers();
+        return parse(r.headers(), r.code(), r.body().string(), type);
+    }
 
+    public static <T> Response<T> parse(Headers headers, int statusCode, String body, TypeToken<T> type) throws IOException {
         Response<T> response = new Response<>();
         try {
             response.entity = GsonProvider.get().fromJson(
-                    bodyString,
+                    body,
                     type.getType());
         } catch (JsonSyntaxException e) {
-            throw new JsonSyntaxException("Can't instantiate " + type.getRawType().getName() + " from " + bodyString);
+            throw new JsonSyntaxException("Can't instantiate " + type.getRawType().getName() + " from " + body);
         }
         response.headers = headers;
-        response.code = r.code();
-        response.body = bodyString;
+        response.code = statusCode;
+        response.body = body;
         response.pagination = PaginationHeaderParser.parse(response);
 
         return response;
