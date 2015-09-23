@@ -37,13 +37,15 @@ public class ResponseTest {
         Response<JSONObject> response = Response.parse(
                 Headers.of("Name", "Value"),
                 422,
-                "{\"errors\": {\"token\": [{\"error\": \"expired\"}]}}",
+                "{\"message\":\"Validation Failed\",\"errors\":[{\"resource\":\"Issue\",\"field\":\"title\",\"code\":\"missing_field\"}]}",
                 new TypeToken<JSONObject>() {
                 });
         assertThat(response.isSuccessful()).isFalse();
         assertThat(response.headers().get("Name")).isEqualTo("Value");
         assertThat(response.code()).isEqualTo(422);
-        assertThat(response.body()).isEqualTo("{\"errors\": {\"token\": [{\"error\": \"expired\"}]}}");
+        assertThat(response.hasError()).isTrue();
+        Error error = response.getError();
+        assertThat(error.getMessage()).isEqualTo("Validation Failed");
     }
 }
 

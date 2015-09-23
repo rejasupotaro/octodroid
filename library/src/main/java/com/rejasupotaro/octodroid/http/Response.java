@@ -21,6 +21,7 @@ public class Response<T> {
     private String body;
     private Observable<Response<T>> next;
     private Pagination pagination;
+    private Error error;
 
     public T entity() {
         return entity;
@@ -70,19 +71,35 @@ public class Response<T> {
         }
     }
 
+    public boolean hasError() {
+        return error != null;
+    }
+
+    public Error getError() {
+        return error;
+    }
+
     public static <T> Response<T> parse(com.squareup.okhttp.Response r, TypeToken<T> type) throws IOException {
         return parse(r.headers(), r.code(), r.body().string(), type);
     }
 
     public static <T> Response<T> parse(Headers headers, int statusCode, String body, TypeToken<T> type) throws IOException {
         Response<T> response = new Response<>();
-        try {
-            response.entity = GsonProvider.get().fromJson(
-                    body,
-                    type.getType());
-        } catch (JsonSyntaxException e) {
-            throw new JsonSyntaxException("Can't instantiate " + type.getRawType().getName() + " from " + body);
+
+        if (200 <= statusCode && statusCode < 300) {
+            try {
+                response.entity = GsonProvider.get().fromJson(body, type.getType());
+            } catch (JsonSyntaxException e) {
+                throw new JsonSyntaxException("Can't instantiate " + type.getRawType().getName() + " class from " + body);
+            }
+        } else {
+            try {
+                response.error = GsonProvider.get().fromJson(body, Error.class);
+            } catch (JsonSyntaxException e) {
+                throw new JsonSyntaxException("Can't instantiate Error class from " + body);
+            }
         }
+
         response.headers = headers;
         response.code = statusCode;
         response.body = body;
