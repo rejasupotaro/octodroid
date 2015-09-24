@@ -32,7 +32,7 @@ public class GitHubClient {
         apiClient.authorization(accessToken);
     }
 
-    @AuthenticationRequired
+    @RequireLogin
     public Observable<Response<User>> user() {
         return apiClient.request(Method.GET, "/user").to(new TypeToken<User>() {
         });
@@ -44,7 +44,7 @@ public class GitHubClient {
         });
     }
 
-    @AuthenticationRequired
+    @RequireLogin
     public Observable<Response<Notification>> notification(int id) {
         String path = String.format("/notifications/threads/%d", id);
         return apiClient.request(Method.GET, path)
@@ -52,7 +52,7 @@ public class GitHubClient {
                 });
     }
 
-    @AuthenticationRequired
+    @RequireLogin
     public Observable<Response<List<Notification>>> notifications(Params params) {
         return apiClient.request(Method.GET, "/notifications", params)
                 .to(new TypeToken<List<Notification>>() {
@@ -66,14 +66,14 @@ public class GitHubClient {
                 });
     }
 
-    @AuthenticationRequired
+    @RequireLogin
     public Observable<Response<Void>> markAsRead() {
         return apiClient.request(Method.PUT, "/notifications")
                 .to(new TypeToken<Void>() {
                 });
     }
 
-    @AuthenticationRequired
+    @RequireLogin
     public Observable<Response<Void>> markNotificationsAsReadInRepository(String owner, String repo) {
         String path = String.format("/repos/%s/%s/notifications", owner, repo);
         return apiClient.request(Method.PUT, path)
@@ -81,7 +81,7 @@ public class GitHubClient {
                 });
     }
 
-    @AuthenticationRequired
+    @RequireLogin
     public Observable<Response<Void>> markThreadAsRead(int id) {
         String path = String.format("/notifications/threads/%d", id);
         return apiClient.request(Method.PATCH, path)
@@ -89,12 +89,12 @@ public class GitHubClient {
                 });
     }
 
-    @AuthenticationRequired
+    @RequireLogin
     public Observable<Response<List<Repository>>> userRepos() {
         return userRepos(new Params());
     }
 
-    @AuthenticationRequired
+    @RequireLogin
     public Observable<Response<List<Repository>>> userRepos(Params params) {
         return apiClient.request(Method.GET, "/user/repos", params)
                 .to(new TypeToken<List<Repository>>() {
@@ -172,14 +172,14 @@ public class GitHubClient {
                 });
     }
 
-    @AuthenticationRequired
+    @RequireLogin
     public Observable<Response<List<Repository>>> starredRepositories() {
         return apiClient.request(Method.GET, "/user/starred")
                 .to(new TypeToken<List<Repository>>() {
                 });
     }
 
-    @AuthenticationRequired
+    @RequireLogin
     public Observable<Response<List<Repository>>> starredRepositories(String username) {
         String path = String.format("/users/%s/starred", username);
         return apiClient.request(Method.GET, path)
