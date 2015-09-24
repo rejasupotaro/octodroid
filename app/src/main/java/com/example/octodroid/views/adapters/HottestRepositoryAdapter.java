@@ -9,11 +9,8 @@ import com.example.octodroid.data.GitHub;
 import com.example.octodroid.views.helpers.ToastHelper;
 import com.example.octodroid.views.holders.RepositoryItemViewHolder;
 import com.rejasupotaro.octodroid.http.Response;
-import com.rejasupotaro.octodroid.http.Params;
 import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.SearchResult;
-
-import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +35,7 @@ public class HottestRepositoryAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     private void requestHottestRepository() {
-        DateTime dateTime = new DateTime();
-        String date = dateTime.minusDays(7).toString("yyyy-MM-dd");
-
-        final Params params = new Params()
-                .add("q", "created:>" + date)
-                .add("sort", "stars")
-                .add("order", "desc");
-
-        subscription = GitHub.client().hottestRepositories(params)
+        subscription = GitHub.client().hottestRepositories()
                 .map(Response::entity)
                 .subscribe(new ResponseSubscriber());
     }

@@ -99,9 +99,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         clear();
         recyclerView.setVisibility(View.VISIBLE);
 
-        Params params = new Params()
-                .add("q", query);
-        responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(params));
+        responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query));
         subscription = responseSubject
                 .flatMap(r -> r)
                 .subscribe(new ResponseSubscriber());

@@ -3,12 +3,14 @@ package com.rejasupotaro.octodroid;
 import com.google.gson.reflect.TypeToken;
 import com.rejasupotaro.octodroid.http.ApiClient;
 import com.rejasupotaro.octodroid.http.Method;
-import com.rejasupotaro.octodroid.http.Response;
 import com.rejasupotaro.octodroid.http.Params;
+import com.rejasupotaro.octodroid.http.Response;
 import com.rejasupotaro.octodroid.models.Notification;
 import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.SearchResult;
 import com.rejasupotaro.octodroid.models.User;
+
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -88,10 +90,21 @@ public class GitHubClient {
     }
 
     @AuthenticationRequired
+    public Observable<Response<List<Repository>>> userRepos() {
+        return userRepos(new Params());
+    }
+
+    @AuthenticationRequired
     public Observable<Response<List<Repository>>> userRepos(Params params) {
         return apiClient.request(Method.GET, "/user/repos", params)
                 .to(new TypeToken<List<Repository>>() {
                 });
+    }
+
+    public Observable<Response<SearchResult<Repository>>> searchRepositories(String query) {
+        Params params = new Params()
+                .add("q", query);
+        return searchRepositories(params);
     }
 
     public Observable<Response<SearchResult<Repository>>> searchRepositories(final Params params) {
@@ -109,6 +122,12 @@ public class GitHubClient {
                 });
     }
 
+    public Observable<Response<SearchResult<User>>> searchUsers(String username) {
+        Params params = new Params()
+                .add("q", username);
+        return searchUsers(params);
+    }
+
     public Observable<Response<SearchResult<User>>> searchUsers(final Params params) {
         return apiClient.request(Method.GET, "/search/users", params)
                 .to(new TypeToken<SearchResult<User>>() {
@@ -122,6 +141,18 @@ public class GitHubClient {
                         return r;
                     }
                 });
+    }
+
+    public Observable<Response<SearchResult<Repository>>> hottestRepositories() {
+        DateTime dateTime = new DateTime();
+        String date = dateTime.minusDays(7).toString("yyyy-MM-dd");
+
+        Params params = new Params()
+                .add("q", "created:>" + date)
+                .add("sort", "stars")
+                .add("order", "desc");
+
+        return hottestRepositories(params);
     }
 
     // Find the hottest repositories created in the last week
