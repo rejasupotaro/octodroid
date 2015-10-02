@@ -47,6 +47,7 @@ public class MainActivity extends RxAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        setupActionBar();
         setupViews();
     }
 
@@ -92,6 +93,10 @@ public class MainActivity extends RxAppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    public void setupActionBar() {
+        getSupportActionBar().setTitle("");
     }
 
     private void setupViews() {
