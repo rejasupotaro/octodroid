@@ -34,12 +34,16 @@ public class SessionPrefsSchema extends PrefSchema {
     @Key("password")
     protected String password;
 
-    public static synchronized SessionPrefs create(Context context) {
+    public static synchronized SessionPrefs get(Context context) {
         if (prefs == null) {
             SharedPreferences base = context.getSharedPreferences("octodroid_session", Context.MODE_PRIVATE);
             prefs = new SessionPrefs(new EncryptedSharedPreferences(getCipher(), base, context));
         }
         return prefs;
+    }
+
+    public boolean isSignedIn() {
+        return prefs.hasUsername() && prefs.hasPassword();
     }
 }
 
