@@ -39,6 +39,7 @@ public class MainActivity extends RxAppCompatActivity {
 
     public static void launch(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
     }
 
@@ -47,8 +48,14 @@ public class MainActivity extends RxAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        setupActionBar();
-        setupViews();
+
+        SessionPrefs prefs = SessionPrefsSchema.get(this);
+        if (prefs.isSignedIn()) {
+            setupActionBar();
+            setupViews();
+        } else {
+            LoginActivity.launch(this);
+        }
     }
 
     @Override
@@ -86,13 +93,17 @@ public class MainActivity extends RxAppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        drawerToggle.syncState();
+        if (drawerToggle != null) {
+            drawerToggle.syncState();
+        }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        drawerToggle.onConfigurationChanged(newConfig);
+        if (drawerToggle != null) {
+            drawerToggle.onConfigurationChanged(newConfig);
+        }
     }
 
     public void setupActionBar() {
@@ -117,19 +128,15 @@ public class MainActivity extends RxAppCompatActivity {
 
     private void requestProfile() {
         SessionPrefs prefs = SessionPrefsSchema.get(this);
-        if (prefs.isSignedIn()) {
-            GitHub.client().authorization(prefs.getUsername(), prefs.getPassword());
-            GitHub.client().user()
-                    .cache()
-                    .compose(this.<Response<User>>bindUntilEvent(ActivityEvent.DESTROY))
-                    .subscribe(r -> {
-                        if (!r.isSuccessful()) {
-                            return;
-                        }
-                        navigationDrawerView.setUser(r.entity());
-                    });
-        } else {
-            navigationDrawerView.setUser(null);
-        }
+        GitHub.client().authorization(prefs.getUsername(), prefs.getPassword());
+        GitHub.client().user()
+                .cache()
+                .compose(this.<Response<User>>bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(r -> {
+                    if (!r.isSuccessful()) {
+                        return;
+                    }
+                    navigationDrawerView.setUser(r.entity());
+                });
     }
 }
