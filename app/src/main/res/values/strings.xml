@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Octodroid</string>
+
     <string name="menu_add_repository">Add repository</string>
+
+    <string name="title_repository_list">Your repositories</string>
+
     <string name="repositories">Repositories</string>
     <string name="action_settings">Settings</string>
     <string name="search">search</string>

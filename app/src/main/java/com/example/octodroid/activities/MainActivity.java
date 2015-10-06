@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.octodroid.R;
+import com.example.octodroid.data.GitHub;
 import com.example.octodroid.data.SessionPrefs;
 import com.example.octodroid.data.SessionPrefsSchema;
 import com.example.octodroid.views.adapters.HottestRepositoryAdapter;
@@ -36,6 +37,7 @@ public class MainActivity extends RxAppCompatActivity {
 
         SessionPrefs prefs = SessionPrefsSchema.get(this);
         if (prefs.isSignedIn()) {
+            GitHub.client().authorization(prefs.getUsername(), prefs.getPassword());
             setupActionBar();
             setupViews();
         } else {
