@@ -62,8 +62,7 @@ public class MainActivity extends RxAppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 return true;
-            case R.id.action_search:
-                SearchResultActivity.launch(this);
+            case R.id.action_add_repository:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
