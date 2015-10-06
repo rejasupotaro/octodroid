@@ -41,9 +41,5 @@ public class SessionPrefsSchema extends PrefSchema {
         }
         return prefs;
     }
-
-    public boolean isSignedIn() {
-        return prefs.hasUsername() && prefs.hasPassword();
-    }
 }
 

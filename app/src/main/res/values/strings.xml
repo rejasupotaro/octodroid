@@ -2,6 +2,7 @@
     <string name="app_name">Octodroid</string>
 
     <string name="menu_add_repository">Add repository</string>
+    <string name="menu_logout">Logout</string>
 
     <string name="title_repository_list">Your repositories</string>
 

@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.example.octodroid.R;
 import com.example.octodroid.data.GitHub;
+import com.example.octodroid.data.SessionManager;
 import com.example.octodroid.data.SessionPrefs;
 import com.example.octodroid.data.SessionPrefsSchema;
 import com.example.octodroid.views.adapters.HottestRepositoryAdapter;
@@ -35,9 +36,8 @@ public class MainActivity extends RxAppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        SessionPrefs prefs = SessionPrefsSchema.get(this);
-        if (prefs.isSignedIn()) {
-            GitHub.client().authorization(prefs.getUsername(), prefs.getPassword());
+        if (SessionManager.isLoggedIn(this)) {
+            SessionManager.login(this);
             setupActionBar();
             setupViews();
         } else {
@@ -66,6 +66,10 @@ public class MainActivity extends RxAppCompatActivity {
                 return true;
             case R.id.action_add_repository:
                 RepositoryListActivity.launch(this);
+                return true;
+            case R.id.action_logout:
+                SessionManager.logout(this);
+                LoginActivity.launch(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
