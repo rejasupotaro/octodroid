@@ -5,14 +5,8 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/hottest_repository_list"
-        android:paddingBottom="@dimen/spacing_medium"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="@dimen/spacing_medium"
         android:scrollbars="vertical" />
-
-    <com.example.octodroid.views.components.ProfileView
-        android:id="@+id/navigation_drawer"
-        android:layout_gravity="start"
-        android:layout_width="240dp"
-        android:layout_height="match_parent" />
 </android.support.v4.widget.DrawerLayout>
