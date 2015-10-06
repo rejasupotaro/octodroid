@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.example.octodroid.data.GitHub;
 import com.example.octodroid.views.helpers.ToastHelper;
 import com.example.octodroid.views.holders.RepositoryItemViewHolder;
+import com.jakewharton.rxbinding.view.RxView;
 import com.rejasupotaro.octodroid.http.Response;
 import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.SearchResult;
@@ -21,11 +22,13 @@ import rx.subscriptions.Subscriptions;
 
 public class HottestRepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
+    private RecyclerView recyclerView;
     private List<Repository> repositories = new ArrayList<>();
     private Subscription subscription = Subscriptions.empty();
 
     public HottestRepositoryAdapter(RecyclerView recyclerView) {
         this.context = recyclerView.getContext();
+        this.recyclerView = recyclerView;
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setHasFixedSize(false);
@@ -36,6 +39,7 @@ public class HottestRepositoryAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private void requestHottestRepository() {
         subscription = GitHub.client().hottestRepositories()
+                .takeUntil(RxView.detaches(recyclerView))
                 .map(Response::entity)
                 .subscribe(new ResponseSubscriber());
     }
@@ -83,10 +87,6 @@ public class HottestRepositoryAdapter extends RecyclerView.Adapter<RecyclerView.
             repositories.addAll(items);
             notifyItemRangeInserted(startPosition, items.size());
         }
-    }
-
-    public void destroy() {
-        subscription.unsubscribe();
     }
 }
 

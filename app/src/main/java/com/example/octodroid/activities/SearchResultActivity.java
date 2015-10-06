@@ -52,12 +52,6 @@ public class SearchResultActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onDestroy() {
-        searchResultAdapter.destroy();
-        super.onDestroy();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_result, menu);
 
@@ -65,7 +59,7 @@ public class SearchResultActivity extends AppCompatActivity {
         SearchView searchView = (SearchView) menuItem.getActionView();
         searchView.setIconifiedByDefault(true);
         searchView.setSubmitButtonEnabled(false);
-        searchView.setQueryHint(getString(R.string.repositories));
+        searchView.setQueryHint(getString(R.string.title_search_result));
         searchView.setOnQueryTextListener(onQueryTextListener);
 
         return true;

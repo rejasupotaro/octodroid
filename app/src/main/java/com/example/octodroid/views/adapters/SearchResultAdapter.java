@@ -11,8 +11,8 @@ import com.example.octodroid.views.components.MoreLoadScrollListener;
 import com.example.octodroid.views.helpers.ToastHelper;
 import com.example.octodroid.views.holders.ProgressViewHolder;
 import com.example.octodroid.views.holders.RepositoryItemViewHolder;
+import com.jakewharton.rxbinding.view.RxView;
 import com.rejasupotaro.octodroid.http.Response;
-import com.rejasupotaro.octodroid.http.Params;
 import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.SearchResult;
 
@@ -101,12 +101,9 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query));
         subscription = responseSubject
+                .takeUntil(RxView.detaches(recyclerView))
                 .flatMap(r -> r)
                 .subscribe(new ResponseSubscriber());
-    }
-
-    public void destroy() {
-        subscription.unsubscribe();
     }
 
     private void showError() {

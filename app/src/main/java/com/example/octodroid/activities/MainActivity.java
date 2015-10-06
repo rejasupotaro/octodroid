@@ -3,26 +3,21 @@ package com.example.octodroid.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.octodroid.R;
-import com.example.octodroid.data.GitHub;
 import com.example.octodroid.data.SessionManager;
-import com.example.octodroid.data.SessionPrefs;
-import com.example.octodroid.data.SessionPrefsSchema;
 import com.example.octodroid.views.adapters.HottestRepositoryAdapter;
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends RxAppCompatActivity {
+public class MainActivity extends AppCompatActivity {
     @Bind(R.id.hottest_repository_list)
     RecyclerView hottestRepositoryListView;
-
-    private HottestRepositoryAdapter hottestRepositoryAdapter;
 
     public static void launch(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -43,14 +38,6 @@ public class MainActivity extends RxAppCompatActivity {
         } else {
             LoginActivity.launch(this);
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        if (hottestRepositoryAdapter != null) {
-            hottestRepositoryAdapter.destroy();
-        }
-        super.onDestroy();
     }
 
     @Override
@@ -81,7 +68,7 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     private void setupViews() {
-        hottestRepositoryAdapter = new HottestRepositoryAdapter(hottestRepositoryListView);
+        HottestRepositoryAdapter hottestRepositoryAdapter = new HottestRepositoryAdapter(hottestRepositoryListView);
         hottestRepositoryListView.setAdapter(hottestRepositoryAdapter);
     }
 }
