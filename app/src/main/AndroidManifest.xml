@@ -18,6 +18,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.SearchResultActivity" />
+        <activity android:name=".activities.RepositoryListActivity" />
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/sign_in" />

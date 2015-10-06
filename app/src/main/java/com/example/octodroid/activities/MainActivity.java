@@ -63,6 +63,7 @@ public class MainActivity extends RxAppCompatActivity {
             case android.R.id.home:
                 return true;
             case R.id.action_add_repository:
+                RepositoryListActivity.launch(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
