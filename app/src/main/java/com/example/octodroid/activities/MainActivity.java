@@ -16,8 +16,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-    @Bind(R.id.hottest_repository_list)
-    RecyclerView hottestRepositoryListView;
+    @Bind(R.id.repository_list)
+    RecyclerView repositoryListView;
 
     public static void launch(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
-        HottestRepositoryAdapter hottestRepositoryAdapter = new HottestRepositoryAdapter(hottestRepositoryListView);
-        hottestRepositoryListView.setAdapter(hottestRepositoryAdapter);
+        HottestRepositoryAdapter hottestRepositoryAdapter = new HottestRepositoryAdapter(repositoryListView);
+        repositoryListView.setAdapter(hottestRepositoryAdapter);
     }
 }

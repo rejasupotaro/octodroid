@@ -4,19 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
 import com.example.octodroid.R;
-import com.example.octodroid.data.GitHub;
-import com.rejasupotaro.octodroid.models.Repository;
+import com.example.octodroid.views.adapters.RepositoryAdapter;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 
 public class RepositoryListActivity extends AppCompatActivity {
-    private Subscription subscription = Subscriptions.empty();
+    @Bind(R.id.repository_list)
+    RecyclerView repositoryListView;
 
     public static void launch(Context context) {
         Intent intent = new Intent(context, RepositoryListActivity.class);
@@ -31,12 +30,6 @@ public class RepositoryListActivity extends AppCompatActivity {
 
         setupActionBar();
         setupViews();
-    }
-
-    @Override
-    public void onDestroy() {
-        subscription.unsubscribe();
-        super.onDestroy();
     }
 
     @Override
@@ -56,11 +49,7 @@ public class RepositoryListActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
-        subscription = GitHub.client().userRepos()
-                .subscribe(r -> {
-                    for (Repository repository : r.entity()) {
-                        Log.d("DEBUG", repository.getName());
-                    }
-                });
+        RepositoryAdapter repositoryAdapter = new RepositoryAdapter(repositoryListView);
+        repositoryListView.setAdapter(repositoryAdapter);
     }
 }

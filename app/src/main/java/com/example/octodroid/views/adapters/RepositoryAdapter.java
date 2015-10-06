@@ -1,8 +1,9 @@
 package com.example.octodroid.views.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.example.octodroid.data.GitHub;
@@ -13,7 +14,6 @@ import com.example.octodroid.views.holders.RepositoryItemViewHolder;
 import com.jakewharton.rxbinding.view.RxView;
 import com.rejasupotaro.octodroid.http.Response;
 import com.rejasupotaro.octodroid.models.Repository;
-import com.rejasupotaro.octodroid.models.SearchResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,32 +22,45 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.subjects.BehaviorSubject;
 
-public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static class ViewType {
         private static final int ITEM = 1;
         private static final int FOOTER = 2;
     }
 
+    private Context context;
     private RecyclerView recyclerView;
     private List<Repository> repositories = new ArrayList<>();
-    private BehaviorSubject<Observable<Response<SearchResult<Repository>>>> responseSubject;
-    private Observable<Response<SearchResult<Repository>>> pagedResponse;
+    private BehaviorSubject<Observable<Response<List<Repository>>>> responseSubject;
+    private Observable<Response<List<Repository>>> pagedResponse;
+    private boolean isReachedLast;
 
-    public SearchResultAdapter(RecyclerView recyclerView) {
+    public RepositoryAdapter(RecyclerView recyclerView) {
+        this.context = recyclerView.getContext();
         this.recyclerView = recyclerView;
-        recyclerView.setVisibility(View.GONE);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
-        recyclerView.setHasFixedSize(false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setItemAnimator(null);
         recyclerView.addOnScrollListener(new LinearLayoutLoadMoreListener(layoutManager) {
             @Override
             public void onLoadMore() {
+                Log.e("DEBUG", "onLoadMore");
                 if (pagedResponse != null) {
                     responseSubject.onNext(pagedResponse);
                 }
             }
         });
+
+        requestUserRepositories();
+    }
+
+    private void requestUserRepositories() {
+        responseSubject = BehaviorSubject.create(GitHub.client().userRepos());
+        responseSubject.takeUntil(RxView.detaches(recyclerView))
+                .flatMap(r -> r)
+                .subscribe(new ResponseSubscriber());
     }
 
     @Override
@@ -83,49 +96,43 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return repositories.size() + 1;
+        return repositories.size() + (isReachedLast ? 0 : 1);
     }
 
-    public void clear() {
-        repositories.clear();
-        notifyDataSetChanged();
-    }
-
-    public void submit(String query) {
-        clear();
-        recyclerView.setVisibility(View.VISIBLE);
-
-        responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query));
-        responseSubject
-                .takeUntil(RxView.detaches(recyclerView))
-                .flatMap(r -> r)
-                .subscribe(new ResponseSubscriber());
-    }
-
-    private class ResponseSubscriber extends Subscriber<Response<SearchResult<Repository>>> {
+    private class ResponseSubscriber extends Subscriber<Response<List<Repository>>> {
 
         @Override
         public void onCompleted() {
-            unsubscribe();
+            // do nothing
         }
 
         @Override
         public void onError(Throwable e) {
-            ToastHelper.showError(recyclerView.getContext());
+            isReachedLast = true;
+            notifyDataSetChanged();
+            ToastHelper.showError(context);
         }
 
         @Override
-        public void onNext(Response<SearchResult<Repository>> r) {
-            if (r.entity().getItems() == null || r.entity().getItems().isEmpty()) {
+        public void onNext(Response<List<Repository>> r) {
+            if (r.entity().isEmpty()) {
+                isReachedLast = true;
+                notifyDataSetChanged();
                 return;
             }
 
-            List<Repository> items = r.entity().getItems();
+            List<Repository> items = r.entity();
             int startPosition = repositories.size();
             repositories.addAll(items);
-            notifyItemRangeInserted(startPosition, items.size());
+
+            if (startPosition == 0) {
+                notifyDataSetChanged();
+            } else {
+                notifyItemRangeInserted(startPosition, items.size());
+            }
 
             pagedResponse = r.next();
         }
     }
 }
+

@@ -95,9 +95,18 @@ public class GitHubClient {
     }
 
     @RequireLogin
-    public Observable<Response<List<Repository>>> userRepos(Params params) {
+    public Observable<Response<List<Repository>>> userRepos(final Params params) {
         return apiClient.request(Method.GET, "/user/repos", params)
                 .to(new TypeToken<List<Repository>>() {
+                }).map(new Func1<Response<List<Repository>>, Response<List<Repository>>>() {
+                    @Override
+                    public Response<List<Repository>> call(Response<List<Repository>> r) {
+                        if (r.hasNext()) {
+                            params.incrementPage();
+                            r.next(userRepos(params));
+                        }
+                        return r;
+                    }
                 });
     }
 

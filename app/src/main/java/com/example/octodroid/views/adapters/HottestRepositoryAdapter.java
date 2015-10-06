@@ -17,14 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Subscriber;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 
 public class HottestRepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private RecyclerView recyclerView;
     private List<Repository> repositories = new ArrayList<>();
-    private Subscription subscription = Subscriptions.empty();
 
     public HottestRepositoryAdapter(RecyclerView recyclerView) {
         this.context = recyclerView.getContext();
@@ -38,7 +35,7 @@ public class HottestRepositoryAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     private void requestHottestRepository() {
-        subscription = GitHub.client().hottestRepositories()
+        GitHub.client().hottestRepositories()
                 .takeUntil(RxView.detaches(recyclerView))
                 .map(Response::entity)
                 .subscribe(new ResponseSubscriber());

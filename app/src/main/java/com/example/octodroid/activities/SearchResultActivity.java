@@ -47,6 +47,7 @@ public class SearchResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
         ButterKnife.bind(this);
+
         setupActionBar();
         setupViews();
     }
