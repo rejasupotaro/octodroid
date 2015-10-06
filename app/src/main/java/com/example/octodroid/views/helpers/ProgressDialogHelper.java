@@ -13,7 +13,7 @@ public class ProgressDialogHelper {
     public ProgressDialogHelper(Context context) {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(context);
-            message = context.getString(R.string.loading);
+            message = context.getString(R.string.message_loading);
         }
     }
 
