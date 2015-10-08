@@ -3,21 +3,25 @@ package com.example.octodroid.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.octodroid.R;
 import com.example.octodroid.data.SessionManager;
-import com.example.octodroid.views.adapters.HottestRepositoryAdapter;
+import com.example.octodroid.fragments.RepositoryNotificationListFragment;
+import com.example.octodroid.views.components.ViewPagerAdapter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-    @Bind(R.id.repository_list)
-    RecyclerView repositoryListView;
+    @Bind(R.id.repository_view_pager_tabs)
+    TabLayout tabLayout;
+    @Bind(R.id.repository_view_pager)
+    ViewPager viewPager;
 
     public static void launch(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -68,7 +72,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
-        HottestRepositoryAdapter hottestRepositoryAdapter = new HottestRepositoryAdapter(repositoryListView);
-        repositoryListView.setAdapter(hottestRepositoryAdapter);
+        RepositoryNotificationListFragment fragment = RepositoryNotificationListFragment.newInstance();
+
+        ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        pagerAdapter.addFragment(fragment, "Title");
+        viewPager.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
     }
 }
