@@ -7,12 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.octodroid.R;
+import com.yatatsu.autobundle.Arg;
+import com.yatatsu.autobundle.AutoBundle;
 
 import butterknife.ButterKnife;
 
 public class RepositoryNotificationListFragment extends Fragment {
-    public static RepositoryNotificationListFragment newInstance() {
-        return new RepositoryNotificationListFragment();
+    @Arg
+    int repositoryId;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        AutoBundle.bind(this);
     }
 
     @Override

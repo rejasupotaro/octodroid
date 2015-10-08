@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.example.octodroid.R;
 import com.example.octodroid.data.SessionManager;
 import com.example.octodroid.fragments.RepositoryNotificationListFragment;
+import com.example.octodroid.fragments.RepositoryNotificationListFragmentAutoBundle;
 import com.example.octodroid.views.components.ViewPagerAdapter;
 
 import butterknife.Bind;
@@ -72,7 +73,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
-        RepositoryNotificationListFragment fragment = RepositoryNotificationListFragment.newInstance();
+        RepositoryNotificationListFragment fragment = RepositoryNotificationListFragmentAutoBundle
+                .createFragmentBuilder(1)
+                .build();
 
         ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(fragment, "Title");
