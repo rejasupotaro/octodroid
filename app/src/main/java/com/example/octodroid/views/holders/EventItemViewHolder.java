@@ -4,21 +4,28 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.octodroid.R;
 import com.rejasupotaro.octodroid.models.Comment;
 import com.rejasupotaro.octodroid.models.Event;
+import com.rejasupotaro.octodroid.models.User;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class EventItemViewHolder extends RecyclerView.ViewHolder {
-    @Bind(R.id.body)
+    @Bind(R.id.user_image)
+    ImageView userImageView;
+    @Bind(R.id.user_name_text)
+    TextView userNameText;
+    @Bind(R.id.body_text)
     TextView bodyTextView;
 
     public static EventItemViewHolder create(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_notification, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_event, parent, false);
         return new EventItemViewHolder(view);
     }
 
@@ -30,6 +37,14 @@ public class EventItemViewHolder extends RecyclerView.ViewHolder {
     public void bind(final Event event) {
         Comment comment = event.getPayload().getComment();
         if (comment != null) {
+            User user = comment.getUser();
+
+            Glide.with(userImageView.getContext())
+                    .load(user.getAvatarUrl())
+                    .into(userImageView);
+
+            userNameText.setText(user.getLogin());
+
             bodyTextView.setText(comment.getBody());
         }
     }

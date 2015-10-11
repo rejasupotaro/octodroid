@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.example.octodroid.data.GitHub;
+import com.example.octodroid.views.components.DividerItemDecoration;
 import com.example.octodroid.views.components.LinearLayoutLoadMoreListener;
 import com.example.octodroid.views.holders.EventItemViewHolder;
 import com.example.octodroid.views.holders.ProgressViewHolder;
@@ -40,6 +41,7 @@ public class RepositoryEventListAdapter extends RecyclerView.Adapter<RecyclerVie
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(false);
         recyclerView.setItemAnimator(null);
+        recyclerView.addItemDecoration(new DividerItemDecoration(context));
         recyclerView.addOnScrollListener(new LinearLayoutLoadMoreListener(layoutManager) {
             @Override
             public void onLoadMore() {
