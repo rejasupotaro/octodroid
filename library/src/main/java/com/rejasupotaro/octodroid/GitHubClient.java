@@ -53,6 +53,11 @@ public class GitHubClient {
     }
 
     @RequireLogin
+    public Observable<Response<List<Notification>>> notifications() {
+        return notifications(new Params());
+    }
+
+    @RequireLogin
     public Observable<Response<List<Notification>>> notifications(Params params) {
         return apiClient.request(Method.GET, "/notifications", params)
                 .to(new TypeToken<List<Notification>>() {

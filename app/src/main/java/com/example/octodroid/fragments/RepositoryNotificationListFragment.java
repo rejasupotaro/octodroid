@@ -2,17 +2,23 @@ package com.example.octodroid.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.octodroid.R;
+import com.example.octodroid.views.adapters.RepositoryNotificationListAdapter;
 import com.yatatsu.autobundle.Arg;
 import com.yatatsu.autobundle.AutoBundle;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class RepositoryNotificationListFragment extends Fragment {
+    @Bind(R.id.repository_notification_list)
+    RecyclerView repositoryNotificationListView;
+
     @Arg
     int repositoryId;
 
@@ -43,5 +49,7 @@ public class RepositoryNotificationListFragment extends Fragment {
     }
 
     private void setupViews() {
+        RepositoryNotificationListAdapter repositoryNotificationListAdapter = new RepositoryNotificationListAdapter(repositoryNotificationListView);
+        repositoryNotificationListView.setAdapter(repositoryNotificationListAdapter);
     }
 }

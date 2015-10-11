@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import com.example.octodroid.data.GitHub;
 import com.example.octodroid.views.components.LinearLayoutLoadMoreListener;
 import com.example.octodroid.views.helpers.ToastHelper;
+import com.example.octodroid.views.holders.NotificationItemViewHolder;
 import com.example.octodroid.views.holders.ProgressViewHolder;
-import com.example.octodroid.views.holders.RepositoryItemViewHolder;
 import com.jakewharton.rxbinding.view.RxView;
 import com.rejasupotaro.octodroid.http.Response;
-import com.rejasupotaro.octodroid.models.Repository;
+import com.rejasupotaro.octodroid.models.Notification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.subjects.BehaviorSubject;
 
-public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RepositoryNotificationListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static class ViewType {
         private static final int ITEM = 1;
         private static final int FOOTER = 2;
@@ -29,12 +29,12 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private Context context;
     private RecyclerView recyclerView;
-    private List<Repository> repositories = new ArrayList<>();
-    private BehaviorSubject<Observable<Response<List<Repository>>>> responseSubject;
-    private Observable<Response<List<Repository>>> pagedResponse;
+    private List<Notification> notifications = new ArrayList<>();
+    private BehaviorSubject<Observable<Response<List<Notification>>>> responseSubject;
+    private Observable<Response<List<Notification>>> pagedResponse;
     private boolean isReachedLast;
 
-    public RepositoryAdapter(RecyclerView recyclerView) {
+    public RepositoryNotificationListAdapter(RecyclerView recyclerView) {
         this.context = recyclerView.getContext();
         this.recyclerView = recyclerView;
 
@@ -55,7 +55,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void requestUserRepositories() {
-        responseSubject = BehaviorSubject.create(GitHub.client().userRepos());
+        responseSubject = BehaviorSubject.create(GitHub.client().notifications());
         responseSubject.takeUntil(RxView.detaches(recyclerView))
                 .flatMap(r -> r)
                 .subscribe(new ResponseSubscriber());
@@ -66,7 +66,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (viewType == ViewType.FOOTER) {
             return ProgressViewHolder.create(parent);
         } else {
-            return RepositoryItemViewHolder.create(parent);
+            return NotificationItemViewHolder.create(parent);
         }
     }
 
@@ -77,15 +77,15 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 // do nothing
                 break;
             default:
-                Repository repository = repositories.get(position);
-                ((RepositoryItemViewHolder) viewHolder).bind(repository);
+                Notification notification = notifications.get(position);
+                ((NotificationItemViewHolder) viewHolder).bind(notification);
                 break;
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (repositories.size() == 0 || position == repositories.size()) {
+        if (notifications.size() == 0 || position == notifications.size()) {
             return ViewType.FOOTER;
         } else {
             return ViewType.ITEM;
@@ -94,10 +94,10 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return repositories.size() + (isReachedLast ? 0 : 1);
+        return notifications.size() + (isReachedLast ? 0 : 1);
     }
 
-    private class ResponseSubscriber extends Subscriber<Response<List<Repository>>> {
+    private class ResponseSubscriber extends Subscriber<Response<List<Notification>>> {
 
         @Override
         public void onCompleted() {
@@ -112,16 +112,16 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         @Override
-        public void onNext(Response<List<Repository>> r) {
+        public void onNext(Response<List<Notification>> r) {
             if (r.entity().isEmpty()) {
                 isReachedLast = true;
                 notifyDataSetChanged();
                 return;
             }
 
-            List<Repository> items = r.entity();
-            int startPosition = repositories.size();
-            repositories.addAll(items);
+            List<Notification> items = r.entity();
+            int startPosition = notifications.size();
+            notifications.addAll(items);
 
             if (startPosition == 0) {
                 notifyDataSetChanged();
