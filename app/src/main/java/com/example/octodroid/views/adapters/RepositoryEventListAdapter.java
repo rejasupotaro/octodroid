@@ -53,7 +53,7 @@ public class RepositoryEventListAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     private void requestUserRepositories() {
-        responseSubject = BehaviorSubject.create(GitHub.client().repositoryEvents("rejasupotaro", "octodroid"));
+        responseSubject = BehaviorSubject.create(GitHub.client().repositoryEvents("rails-api", "active_model_serializers"));
         responseSubject.takeUntil(RxView.detaches(recyclerView))
                 .flatMap(r -> r)
                 .subscribe(r -> {

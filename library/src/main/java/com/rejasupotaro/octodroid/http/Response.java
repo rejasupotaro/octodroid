@@ -1,11 +1,16 @@
 package com.rejasupotaro.octodroid.http;
 
+import android.util.Log;
+
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.rejasupotaro.octodroid.GsonProvider;
+import com.rejasupotaro.octodroid.models.Event;
+import com.rejasupotaro.octodroid.models.Resource;
 import com.squareup.okhttp.Headers;
 
 import java.io.IOException;
+import java.util.List;
 
 import rx.Observable;
 
@@ -69,17 +74,24 @@ public class Response<T> {
     public static <T> Response<T> parse(Headers headers, int statusCode, String body, TypeToken<T> type) throws IOException {
         Response<T> response = new Response<>();
 
+        try {
+            List<Event> events = GsonProvider.get().fromJson(body, new TypeToken<List<Event>>() {
+            }.getType());
+        } catch (Exception e) {
+            Log.e("DEBUG", e.toString());
+        }
+
         if (200 <= statusCode && statusCode < 300) {
             try {
                 response.entity = GsonProvider.get().fromJson(body, type.getType());
             } catch (JsonSyntaxException e) {
-                throw new JsonSyntaxException("Can't instantiate " + type.getRawType().getName() + " class from " + body);
+                throw new JsonSyntaxException("Can't instantiate " + type.getRawType().getName() + " class from " + body, e);
             }
         } else {
             try {
                 response.error = GsonProvider.get().fromJson(body, Error.class);
             } catch (JsonSyntaxException e) {
-                throw new JsonSyntaxException("Can't instantiate Error class from " + body);
+                throw new JsonSyntaxException("Can't instantiate Error class from " + body, e);
             }
         }
 

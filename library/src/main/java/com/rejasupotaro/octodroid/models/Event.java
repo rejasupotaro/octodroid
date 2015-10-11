@@ -14,7 +14,7 @@ public class Event extends Resource {
     @SerializedName("public")
     private boolean isPublic;
     @SerializedName("payload")
-    private JSONObject payload;
+    private Payload payload;
     @SerializedName("repo")
     private Repository repository;
     @SerializedName("actor")
@@ -36,7 +36,7 @@ public class Event extends Resource {
         return isPublic;
     }
 
-    public JSONObject getPayload() {
+    public Payload getPayload() {
         return payload;
     }
 

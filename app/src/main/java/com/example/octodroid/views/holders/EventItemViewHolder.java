@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.octodroid.R;
+import com.rejasupotaro.octodroid.models.Comment;
 import com.rejasupotaro.octodroid.models.Event;
 
 import butterknife.Bind;
@@ -27,7 +28,10 @@ public class EventItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(final Event event) {
-        bodyTextView.setText(event.toJson());
+        Comment comment = event.getPayload().getComment();
+        if (comment != null) {
+            bodyTextView.setText(comment.getBody());
+        }
     }
 }
 
