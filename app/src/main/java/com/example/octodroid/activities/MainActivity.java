@@ -11,8 +11,8 @@ import android.view.MenuItem;
 
 import com.example.octodroid.R;
 import com.example.octodroid.data.SessionManager;
-import com.example.octodroid.fragments.RepositoryNotificationListFragment;
-import com.example.octodroid.fragments.RepositoryNotificationListFragmentAutoBundle;
+import com.example.octodroid.fragments.RepositoryEventListFragment;
+import com.example.octodroid.fragments.RepositoryEventListFragmentAutoBundle;
 import com.example.octodroid.views.components.ViewPagerAdapter;
 
 import butterknife.Bind;
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
-        RepositoryNotificationListFragment fragment = RepositoryNotificationListFragmentAutoBundle
+        RepositoryEventListFragment fragment = RepositoryEventListFragmentAutoBundle
                 .createFragmentBuilder(1)
                 .build();
 

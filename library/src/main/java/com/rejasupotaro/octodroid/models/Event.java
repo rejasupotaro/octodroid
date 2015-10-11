@@ -2,18 +2,19 @@ package com.rejasupotaro.octodroid.models;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.joda.time.DateTime;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 public class Event extends Resource {
     @SerializedName("id")
-    private int id;
+    private long id;
     @SerializedName("type")
     private String type;
     @SerializedName("public")
     private boolean isPublic;
     @SerializedName("payload")
-    private String payload;
+    private JSONObject payload;
     @SerializedName("repo")
     private Repository repository;
     @SerializedName("actor")
@@ -21,9 +22,9 @@ public class Event extends Resource {
     @SerializedName("org")
     private JSONObject organization;
     @SerializedName("created_at")
-    private DateTime createdAt;
+    private Date createdAt;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -35,7 +36,7 @@ public class Event extends Resource {
         return isPublic;
     }
 
-    public String getPayload() {
+    public JSONObject getPayload() {
         return payload;
     }
 
@@ -51,7 +52,7 @@ public class Event extends Resource {
         return organization;
     }
 
-    public DateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 }

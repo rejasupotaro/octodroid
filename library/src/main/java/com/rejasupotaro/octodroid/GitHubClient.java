@@ -5,6 +5,7 @@ import com.rejasupotaro.octodroid.http.ApiClient;
 import com.rejasupotaro.octodroid.http.Method;
 import com.rejasupotaro.octodroid.http.Params;
 import com.rejasupotaro.octodroid.http.Response;
+import com.rejasupotaro.octodroid.models.Event;
 import com.rejasupotaro.octodroid.models.Notification;
 import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.SearchResult;
@@ -40,8 +41,29 @@ public class GitHubClient {
 
     public Observable<Response<User>> user(String username) {
         String path = String.format("/users/%s", username);
-        return apiClient.request(Method.GET, path).to(new TypeToken<User>() {
-        });
+        return apiClient.request(Method.GET, path)
+                .to(new TypeToken<User>() {
+                });
+    }
+
+    public Observable<Response<List<Event>>> repositoryEvents(String owner, String repo) {
+        return repositoryEvents(owner, repo, new Params());
+    }
+
+    public Observable<Response<List<Event>>> repositoryEvents(final String owner, final String repo, final Params params) {
+        String path = String.format("/repos/%s/%s/events", owner, repo);
+        return apiClient.request(Method.GET, path)
+                .to(new TypeToken<List<Event>>() {
+                }).map(new Func1<Response<List<Event>>, Response<List<Event>>>() {
+                    @Override
+                    public Response<List<Event>> call(Response<List<Event>> r) {
+                        if (r.hasNext()) {
+                            params.incrementPage();
+                            r.next(repositoryEvents(owner, repo, params));
+                        }
+                        return r;
+                    }
+                });
     }
 
     @RequireLogin

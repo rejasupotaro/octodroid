@@ -1,14 +1,9 @@
 package com.rejasupotaro.octodroid.http;
 
-import android.text.TextUtils;
-
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.rejasupotaro.octodroid.GsonProvider;
 import com.squareup.okhttp.Headers;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -57,18 +52,6 @@ public class Response<T> {
 
     public void next(Observable<Response<T>> next) {
         this.next = next;
-    }
-
-    public JSONObject bodyAsJson() {
-        if (TextUtils.isEmpty(body)) {
-            return new JSONObject();
-        }
-
-        try {
-            return new JSONObject(body);
-        } catch (JSONException e) {
-            return new JSONObject();
-        }
     }
 
     public boolean hasError() {

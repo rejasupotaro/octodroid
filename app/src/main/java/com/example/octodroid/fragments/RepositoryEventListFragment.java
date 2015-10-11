@@ -8,16 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.octodroid.R;
-import com.example.octodroid.views.adapters.RepositoryNotificationListAdapter;
+import com.example.octodroid.views.adapters.RepositoryEventListAdapter;
 import com.yatatsu.autobundle.Arg;
 import com.yatatsu.autobundle.AutoBundle;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class RepositoryNotificationListFragment extends Fragment {
-    @Bind(R.id.repository_notification_list)
-    RecyclerView repositoryNotificationListView;
+public class RepositoryEventListFragment extends Fragment {
+    @Bind(R.id.repository_event_list)
+    RecyclerView repositoryEventListView;
 
     @Arg
     int repositoryId;
@@ -30,7 +30,7 @@ public class RepositoryNotificationListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_repository_notification_list, null);
+        View view = inflater.inflate(R.layout.fragment_repository_event_list, null);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -49,7 +49,7 @@ public class RepositoryNotificationListFragment extends Fragment {
     }
 
     private void setupViews() {
-        RepositoryNotificationListAdapter repositoryNotificationListAdapter = new RepositoryNotificationListAdapter(repositoryNotificationListView);
-        repositoryNotificationListView.setAdapter(repositoryNotificationListAdapter);
+        RepositoryEventListAdapter repositoryEventListAdapter = new RepositoryEventListAdapter(repositoryEventListView);
+        repositoryEventListView.setAdapter(repositoryEventListAdapter);
     }
 }
