@@ -6,10 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.example.octodroid.data.GitHub;
+import com.example.octodroid.views.components.DividerItemDecoration;
 import com.example.octodroid.views.components.LinearLayoutLoadMoreListener;
 import com.example.octodroid.views.helpers.ToastHelper;
 import com.example.octodroid.views.holders.ProgressViewHolder;
-import com.example.octodroid.views.holders.RepositoryItemViewHolder;
+import com.example.octodroid.views.holders.SelectableRepositoryItemViewHolder;
 import com.jakewharton.rxbinding.view.RxView;
 import com.rejasupotaro.octodroid.http.Params;
 import com.rejasupotaro.octodroid.http.Response;
@@ -43,6 +44,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(false);
         recyclerView.setItemAnimator(null);
+        recyclerView.addItemDecoration(new DividerItemDecoration(context));
         recyclerView.addOnScrollListener(new LinearLayoutLoadMoreListener(layoutManager) {
             @Override
             public void onLoadMore() {
@@ -70,7 +72,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (viewType == ViewType.FOOTER) {
             return ProgressViewHolder.create(parent);
         } else {
-            return RepositoryItemViewHolder.create(parent);
+            return SelectableRepositoryItemViewHolder.create(parent);
         }
     }
 
@@ -82,7 +84,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 break;
             default:
                 Repository repository = repositories.get(position);
-                ((RepositoryItemViewHolder) viewHolder).bind(repository);
+                ((SelectableRepositoryItemViewHolder) viewHolder).bind(repository);
                 break;
         }
     }
