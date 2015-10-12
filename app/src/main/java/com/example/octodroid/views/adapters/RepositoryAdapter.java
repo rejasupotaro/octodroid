@@ -11,6 +11,7 @@ import com.example.octodroid.views.helpers.ToastHelper;
 import com.example.octodroid.views.holders.ProgressViewHolder;
 import com.example.octodroid.views.holders.RepositoryItemViewHolder;
 import com.jakewharton.rxbinding.view.RxView;
+import com.rejasupotaro.octodroid.http.Params;
 import com.rejasupotaro.octodroid.http.Response;
 import com.rejasupotaro.octodroid.models.Repository;
 
@@ -55,7 +56,10 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void requestUserRepositories() {
-        responseSubject = BehaviorSubject.create(GitHub.client().userRepositories());
+        Params params = new Params();
+        params.add("per_page", "100");
+        params.add("sort", "updated");
+        responseSubject = BehaviorSubject.create(GitHub.client().userRepositories(params));
         responseSubject.takeUntil(RxView.detaches(recyclerView))
                 .flatMap(r -> r)
                 .subscribe(new ResponseSubscriber());

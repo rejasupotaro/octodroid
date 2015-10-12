@@ -16,6 +16,7 @@ public class Params {
     public Params() {
         queryMap = new HashMap<>();
         queryMap.put("page", "1");
+        queryMap.put("per_page", "20");
     }
 
     public Params add(String key, String value) {
