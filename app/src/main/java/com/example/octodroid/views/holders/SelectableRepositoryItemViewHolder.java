@@ -1,9 +1,11 @@
 package com.example.octodroid.views.holders;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.octodroid.R;
@@ -17,6 +19,8 @@ public class SelectableRepositoryItemViewHolder extends RecyclerView.ViewHolder 
     TextView repositoryNameTextView;
     @Bind(R.id.description)
     TextView descriptionTextView;
+    @Bind(R.id.checkbox)
+    CheckBox checkBox;
 
     public static SelectableRepositoryItemViewHolder create(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_selectable_repository, parent, false);
@@ -32,7 +36,13 @@ public class SelectableRepositoryItemViewHolder extends RecyclerView.ViewHolder 
         repositoryNameTextView.setText(String.format("%s / %s",
                 repository.getOwner().getLogin(),
                 repository.getName()));
-        descriptionTextView.setText(repository.getDescription());
+
+        if (TextUtils.isEmpty(repository.getDescription())) {
+            descriptionTextView.setVisibility(View.GONE);
+        } else {
+            descriptionTextView.setText(repository.getDescription());
+            descriptionTextView.setVisibility(View.VISIBLE);
+        }
     }
 }
 
