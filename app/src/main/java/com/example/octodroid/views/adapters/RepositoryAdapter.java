@@ -55,7 +55,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void requestUserRepositories() {
-        responseSubject = BehaviorSubject.create(GitHub.client().userRepos());
+        responseSubject = BehaviorSubject.create(GitHub.client().userRepositories());
         responseSubject.takeUntil(RxView.detaches(recyclerView))
                 .flatMap(r -> r)
                 .subscribe(new ResponseSubscriber());

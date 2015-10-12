@@ -117,12 +117,12 @@ public class GitHubClient {
     }
 
     @RequireLogin
-    public Observable<Response<List<Repository>>> userRepos() {
-        return userRepos(new Params());
+    public Observable<Response<List<Repository>>> userRepositories() {
+        return userRepositories(new Params());
     }
 
     @RequireLogin
-    public Observable<Response<List<Repository>>> userRepos(final Params params) {
+    public Observable<Response<List<Repository>>> userRepositories(final Params params) {
         return apiClient.request(Method.GET, "/user/repos", params)
                 .to(new TypeToken<List<Repository>>() {
                 }).map(new Func1<Response<List<Repository>>, Response<List<Repository>>>() {
@@ -130,7 +130,7 @@ public class GitHubClient {
                     public Response<List<Repository>> call(Response<List<Repository>> r) {
                         if (r.hasNext()) {
                             params.incrementPage();
-                            r.next(userRepos(params));
+                            r.next(userRepositories(params));
                         }
                         return r;
                     }
