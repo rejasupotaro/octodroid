@@ -32,7 +32,7 @@ public class SelectableRepositoryItemViewHolder extends RecyclerView.ViewHolder 
         ButterKnife.bind(this, view);
     }
 
-    public void bind(final Repository repository) {
+    public void bind(final Repository repository, boolean isSelected, OnSelectRepositoryListener listener) {
         repositoryNameTextView.setText(String.format("%s / %s",
                 repository.getOwner().getLogin(),
                 repository.getName()));
@@ -43,6 +43,21 @@ public class SelectableRepositoryItemViewHolder extends RecyclerView.ViewHolder 
             descriptionTextView.setText(repository.getDescription());
             descriptionTextView.setVisibility(View.VISIBLE);
         }
+
+        checkBox.setOnCheckedChangeListener((v, isChecked) -> {
+            if (isChecked) {
+                listener.onSelect(repository.getId());
+            } else {
+                listener.onUnSelect(repository.getId());
+            }
+        });
+        checkBox.setChecked(isSelected);
+    }
+
+    public interface OnSelectRepositoryListener {
+        void onSelect(int id);
+
+        void onUnSelect(int id);
     }
 }
 

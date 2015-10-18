@@ -29,7 +29,6 @@ public class ResponseTest {
         assertThat(response.headers().get("Name")).isEqualTo("Value");
         assertThat(response.code()).isEqualTo(200);
         assertThat(response.body()).isEqualTo("{\"message\":\"This is a message\"}");
-        assertThat(response.bodyAsJson().get("message")).isEqualTo("This is a message");
     }
 
     @Test

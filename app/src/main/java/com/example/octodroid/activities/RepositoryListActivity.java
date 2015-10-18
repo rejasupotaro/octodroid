@@ -17,6 +17,8 @@ public class RepositoryListActivity extends AppCompatActivity {
     @Bind(R.id.repository_list)
     RecyclerView repositoryListView;
 
+    private RepositoryAdapter repositoryAdapter;
+
     public static void launch(Context context) {
         Intent intent = new Intent(context, RepositoryListActivity.class);
         context.startActivity(intent);
@@ -30,6 +32,12 @@ public class RepositoryListActivity extends AppCompatActivity {
 
         setupActionBar();
         setupViews();
+    }
+
+    @Override
+    public void onDestroy() {
+        repositoryAdapter.onDestroy();
+        super.onDestroy();
     }
 
     @Override
@@ -49,7 +57,7 @@ public class RepositoryListActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
-        RepositoryAdapter repositoryAdapter = new RepositoryAdapter(repositoryListView);
+        repositoryAdapter = new RepositoryAdapter(repositoryListView);
         repositoryListView.setAdapter(repositoryAdapter);
     }
 }

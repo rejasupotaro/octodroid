@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.example.octodroid.data.GitHub;
+import com.example.octodroid.data.prefs.OctodroidPrefs;
+import com.example.octodroid.data.prefs.OctodroidPrefsSchema;
 import com.example.octodroid.views.components.DividerItemDecoration;
 import com.example.octodroid.views.components.LinearLayoutLoadMoreListener;
 import com.example.octodroid.views.helpers.ToastHelper;
@@ -18,6 +20,7 @@ import com.rejasupotaro.octodroid.models.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -36,9 +39,15 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Observable<Response<List<Repository>>> pagedResponse;
     private boolean isReachedLast;
 
+    private OctodroidPrefs octodroidPrefs;
+    private Set<String> selectedRepositoryIds;
+
     public RepositoryAdapter(RecyclerView recyclerView) {
         this.context = recyclerView.getContext();
         this.recyclerView = recyclerView;
+
+        octodroidPrefs = OctodroidPrefsSchema.get(context);
+        selectedRepositoryIds = octodroidPrefs.getSelectedRepositoryIds();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
@@ -84,7 +93,20 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 break;
             default:
                 Repository repository = repositories.get(position);
-                ((SelectableRepositoryItemViewHolder) viewHolder).bind(repository);
+                ((SelectableRepositoryItemViewHolder) viewHolder).bind(
+                        repository,
+                        selectedRepositoryIds.contains(String.valueOf(repository.getId())),
+                        new SelectableRepositoryItemViewHolder.OnSelectRepositoryListener() {
+                            @Override
+                            public void onSelect(int id) {
+                                selectedRepositoryIds.add(String.valueOf(id));
+                            }
+
+                            @Override
+                            public void onUnSelect(int id) {
+                                selectedRepositoryIds.remove(String.valueOf(id));
+                            }
+                        });
                 break;
         }
     }
@@ -137,6 +159,10 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             pagedResponse = r.next();
         }
+    }
+
+    public void onDestroy() {
+        octodroidPrefs.putSelectedRepositoryIds(selectedRepositoryIds);
     }
 }
 

@@ -1,4 +1,4 @@
-package com.example.octodroid.data;
+package com.example.octodroid.data.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -30,9 +30,9 @@ public class SessionPrefsSchema extends PrefSchema {
     private static SessionPrefs prefs;
 
     @Key("username")
-    protected String username;
+    String username;
     @Key("password")
-    protected String password;
+    String password;
 
     public static synchronized SessionPrefs get(Context context) {
         if (prefs == null) {

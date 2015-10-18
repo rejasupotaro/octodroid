@@ -2,6 +2,9 @@ package com.example.octodroid.data;
 
 import android.content.Context;
 
+import com.example.octodroid.data.prefs.SessionPrefs;
+import com.example.octodroid.data.prefs.SessionPrefsSchema;
+
 public class SessionManager {
     public static boolean isLoggedIn(Context context) {
         SessionPrefs prefs = SessionPrefsSchema.get(context);
