@@ -11,8 +11,8 @@ import java.util.Set;
 
 @Table("octodroid")
 public class OctodroidPrefsSchema extends PrefSchema {
-    @Key("selected_repository_ids")
-    Set<String> selectedRepositoryIds = new HashSet<>();
+    @Key("selected_serialized_serialized_repositories")
+    Set<String> seletedSerializedRepositories = new HashSet<>();
 
     private static OctodroidPrefs prefs;
 

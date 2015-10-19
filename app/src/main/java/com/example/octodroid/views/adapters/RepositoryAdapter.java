@@ -17,9 +17,13 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.rejasupotaro.octodroid.http.Params;
 import com.rejasupotaro.octodroid.http.Response;
 import com.rejasupotaro.octodroid.models.Repository;
+import com.rejasupotaro.octodroid.models.Resource;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import rx.Observable;
@@ -40,14 +44,17 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private boolean isReachedLast;
 
     private OctodroidPrefs octodroidPrefs;
-    private Set<String> selectedRepositoryIds;
+    private Map<Integer, Repository> selectedRepositories = new HashMap<>();
 
     public RepositoryAdapter(RecyclerView recyclerView) {
         this.context = recyclerView.getContext();
         this.recyclerView = recyclerView;
 
         octodroidPrefs = OctodroidPrefsSchema.get(context);
-        selectedRepositoryIds = octodroidPrefs.getSelectedRepositoryIds();
+        for (String serializedRepositories : octodroidPrefs.getSeletedSerializedRepositories()) {
+            Repository repository = Resource.fromJson(serializedRepositories, Repository.class);
+            selectedRepositories.put(repository.getId(), repository);
+        }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
@@ -95,16 +102,16 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Repository repository = repositories.get(position);
                 ((SelectableRepositoryItemViewHolder) viewHolder).bind(
                         repository,
-                        selectedRepositoryIds.contains(String.valueOf(repository.getId())),
+                        selectedRepositories.containsKey(repository.getId()),
                         new SelectableRepositoryItemViewHolder.OnSelectRepositoryListener() {
                             @Override
                             public void onSelect(int id) {
-                                selectedRepositoryIds.add(String.valueOf(id));
+                                selectedRepositories.put(id, repository);
                             }
 
                             @Override
                             public void onUnSelect(int id) {
-                                selectedRepositoryIds.remove(String.valueOf(id));
+                                selectedRepositories.remove(id);
                             }
                         });
                 break;
@@ -162,7 +169,12 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void onDestroy() {
-        octodroidPrefs.putSelectedRepositoryIds(selectedRepositoryIds);
+        Set<String> selectedSerializedRepositories = new HashSet<>();
+        for (Integer repositoryId : selectedRepositories.keySet()) {
+            Repository repository = selectedRepositories.get(repositoryId);
+            selectedSerializedRepositories.add(repository.toJson());
+        }
+        octodroidPrefs.putSeletedSerializedRepositories(selectedSerializedRepositories);
     }
 }
 
