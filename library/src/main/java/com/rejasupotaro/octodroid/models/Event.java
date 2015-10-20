@@ -10,7 +10,7 @@ public class Event extends Resource {
     @SerializedName("id")
     private long id;
     @SerializedName("type")
-    private String type;
+    private Type type;
     @SerializedName("public")
     private boolean isPublic;
     @SerializedName("payload")
@@ -28,7 +28,7 @@ public class Event extends Resource {
         return id;
     }
 
-    public String getType() {
+    public Type getType() {
         return type;
     }
 
@@ -54,5 +54,48 @@ public class Event extends Resource {
 
     public Date getCreatedAt() {
         return createdAt;
+    }
+
+    public enum Type {
+        CommitComment("CommitCommentEvent"),
+        Create("CreateEvent"),
+        Delete("DeleteEvent"),
+        Deployment("DeploymentEvent"),
+        DeploymentStatus("DeploymentStatusEvent"),
+        Download("DownloadEvent"),
+        Follow("FollowEvent"),
+        Fork("ForkEvent"),
+        ForkApply("ForkApplyEvent"),
+        Gist("GistEvent"),
+        Gollum("GollumEvent"),
+        IssueComment("IssueCommentEvent"),
+        Issues("IssuesEvent"),
+        Member("MemberEvent"),
+        Membership("MembershipEvent"),
+        PageBuild("PageBuildEvent"),
+        Public("PublicEvent"),
+        PullRequest("PullRequestEvent"),
+        PullRequestReviewComment("PullRequestReviewComment"),
+        Push("PushEvent"),
+        Release("ReleaseEvent"),
+        Repository("RepositoryEvent"),
+        Status("StatusEvent"),
+        TeamAddEvent("TeamAddEvent"),
+        Watch("WatchEvent");
+
+        private String src;
+
+        Type(String src) {
+            this.src = src;
+        }
+
+        public static Type of(String src) {
+            for (Type type : values()) {
+                if (type.src.equals(src)) {
+                    return type;
+                }
+            }
+            throw new IllegalArgumentException("Given type is not supported: " + src);
+        }
     }
 }
