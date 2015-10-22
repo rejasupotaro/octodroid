@@ -35,17 +35,27 @@ public class EventItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(final Event event) {
-        Comment comment = event.getPayload().getComment();
-        if (comment != null) {
-            User user = comment.getUser();
+        User user = event.getUser();
 
-            Glide.with(userImageView.getContext())
-                    .load(user.getAvatarUrl())
-                    .into(userImageView);
+        switch (event.getType()) {
+            case IssueComment:
+                Comment comment = event.getPayload().getComment();
 
-            userNameText.setText(user.getLogin());
+                Glide.with(userImageView.getContext())
+                        .load(user.getAvatarUrl())
+                        .into(userImageView);
 
-            bodyTextView.setText(comment.getBody());
+                userNameText.setText(user.getLogin());
+
+                bodyTextView.setText(comment.getBody());
+                break;
+            default:
+                Glide.with(userImageView.getContext())
+                        .load(user.getAvatarUrl())
+                        .into(userImageView);
+
+                bodyTextView.setText(event.getType().toString());
+                break;
         }
     }
 }

@@ -11,9 +11,13 @@ import android.view.MenuItem;
 
 import com.example.octodroid.R;
 import com.example.octodroid.data.SessionManager;
+import com.example.octodroid.data.prefs.OctodroidPrefs;
+import com.example.octodroid.data.prefs.OctodroidPrefsSchema;
 import com.example.octodroid.fragments.RepositoryEventListFragment;
 import com.example.octodroid.fragments.RepositoryEventListFragmentAutoBundle;
 import com.example.octodroid.views.components.ViewPagerAdapter;
+import com.rejasupotaro.octodroid.models.Repository;
+import com.rejasupotaro.octodroid.models.Resource;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -73,12 +77,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
-        RepositoryEventListFragment fragment = RepositoryEventListFragmentAutoBundle
-                .createFragmentBuilder(1)
-                .build();
-
         ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(fragment, "Title");
+
+        OctodroidPrefs octodroidPrefs = OctodroidPrefsSchema.get(this);
+        for (String serializedRepositories : octodroidPrefs.getSeletedSerializedRepositories()) {
+            Repository repository = Resource.fromJson(serializedRepositories, Repository.class);
+
+            RepositoryEventListFragment fragment = RepositoryEventListFragmentAutoBundle
+                    .createFragmentBuilder(repository)
+                    .build();
+
+            pagerAdapter.addFragment(fragment, repository.getFullName());
+        }
+
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }

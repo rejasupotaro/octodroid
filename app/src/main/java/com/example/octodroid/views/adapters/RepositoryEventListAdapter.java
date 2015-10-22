@@ -13,6 +13,7 @@ import com.example.octodroid.views.holders.ProgressViewHolder;
 import com.jakewharton.rxbinding.view.RxView;
 import com.rejasupotaro.octodroid.http.Response;
 import com.rejasupotaro.octodroid.models.Event;
+import com.rejasupotaro.octodroid.models.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,12 +51,13 @@ public class RepositoryEventListAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
             }
         });
-
-        requestUserRepositories();
     }
 
-    private void requestUserRepositories() {
-        responseSubject = BehaviorSubject.create(GitHub.client().repositoryEvents("rails-api", "active_model_serializers"));
+    public void requestRepositoryEvents(Repository repository) {
+        String owner = repository.getOwner().getLogin();
+        String repo = repository.getName();
+
+        responseSubject = BehaviorSubject.create(GitHub.client().repositoryEvents(owner, repo));
         responseSubject.takeUntil(RxView.detaches(recyclerView))
                 .flatMap(r -> r)
                 .subscribe(r -> {
@@ -81,22 +83,23 @@ public class RepositoryEventListAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == ViewType.FOOTER) {
-            return ProgressViewHolder.create(parent);
-        } else {
-            return EventItemViewHolder.create(parent);
+        switch (viewType) {
+            case ViewType.ITEM:
+                return EventItemViewHolder.create(parent);
+            default:
+                return ProgressViewHolder.create(parent);
         }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         switch (getItemViewType(position)) {
-            case ViewType.FOOTER:
-                // do nothing
-                break;
-            default:
+            case ViewType.ITEM:
                 Event event = events.get(position);
                 ((EventItemViewHolder) viewHolder).bind(event);
+                break;
+            default:
+                // do nothing
                 break;
         }
     }
