@@ -9,10 +9,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.octodroid.R;
 import com.example.octodroid.activities.LoginActivity;
 import com.rejasupotaro.octodroid.models.User;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,7 +50,7 @@ public class ProfileView extends FrameLayout {
             signInButton.setVisibility(View.GONE);
             container.setVisibility(View.VISIBLE);
 
-            Glide.with(userImageView.getContext())
+            Picasso.with(userImageView.getContext())
                     .load(user.getAvatarUrl())
                     .into(userImageView);
             userNameTextView.setText(user.getLogin());

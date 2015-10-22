@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.octodroid.R;
 import com.rejasupotaro.octodroid.models.Comment;
 import com.rejasupotaro.octodroid.models.Event;
 import com.rejasupotaro.octodroid.models.User;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -41,7 +41,7 @@ public class EventItemViewHolder extends RecyclerView.ViewHolder {
             case IssueComment:
                 Comment comment = event.getPayload().getComment();
 
-                Glide.with(userImageView.getContext())
+                Picasso.with(userImageView.getContext())
                         .load(user.getAvatarUrl())
                         .into(userImageView);
 
@@ -50,7 +50,7 @@ public class EventItemViewHolder extends RecyclerView.ViewHolder {
                 bodyTextView.setText(comment.getBody());
                 break;
             default:
-                Glide.with(userImageView.getContext())
+                Picasso.with(userImageView.getContext())
                         .load(user.getAvatarUrl())
                         .into(userImageView);
 

@@ -6,10 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.octodroid.R;
 import com.makeramen.RoundedImageView;
 import com.rejasupotaro.octodroid.models.Repository;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,7 +37,7 @@ public class RepositoryItemViewHolder extends RecyclerView.ViewHolder {
     public void bind(final Repository repository) {
         nameTextView.setText(repository.getName());
         descriptionTextView.setText(repository.getDescription());
-        Glide.with(userImageView.getContext())
+        Picasso.with(userImageView.getContext())
                 .load(repository.getOwner().getAvatarUrl())
                 .into(userImageView);
         userNameTextView.setText(repository.getOwner().getLogin());

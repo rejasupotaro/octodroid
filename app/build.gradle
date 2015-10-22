@@ -47,7 +47,7 @@ dependencies {
     compile 'io.reactivex:rxandroid:0.24.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.github.castorflex.smoothprogressbar:library-circular:1.0.1'
-    compile 'com.github.bumptech.glide:glide:3.4.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.makeramen:roundedimageview:1.4.0'
     compile 'com.github.gfx.util.encrypt:android-encrypt-utils:2.0.0'
     compile 'com.jakewharton.rxbinding:rxbinding:0.2.0'
