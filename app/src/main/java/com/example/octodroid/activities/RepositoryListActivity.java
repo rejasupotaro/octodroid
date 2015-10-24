@@ -1,5 +1,6 @@
 package com.example.octodroid.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
 import com.example.octodroid.R;
+import com.example.octodroid.intent.RequestCode;
 import com.example.octodroid.views.adapters.RepositoryAdapter;
+import com.yatatsu.autobundle.Arg;
+import com.yatatsu.autobundle.AutoBundle;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -19,9 +23,9 @@ public class RepositoryListActivity extends AppCompatActivity {
 
     private RepositoryAdapter repositoryAdapter;
 
-    public static void launch(Context context) {
-        Intent intent = new Intent(context, RepositoryListActivity.class);
-        context.startActivity(intent);
+    public static void launch(Activity activity) {
+        Intent intent = new Intent(activity, RepositoryListActivity.class);
+        activity.startActivityForResult(intent, RequestCode.ADD_REPOSITORY);
     }
 
     @Override
@@ -29,26 +33,27 @@ public class RepositoryListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repository_list);
         ButterKnife.bind(this);
+        AutoBundle.bind(this);
 
         setupActionBar();
         setupViews();
     }
 
     @Override
-    public void onDestroy() {
-        repositoryAdapter.onDestroy();
-        super.onDestroy();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        repositoryAdapter.saveSelectedRepositories();
+        super.onBackPressed();
     }
 
     public void setupActionBar() {

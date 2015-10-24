@@ -20,4 +20,6 @@
     <string name="email">Email</string>
     <string name="sign_in">Sign in</string>
     <string name="notice_for_sign_in">Username and Password are saved encrypted to shared preferences.</string>
+    <string name="label_add_repository">Add Repository</string>
+    <string name="description_add_repository">You need to add more than one repository.</string>
 </resources>

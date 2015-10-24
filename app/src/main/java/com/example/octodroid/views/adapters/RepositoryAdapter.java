@@ -168,7 +168,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    public void onDestroy() {
+    public void saveSelectedRepositories() {
         Set<String> selectedSerializedRepositories = new HashSet<>();
         for (Integer repositoryId : selectedRepositories.keySet()) {
             Repository repository = selectedRepositories.get(repositoryId);
