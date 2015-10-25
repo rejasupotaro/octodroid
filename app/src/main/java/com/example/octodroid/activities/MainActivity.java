@@ -120,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
 
             setTitle("");
         } else {
+            repositories.clear();
+
             emptyViewContainer.setVisibility(View.GONE);
 
             ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
