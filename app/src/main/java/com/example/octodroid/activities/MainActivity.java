@@ -21,6 +21,9 @@ import com.example.octodroid.views.components.ViewPagerAdapter;
 import com.rejasupotaro.octodroid.models.Repository;
 import com.rejasupotaro.octodroid.models.Resource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -32,6 +35,24 @@ public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     @Bind(R.id.empty_view_container)
     View emptyViewContainer;
+
+    private List<Repository> repositories = new ArrayList<>();
+
+    private ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            Repository repository = repositories.get(position);
+            setTitle(repository);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+        }
+    };
 
     public static void launch(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -47,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (SessionManager.isLoggedIn(this)) {
             SessionManager.login(this);
-            setupActionBar();
             setupViews();
         } else {
             LoginActivity.launch(this);
@@ -89,14 +109,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setupActionBar() {
-        getSupportActionBar().setTitle("");
+    private void setTitle(Repository repository) {
+        getSupportActionBar().setTitle(repository.getFullName());
     }
 
     private void setupViews() {
         OctodroidPrefs octodroidPrefs = OctodroidPrefsSchema.get(this);
         if (octodroidPrefs.getSeletedSerializedRepositories().isEmpty()) {
             emptyViewContainer.setVisibility(View.VISIBLE);
+
+            setTitle("");
         } else {
             emptyViewContainer.setVisibility(View.GONE);
 
@@ -108,11 +130,15 @@ public class MainActivity extends AppCompatActivity {
                         .createFragmentBuilder(repository)
                         .build();
 
-                pagerAdapter.addFragment(fragment, repository.getFullName());
+                pagerAdapter.addFragment(fragment, repository.getName());
+                repositories.add(repository);
             }
 
             viewPager.setAdapter(pagerAdapter);
+            viewPager.addOnPageChangeListener(onPageChangeListener);
             tabLayout.setupWithViewPager(viewPager);
+
+            setTitle(repositories.get(0));
         }
     }
 
