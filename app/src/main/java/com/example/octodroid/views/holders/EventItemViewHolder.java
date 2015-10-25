@@ -10,7 +10,10 @@ import android.widget.TextView;
 import com.example.octodroid.R;
 import com.rejasupotaro.octodroid.models.Comment;
 import com.rejasupotaro.octodroid.models.Event;
+import com.rejasupotaro.octodroid.models.Issue;
+import com.rejasupotaro.octodroid.models.PullRequest;
 import com.rejasupotaro.octodroid.models.User;
+import com.squareup.phrase.Phrase;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -19,10 +22,10 @@ import butterknife.ButterKnife;
 public class EventItemViewHolder extends RecyclerView.ViewHolder {
     @Bind(R.id.user_image)
     ImageView userImageView;
-    @Bind(R.id.user_name_text)
-    TextView userNameText;
-    @Bind(R.id.body_text)
-    TextView bodyTextView;
+    @Bind(R.id.head_text)
+    TextView headTextView;
+    @Bind(R.id.description_text)
+    TextView descriptionTextView;
 
     public static EventItemViewHolder create(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_event, parent, false);
@@ -36,27 +39,87 @@ public class EventItemViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(final Event event) {
         User user = event.getUser();
+        Picasso.with(userImageView.getContext())
+                .load(user.getAvatarUrl())
+                .into(userImageView);
+        descriptionTextView.setText("");
 
         switch (event.getType()) {
+            case Fork:
+                bindFork(event);
+                break;
             case IssueComment:
-                Comment comment = event.getPayload().getComment();
-
-                Picasso.with(userImageView.getContext())
-                        .load(user.getAvatarUrl())
-                        .into(userImageView);
-
-                userNameText.setText(user.getLogin());
-
-                bodyTextView.setText(comment.getBody());
+                bindIssueComment(event);
+                break;
+            case PullRequestReviewComment:
+                bindPullRequestComment(event);
+                break;
+            case Push:
+                bindPush(event);
+                break;
+            case Watch:
+                bindWatch(event);
                 break;
             default:
-                Picasso.with(userImageView.getContext())
-                        .load(user.getAvatarUrl())
-                        .into(userImageView);
-
-                bodyTextView.setText(event.getType().toString());
+                headTextView.setText(event.getType().toString());
                 break;
         }
+
+        if (descriptionTextView.getText().length() == 0) {
+            descriptionTextView.setVisibility(View.GONE);
+        } else {
+            descriptionTextView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void bindFork(Event event) {
+        User user = event.getUser();
+        CharSequence text = Phrase.from(headTextView.getContext(), R.string.event_fork)
+                .put("username", user.getLogin())
+                .format();
+        headTextView.setText(text);
+    }
+
+    private void bindIssueComment(Event event) {
+        User user = event.getUser();
+        Issue issue = event.getPayload().getIssue();
+        CharSequence text = Phrase.from(headTextView.getContext(), R.string.event_issue_comment)
+                .put("username", user.getLogin())
+                .put("issue", issue.getTitle())
+                .format();
+        headTextView.setText(text);
+        Comment comment = event.getPayload().getComment();
+        descriptionTextView.setText(comment.getBody());
+    }
+
+    private void bindPullRequestComment(Event event) {
+        User user = event.getUser();
+        PullRequest pullRequset = event.getPayload().getPullRequest();
+        CharSequence text = Phrase.from(headTextView.getContext(), R.string.event_pull_request_comment)
+                .put("username", user.getLogin())
+                .put("pull_request", pullRequset.getTitle())
+                .format();
+        headTextView.setText(text);
+        Comment comment = event.getPayload().getComment();
+        descriptionTextView.setText(comment.getBody());
+    }
+
+    private void bindPush(Event event) {
+        User user = event.getUser();
+        String ref = event.getPayload().getRef();
+        CharSequence text = Phrase.from(headTextView.getContext(), R.string.event_push)
+                .put("username", user.getLogin())
+                .put("ref", ref)
+                .format();
+        headTextView.setText(text);
+    }
+
+    private void bindWatch(Event event) {
+        User user = event.getUser();
+        CharSequence text = Phrase.from(headTextView.getContext(), R.string.event_watch)
+                .put("username", user.getLogin())
+                .format();
+        headTextView.setText(text);
     }
 }
 

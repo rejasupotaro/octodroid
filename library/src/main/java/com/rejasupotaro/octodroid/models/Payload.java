@@ -9,7 +9,7 @@ public class Payload extends Resource {
     @SerializedName("action")
     private String action;
     @SerializedName("issue")
-    private JSONObject issue;
+    private Issue issue;
     @SerializedName("comment")
     private Comment comment;
     @SerializedName("repository")
@@ -47,7 +47,7 @@ public class Payload extends Resource {
     @SerializedName("number")
     private int number;
     @SerializedName("pull_request")
-    private JSONObject pullRequest;
+    private PullRequest pullRequest;
     @SerializedName("before")
     private String before;
     @SerializedName("after")
@@ -59,7 +59,7 @@ public class Payload extends Resource {
         return action;
     }
 
-    public JSONObject getIssue() {
+    public Issue getIssue() {
         return issue;
     }
 
@@ -135,7 +135,7 @@ public class Payload extends Resource {
         return number;
     }
 
-    public JSONObject getPullRequest() {
+    public PullRequest getPullRequest() {
         return pullRequest;
     }
 

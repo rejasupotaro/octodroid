@@ -19,14 +19,17 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/user_name_text"
+            android:id="@+id/head_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_color_primary"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/body_text"
+            android:id="@+id/description_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:textColor="@color/text_color_secondary" />
     </LinearLayout>
 </LinearLayout>

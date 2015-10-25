@@ -51,4 +51,5 @@ dependencies {
     compile 'com.makeramen:roundedimageview:1.4.0'
     compile 'com.github.gfx.util.encrypt:android-encrypt-utils:2.0.0'
     compile 'com.jakewharton.rxbinding:rxbinding:0.2.0'
+    compile 'com.squareup.phrase:phrase:1.1.0'
 }

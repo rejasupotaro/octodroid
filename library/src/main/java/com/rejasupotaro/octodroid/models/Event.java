@@ -75,7 +75,7 @@ public class Event extends Resource {
         PageBuild("PageBuildEvent"),
         Public("PublicEvent"),
         PullRequest("PullRequestEvent"),
-        PullRequestReviewComment("PullRequestReviewComment"),
+        PullRequestReviewComment("PullRequestReviewCommentEvent"),
         Push("PushEvent"),
         Release("ReleaseEvent"),
         Repository("RepositoryEvent"),
