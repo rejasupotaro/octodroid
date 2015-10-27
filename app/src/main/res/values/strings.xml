@@ -24,9 +24,12 @@
     <string name="label_add_repository">Add Repository</string>
     <string name="description_add_repository">You need to add more than one repository.</string>
 
-    <string name="event_fork">{username} forked this repository.</string>
-    <string name="event_issue_comment">{username} commented on issue "{issue}".</string>
-    <string name="event_pull_request_comment">{username} commented on pull request "{pull_request}".</string>
-    <string name="event_push">{username} pushed to "{ref}".</string>
-    <string name="event_watch">{username} started watching this repository.</string>
+    <string name="event_create">{username} created {ref_type} {ref}</string>
+    <string name="event_fork">{username} forked repository.</string>
+    <string name="event_issue_comment">{username} commented on issue "{issue}"</string>
+    <string name="event_issues">{username} opened issue #{number}</string>
+    <string name="event_pull_request">{username} opened pull request #{number}</string>
+    <string name="event_pull_request_comment">{username} commented on pull request "{pull_request}"</string>
+    <string name="event_push">{username} pushed to "{ref}"</string>
+    <string name="event_watch">{username} started watching repository</string>
 </resources>

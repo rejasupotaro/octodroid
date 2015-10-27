@@ -45,11 +45,20 @@ public class EventItemViewHolder extends RecyclerView.ViewHolder {
         descriptionTextView.setText("");
 
         switch (event.getType()) {
+            case Create:
+                bindCreate(event);
+                break;
             case Fork:
                 bindFork(event);
                 break;
             case IssueComment:
                 bindIssueComment(event);
+                break;
+            case Issues:
+                bindIssues(event);
+                break;
+            case PullRequest:
+                bindPullRequest(event);
                 break;
             case PullRequestReviewComment:
                 bindPullRequestComment(event);
@@ -72,6 +81,16 @@ public class EventItemViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
+    private void bindCreate(Event event) {
+        User user = event.getUser();
+        CharSequence text = Phrase.from(headTextView.getContext(), R.string.event_create)
+                .put("username", user.getLogin())
+                .put("ref_type", event.getPayload().getRefType())
+                .put("ref", event.getPayload().getRef())
+                .format();
+        headTextView.setText(text);
+    }
+
     private void bindFork(Event event) {
         User user = event.getUser();
         CharSequence text = Phrase.from(headTextView.getContext(), R.string.event_fork)
@@ -90,6 +109,28 @@ public class EventItemViewHolder extends RecyclerView.ViewHolder {
         headTextView.setText(text);
         Comment comment = event.getPayload().getComment();
         descriptionTextView.setText(comment.getBody());
+    }
+
+    private void bindIssues(Event event) {
+        User user = event.getUser();
+        Issue issue = event.getPayload().getIssue();
+        CharSequence text = Phrase.from(headTextView.getContext(), R.string.event_issues)
+                .put("username", user.getLogin())
+                .put("number", issue.getNumber())
+                .format();
+        headTextView.setText(text);
+        descriptionTextView.setText(String.format("%s\n%s", issue.getTitle(), issue.getBody()));
+    }
+
+    private void bindPullRequest(Event event) {
+        User user = event.getUser();
+        PullRequest pullRequest = event.getPayload().getPullRequest();
+        CharSequence text = Phrase.from(headTextView.getContext(), R.string.event_pull_request)
+                .put("username", user.getLogin())
+                .put("number", pullRequest.getNumber())
+                .format();
+        headTextView.setText(text);
+        descriptionTextView.setText(String.format("%s\n%s", pullRequest.getTitle(), pullRequest.getBody()));
     }
 
     private void bindPullRequestComment(Event event) {

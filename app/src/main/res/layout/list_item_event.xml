@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="@dimen/spacing_medium">
+    android:padding="@dimen/spacing_large">
 
     <com.makeramen.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/user_image"
