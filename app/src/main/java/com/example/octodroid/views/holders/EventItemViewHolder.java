@@ -48,6 +48,9 @@ public class EventItemViewHolder extends RecyclerView.ViewHolder {
             case Create:
                 bindCreate(event);
                 break;
+            case Delete:
+                bindDelete(event);
+                break;
             case Fork:
                 bindFork(event);
                 break;
@@ -87,6 +90,16 @@ public class EventItemViewHolder extends RecyclerView.ViewHolder {
     private void bindCreate(Event event) {
         User user = event.getUser();
         CharSequence text = Phrase.from(headTextView.getContext(), R.string.event_create)
+                .put("username", user.getLogin())
+                .put("ref_type", event.getPayload().getRefType())
+                .put("ref", event.getPayload().getRef())
+                .format();
+        headTextView.setText(text);
+    }
+
+    private void bindDelete(Event event) {
+        User user = event.getUser();
+        CharSequence text = Phrase.from(headTextView.getContext(), R.string.event_delete)
                 .put("username", user.getLogin())
                 .put("ref_type", event.getPayload().getRefType())
                 .put("ref", event.getPayload().getRef())

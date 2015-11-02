@@ -25,6 +25,7 @@
     <string name="description_add_repository">You need to add more than one repository.</string>
 
     <string name="event_create">{username} created {ref_type} {ref}</string>
+    <string name="event_delete">{username} deleted {ref_type} {ref}</string>
     <string name="event_fork">{username} forked repository.</string>
     <string name="event_issue_comment">{username} commented on issue "{issue}"</string>
     <string name="event_issues">{username} opened issue #{number}</string>
