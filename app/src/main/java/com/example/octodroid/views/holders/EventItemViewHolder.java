@@ -57,6 +57,9 @@ public class EventItemViewHolder extends RecyclerView.ViewHolder {
             case Issues:
                 bindIssues(event);
                 break;
+            case Member:
+                bindMember(event);
+                break;
             case PullRequest:
                 bindPullRequest(event);
                 break;
@@ -120,6 +123,20 @@ public class EventItemViewHolder extends RecyclerView.ViewHolder {
                 .format();
         headTextView.setText(text);
         descriptionTextView.setText(String.format("%s\n%s", issue.getTitle(), issue.getBody()));
+    }
+
+    private void bindMember(Event event) {
+        User user = event.getPayload().getMember();
+
+        Picasso.with(userImageView.getContext())
+                .load(user.getAvatarUrl())
+                .into(userImageView);
+        descriptionTextView.setText("");
+
+        CharSequence text = Phrase.from(headTextView.getContext(), R.string.event_member)
+                .put("username", user.getLogin())
+                .format();
+        headTextView.setText(text);
     }
 
     private void bindPullRequest(Event event) {
