@@ -71,13 +71,17 @@ public class RepositoryEventListAdapter extends RecyclerView.Adapter<RecyclerVie
                     int startPosition = events.size();
                     events.addAll(items);
 
+                    if (r.hasNext()) {
+                        pagedResponse = r.next();
+                    } else {
+                        isReachedLast = true;
+                    }
+
                     if (startPosition == 0) {
                         notifyDataSetChanged();
                     } else {
                         notifyItemRangeInserted(startPosition, items.size());
                     }
-
-                    pagedResponse = r.next();
                 });
     }
 

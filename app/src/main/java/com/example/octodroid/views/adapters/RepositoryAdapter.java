@@ -158,13 +158,17 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             int startPosition = repositories.size();
             repositories.addAll(items);
 
+            if (r.hasNext()) {
+                pagedResponse = r.next();
+            } else {
+                isReachedLast = true;
+            }
+
             if (startPosition == 0) {
                 notifyDataSetChanged();
             } else {
                 notifyItemRangeInserted(startPosition, items.size());
             }
-
-            pagedResponse = r.next();
         }
     }
 

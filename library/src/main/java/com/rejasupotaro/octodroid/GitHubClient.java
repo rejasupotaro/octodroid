@@ -51,7 +51,7 @@ public class GitHubClient {
     }
 
     public Observable<Response<List<Event>>> repositoryEvents(final String owner, final String repo, final Params params) {
-        String path = String.format("/repos/%s/%s/events", owner, repo);
+        String path = String.format("/repos/%s/%s/events?%s", owner, repo, params.toString());
         return apiClient.request(Method.GET, path)
                 .to(new TypeToken<List<Event>>() {
                 }).map(new Func1<Response<List<Event>>, Response<List<Event>>>() {
