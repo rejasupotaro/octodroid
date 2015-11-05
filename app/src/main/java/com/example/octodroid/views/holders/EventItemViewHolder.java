@@ -45,34 +45,34 @@ public class EventItemViewHolder extends RecyclerView.ViewHolder {
         descriptionTextView.setText("");
 
         switch (event.getType()) {
-            case Create:
+            case CREATE:
                 bindCreate(event);
                 break;
-            case Delete:
+            case DELETE:
                 bindDelete(event);
                 break;
-            case Fork:
+            case FORK:
                 bindFork(event);
                 break;
-            case IssueComment:
+            case ISSUE_COMMENT:
                 bindIssueComment(event);
                 break;
-            case Issues:
+            case ISSUES:
                 bindIssues(event);
                 break;
-            case Member:
+            case MEMBER:
                 bindMember(event);
                 break;
-            case PullRequest:
+            case PULL_REQUEST:
                 bindPullRequest(event);
                 break;
-            case PullRequestReviewComment:
+            case PULL_REQUEST_REVIEW_COMMENT:
                 bindPullRequestComment(event);
                 break;
-            case Push:
+            case PUSH:
                 bindPush(event);
                 break;
-            case Watch:
+            case WATCH:
                 bindWatch(event);
                 break;
             default:
