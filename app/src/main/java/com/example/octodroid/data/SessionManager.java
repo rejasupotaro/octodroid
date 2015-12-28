@@ -17,6 +17,6 @@ public class SessionManager {
     }
 
     public static void logout(Context context) {
-        SessionPrefs.get(context).clear();
+        SessionPrefsSchema.get(context).clear();
     }
 }
