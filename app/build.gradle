@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'android-apt'
+apply plugin: 'kotlin-android'
+
+buildscript {
+    ext.kotlin_version = '1.0.0-beta-4584'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
 
 android {
     compileSdkVersion 23
@@ -24,7 +33,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }
+
+kapt.generateStubs true
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -36,10 +50,10 @@ dependencies {
             'com.android.support:cardview-v7:22.2.0',
     )
 
-    apt 'com.github.rejasupotaro.kvs-schema:compiler:2.0.0'
+    kapt 'com.github.rejasupotaro.kvs-schema:compiler:2.0.0'
     compile 'com.github.rejasupotaro.kvs-schema:library:2.0.0'
 
-    apt 'com.github.yatatsu:autobundle-processor:0.1.6'
+    kapt 'com.github.yatatsu:autobundle-processor:0.1.6'
     compile 'com.github.yatatsu:autobundle:0.1.6'
 
     compile 'com.google.code.gson:gson:2.3.1'
@@ -52,4 +66,5 @@ dependencies {
     compile 'com.github.gfx.util.encrypt:android-encrypt-utils:2.0.0'
     compile 'com.jakewharton.rxbinding:rxbinding:0.2.0'
     compile 'com.squareup.phrase:phrase:1.1.0'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
