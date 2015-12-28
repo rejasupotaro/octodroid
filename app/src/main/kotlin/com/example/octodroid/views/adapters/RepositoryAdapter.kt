@@ -4,7 +4,6 @@ import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-
 import com.example.octodroid.data.GitHub
 import com.example.octodroid.data.prefs.OctodroidPrefs
 import com.example.octodroid.data.prefs.OctodroidPrefsSchema
@@ -18,19 +17,15 @@ import com.rejasupotaro.octodroid.http.Params
 import com.rejasupotaro.octodroid.http.Response
 import com.rejasupotaro.octodroid.models.Repository
 import com.rejasupotaro.octodroid.models.Resource
-
-import java.util.ArrayList
-import java.util.HashMap
-import java.util.HashSet
-
 import rx.Observable
 import rx.Subscriber
 import rx.subjects.BehaviorSubject
+import java.util.*
 
 class RepositoryAdapter(private val recyclerView: RecyclerView) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private object ViewType {
-        private val ITEM = 1
-        private val FOOTER = 2
+        val ITEM = 1
+        val FOOTER = 2
     }
 
     private val context: Context
@@ -43,21 +38,21 @@ class RepositoryAdapter(private val recyclerView: RecyclerView) : RecyclerView.A
     private val selectedRepositories = HashMap<Int, Repository>()
 
     init {
-        this.context = recyclerView.getContext()
+        this.context = recyclerView.context
 
         octodroidPrefs = OctodroidPrefsSchema.get(context)
-        for (serializedRepositories in octodroidPrefs.getSeletedSerializedRepositories()) {
+        for (serializedRepositories in octodroidPrefs.selectedSerializedRepositories) {
             val repository = Resource.fromJson(serializedRepositories, Repository::class.java)
-            selectedRepositories.put(repository.getId(), repository)
+            selectedRepositories.put(repository.id, repository)
         }
 
         val layoutManager = LinearLayoutManager(context)
-        recyclerView.setLayoutManager(layoutManager)
+        recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(false)
-        recyclerView.setItemAnimator(null)
+        recyclerView.itemAnimator = null
         recyclerView.addItemDecoration(DividerItemDecoration(context))
         recyclerView.addOnScrollListener(object : LinearLayoutLoadMoreListener(layoutManager) {
-            fun onLoadMore() {
+            override fun onLoadMore() {
                 if (pagedResponse != null) {
                     responseSubject!!.onNext(pagedResponse)
                 }
@@ -72,7 +67,9 @@ class RepositoryAdapter(private val recyclerView: RecyclerView) : RecyclerView.A
         params.add("per_page", "100")
         params.add("sort", "updated")
         responseSubject = BehaviorSubject.create(GitHub.client().userRepositories(params))
-        responseSubject!!.takeUntil(RxView.detaches(recyclerView)).flatMap({ r -> r }).subscribe(ResponseSubscriber())
+        responseSubject!!.takeUntil(RxView.detaches(recyclerView))
+                .flatMap { r -> r }
+                .subscribe(ResponseSubscriber())
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -88,21 +85,21 @@ class RepositoryAdapter(private val recyclerView: RecyclerView) : RecyclerView.A
             ViewType.FOOTER -> {
             }
             else -> {
-                val repository = repositories.get(position)
+                val repository = repositories[position]
                 (viewHolder as SelectableRepositoryItemViewHolder).bind(
                         repository,
-                        selectedRepositories.containsKey(repository.getId()),
-                        object : SelectableRepositoryItemViewHolder.OnSelectRepositoryListener() {
-                            fun onSelect(id: Int) {
+                        selectedRepositories.containsKey(repository.id),
+                        object : SelectableRepositoryItemViewHolder.OnSelectRepositoryListener {
+                            override fun onSelect(id: Int) {
                                 selectedRepositories.put(id, repository)
                             }
 
-                            fun onUnSelect(id: Int) {
+                            override fun onUnSelect(id: Int) {
                                 selectedRepositories.remove(id)
                             }
                         })
             }
-        }// do nothing
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -157,10 +154,10 @@ class RepositoryAdapter(private val recyclerView: RecyclerView) : RecyclerView.A
     fun saveSelectedRepositories() {
         val selectedSerializedRepositories = HashSet<String>()
         for (repositoryId in selectedRepositories.keys) {
-            val repository = selectedRepositories.get(repositoryId)
-            selectedSerializedRepositories.add(repository.toJson())
+            val repository = selectedRepositories[repositoryId]
+            selectedSerializedRepositories.add(repository!!.toJson())
         }
-        octodroidPrefs.putSeletedSerializedRepositories(selectedSerializedRepositories)
+        octodroidPrefs.selectedSerializedRepositories = selectedSerializedRepositories
     }
 }
 

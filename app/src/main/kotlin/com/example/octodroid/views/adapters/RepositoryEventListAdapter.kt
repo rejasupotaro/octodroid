@@ -4,7 +4,6 @@ import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-
 import com.example.octodroid.data.GitHub
 import com.example.octodroid.views.components.DividerItemDecoration
 import com.example.octodroid.views.components.LinearLayoutLoadMoreListener
@@ -14,16 +13,14 @@ import com.jakewharton.rxbinding.view.RxView
 import com.rejasupotaro.octodroid.http.Response
 import com.rejasupotaro.octodroid.models.Event
 import com.rejasupotaro.octodroid.models.Repository
-
-import java.util.ArrayList
-
 import rx.Observable
 import rx.subjects.BehaviorSubject
+import java.util.*
 
 class RepositoryEventListAdapter(private val recyclerView: RecyclerView) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private object ViewType {
-        private val ITEM = 1
-        private val FOOTER = 2
+        val ITEM = 1
+        val FOOTER = 2
     }
 
     private val context: Context
@@ -33,15 +30,15 @@ class RepositoryEventListAdapter(private val recyclerView: RecyclerView) : Recyc
     private var isReachedLast: Boolean = false
 
     init {
-        this.context = recyclerView.getContext()
+        this.context = recyclerView.context
 
         val layoutManager = LinearLayoutManager(context)
-        recyclerView.setLayoutManager(layoutManager)
+        recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(false)
-        recyclerView.setItemAnimator(null)
+        recyclerView.itemAnimator = null
         recyclerView.addItemDecoration(DividerItemDecoration(context))
         recyclerView.addOnScrollListener(object : LinearLayoutLoadMoreListener(layoutManager) {
-            fun onLoadMore() {
+            override fun onLoadMore() {
                 if (pagedResponse != null) {
                     responseSubject!!.onNext(pagedResponse)
                 }
@@ -50,35 +47,35 @@ class RepositoryEventListAdapter(private val recyclerView: RecyclerView) : Recyc
     }
 
     fun requestRepositoryEvents(repository: Repository) {
-        val owner = repository.getOwner().getLogin()
-        val repo = repository.getName()
+        val owner = repository.owner.login
+        val repo = repository.name
 
         responseSubject = BehaviorSubject.create(GitHub.client().repositoryEvents(owner, repo))
-        responseSubject!!.takeUntil(RxView.detaches(recyclerView)).flatMap({ r -> r }).subscribe({ r ->
-            if (r.entity().isEmpty()) {
-                isReachedLast = true
-                notifyDataSetChanged()
-                return@responseSubject.takeUntil(RxView.detaches(recyclerView))
-                        .flatMap(r -> r)
-                .subscribe
-            }
+        responseSubject!!.takeUntil(RxView.detaches(recyclerView))
+                .flatMap { r -> r }
+                .subscribe({ r ->
+                    if (r.entity().isEmpty()) {
+                        isReachedLast = true
+                        notifyDataSetChanged()
+                        return@subscribe
+                    }
 
-            val items = r.entity()
-            val startPosition = events.size
-            events.addAll(items)
+                    val items = r.entity()
+                    val startPosition = events.size
+                    events.addAll(items)
 
-            if (r.hasNext()) {
-                pagedResponse = r.next()
-            } else {
-                isReachedLast = true
-            }
+                    if (r.hasNext()) {
+                        pagedResponse = r.next()
+                    } else {
+                        isReachedLast = true
+                    }
 
-            if (startPosition == 0) {
-                notifyDataSetChanged()
-            } else {
-                notifyItemRangeInserted(startPosition, items.size)
-            }
-        })
+                    if (startPosition == 0) {
+                        notifyDataSetChanged()
+                    } else {
+                        notifyItemRangeInserted(startPosition, items.size)
+                    }
+                })
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -91,12 +88,12 @@ class RepositoryEventListAdapter(private val recyclerView: RecyclerView) : Recyc
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             ViewType.ITEM -> {
-                val event = events.get(position)
+                val event = events[position]
                 (viewHolder as EventItemViewHolder).bind(event)
             }
             else -> {
             }
-        }// do nothing
+        }
     }
 
     override fun getItemViewType(position: Int): Int {

@@ -7,43 +7,33 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
-
+import butterknife.bindView
 import com.example.octodroid.R
 import com.rejasupotaro.octodroid.models.Repository
 
-import butterknife.Bind
-import butterknife.ButterKnife
-
 class SelectableRepositoryItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    @Bind(R.id.repository_name_text)
-    internal var repositoryNameTextView: TextView
-    @Bind(R.id.description)
-    internal var descriptionTextView: TextView
-    @Bind(R.id.checkbox)
-    internal var checkBox: CheckBox
-
-    init {
-        ButterKnife.bind(this, view)
-    }
+    val repositoryNameTextView: TextView by bindView(R.id.repository_name_text)
+    val descriptionTextView: TextView by bindView(R.id.description)
+    val checkBox: CheckBox by bindView(R.id.checkbox)
 
     fun bind(repository: Repository, isSelected: Boolean, listener: OnSelectRepositoryListener) {
-        repositoryNameTextView.setText("%s / %s".format(repository.getOwner().getLogin(), repository.getName()))
+        repositoryNameTextView.text = "%s / %s".format(repository.owner.login, repository.name)
 
-        if (TextUtils.isEmpty(repository.getDescription())) {
-            descriptionTextView.setVisibility(View.GONE)
+        if (TextUtils.isEmpty(repository.description)) {
+            descriptionTextView.visibility = View.GONE
         } else {
-            descriptionTextView.setText(repository.getDescription())
-            descriptionTextView.setVisibility(View.VISIBLE)
+            descriptionTextView.text = repository.description
+            descriptionTextView.visibility = View.VISIBLE
         }
 
         checkBox.setOnCheckedChangeListener({ v, isChecked ->
             if (isChecked) {
-                listener.onSelect(repository.getId())
+                listener.onSelect(repository.id)
             } else {
-                listener.onUnSelect(repository.getId())
+                listener.onUnSelect(repository.id)
             }
         })
-        checkBox.setChecked(isSelected)
+        checkBox.isChecked = isSelected
     }
 
     interface OnSelectRepositoryListener {
@@ -55,7 +45,7 @@ class SelectableRepositoryItemViewHolder(view: View) : RecyclerView.ViewHolder(v
     companion object {
 
         fun create(parent: ViewGroup): SelectableRepositoryItemViewHolder {
-            val view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_selectable_repository, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_selectable_repository, parent, false)
             return SelectableRepositoryItemViewHolder(view)
         }
     }

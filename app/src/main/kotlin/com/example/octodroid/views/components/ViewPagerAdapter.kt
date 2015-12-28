@@ -18,7 +18,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
     }
 
     override fun getItem(position: Int): Fragment {
-        return fragments.get(position)
+        return fragments[position]
     }
 
     override fun getCount(): Int {
@@ -26,7 +26,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        return titles.get(position)
+        return titles[position]
     }
 }
 

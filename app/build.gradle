@@ -30,15 +30,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 }
 
-kapt.generateStubs true
+kapt {
+    generateStubs true
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -53,13 +55,10 @@ dependencies {
     kapt 'com.github.rejasupotaro.kvs-schema:compiler:2.0.0'
     compile 'com.github.rejasupotaro.kvs-schema:library:2.0.0'
 
-    kapt 'com.github.yatatsu:autobundle-processor:0.1.6'
-    compile 'com.github.yatatsu:autobundle:0.1.6'
-
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.squareup.okhttp:okhttp:2.2.0'
     compile 'io.reactivex:rxandroid:0.24.0'
-    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.jakewharton:kotterknife:0.1.0-SNAPSHOT'
     compile 'com.github.castorflex.smoothprogressbar:library-circular:1.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.makeramen:roundedimageview:1.4.0'

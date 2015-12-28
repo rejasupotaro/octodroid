@@ -1,8 +1,6 @@
 package com.example.octodroid.data
 
 import android.content.Context
-
-import com.example.octodroid.data.prefs.SessionPrefs
 import com.example.octodroid.data.prefs.SessionPrefsSchema
 
 object SessionManager {
@@ -13,7 +11,7 @@ object SessionManager {
 
     fun login(context: Context) {
         val prefs = SessionPrefsSchema.get(context)
-        GitHub.client().authorization(prefs.getUsername(), prefs.getPassword())
+        GitHub.client().authorization(prefs.username, prefs.password)
     }
 
     fun logout(context: Context) {

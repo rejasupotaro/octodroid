@@ -26,7 +26,7 @@ object GitHub {
                 }
             }
         }
-        return client
+        return client!!
     }
 
     fun gson(gson: Gson) {

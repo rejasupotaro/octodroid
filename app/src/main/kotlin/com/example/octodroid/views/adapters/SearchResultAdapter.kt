@@ -4,7 +4,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-
 import com.example.octodroid.data.GitHub
 import com.example.octodroid.views.components.LinearLayoutLoadMoreListener
 import com.example.octodroid.views.helpers.ToastHelper
@@ -14,17 +13,15 @@ import com.jakewharton.rxbinding.view.RxView
 import com.rejasupotaro.octodroid.http.Response
 import com.rejasupotaro.octodroid.models.Repository
 import com.rejasupotaro.octodroid.models.SearchResult
-
-import java.util.ArrayList
-
 import rx.Observable
 import rx.Subscriber
 import rx.subjects.BehaviorSubject
+import java.util.*
 
 class SearchResultAdapter(private val recyclerView: RecyclerView) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private object ViewType {
-        private val ITEM = 1
-        private val FOOTER = 2
+        val ITEM = 1
+        val FOOTER = 2
     }
 
     private val repositories = ArrayList<Repository>()
@@ -32,13 +29,13 @@ class SearchResultAdapter(private val recyclerView: RecyclerView) : RecyclerView
     private var pagedResponse: Observable<Response<SearchResult<Repository>>>? = null
 
     init {
-        recyclerView.setVisibility(View.GONE)
+        recyclerView.visibility = View.GONE
 
-        val layoutManager = LinearLayoutManager(recyclerView.getContext())
+        val layoutManager = LinearLayoutManager(recyclerView.context)
         recyclerView.setHasFixedSize(false)
-        recyclerView.setLayoutManager(layoutManager)
+        recyclerView.layoutManager = layoutManager
         recyclerView.addOnScrollListener(object : LinearLayoutLoadMoreListener(layoutManager) {
-            fun onLoadMore() {
+            override fun onLoadMore() {
                 if (pagedResponse != null) {
                     responseSubject!!.onNext(pagedResponse)
                 }
@@ -59,10 +56,10 @@ class SearchResultAdapter(private val recyclerView: RecyclerView) : RecyclerView
             ViewType.FOOTER -> {
             }
             else -> {
-                val repository = repositories.get(position)
+                val repository = repositories[position]
                 (viewHolder as RepositoryItemViewHolder).bind(repository)
             }
-        }// do nothing
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -84,7 +81,7 @@ class SearchResultAdapter(private val recyclerView: RecyclerView) : RecyclerView
 
     fun submit(query: String) {
         clear()
-        recyclerView.setVisibility(View.VISIBLE)
+        recyclerView.visibility = View.VISIBLE
 
         responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query))
         responseSubject!!.takeUntil(RxView.detaches(recyclerView)).flatMap({ r -> r }).subscribe(ResponseSubscriber())
@@ -97,15 +94,15 @@ class SearchResultAdapter(private val recyclerView: RecyclerView) : RecyclerView
         }
 
         override fun onError(e: Throwable) {
-            ToastHelper.showError(recyclerView.getContext())
+            ToastHelper.showError(recyclerView.context)
         }
 
         override fun onNext(r: Response<SearchResult<Repository>>) {
-            if (r.entity().getItems() == null || r.entity().getItems().isEmpty()) {
+            if (r.entity().items == null || r.entity().items.isEmpty()) {
                 return
             }
 
-            val items = r.entity().getItems()
+            val items = r.entity().items
             val startPosition = repositories.size
             repositories.addAll(items)
             notifyItemRangeInserted(startPosition, items.size)

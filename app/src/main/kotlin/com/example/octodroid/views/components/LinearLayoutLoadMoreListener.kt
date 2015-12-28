@@ -12,8 +12,8 @@ abstract class LinearLayoutLoadMoreListener(private val layoutManager: LinearLay
     override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
 
-        val visibleItemCount = recyclerView!!.getChildCount()
-        val totalItemCount = layoutManager.getItemCount()
+        val visibleItemCount = recyclerView!!.childCount
+        val totalItemCount = layoutManager.itemCount
         val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
 
         if (isLoading) {
@@ -31,4 +31,3 @@ abstract class LinearLayoutLoadMoreListener(private val layoutManager: LinearLay
 
     abstract fun onLoadMore()
 }
-
