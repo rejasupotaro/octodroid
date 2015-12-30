@@ -86,8 +86,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupViews() {
-        val octodroidPrefs = OctodroidPrefsSchema.get(this)
-        if (octodroidPrefs.selectedSerializedRepositories.isEmpty()) {
+        val prefs = OctodroidPrefsSchema.get(this)
+        if (prefs.selectedSerializedRepositories.isEmpty()) {
             emptyViewContainer.visibility = View.VISIBLE
 
             title = ""
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             emptyViewContainer.visibility = View.GONE
 
             val pagerAdapter = ViewPagerAdapter(supportFragmentManager)
-            for (serializedRepositories in octodroidPrefs.selectedSerializedRepositories) {
+            for (serializedRepositories in prefs.selectedSerializedRepositories) {
                 val repository = Resource.fromJson(serializedRepositories, Repository::class.java)
 
                 val fragment = RepositoryEventListFragment.newInstance(repository)

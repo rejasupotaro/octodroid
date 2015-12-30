@@ -8,14 +8,11 @@ import android.text.TextUtils
 import android.view.MenuItem
 import android.widget.EditText
 import butterknife.bindView
-
 import com.example.octodroid.R
 import com.example.octodroid.data.GitHub
-import com.example.octodroid.data.prefs.SessionPrefs
 import com.example.octodroid.data.prefs.SessionPrefsSchema
 import com.example.octodroid.views.helpers.ProgressDialogHelper
 import com.example.octodroid.views.helpers.ToastHelper
-
 import rx.subscriptions.Subscriptions
 
 class LoginActivity : AppCompatActivity() {

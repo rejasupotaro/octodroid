@@ -34,14 +34,14 @@ class RepositoryAdapter(private val recyclerView: RecyclerView) : RecyclerView.A
     private var pagedResponse: Observable<Response<List<Repository>>>? = null
     private var isReachedLast: Boolean = false
 
-    private val octodroidPrefs: OctodroidPrefs
+    private val prefs: OctodroidPrefs
     private val selectedRepositories = HashMap<Int, Repository>()
 
     init {
         this.context = recyclerView.context
 
-        octodroidPrefs = OctodroidPrefsSchema.get(context)
-        for (serializedRepositories in octodroidPrefs.selectedSerializedRepositories) {
+        prefs = OctodroidPrefsSchema.get(context)
+        for (serializedRepositories in prefs.selectedSerializedRepositories) {
             val repository = Resource.fromJson(serializedRepositories, Repository::class.java)
             selectedRepositories.put(repository.id, repository)
         }
@@ -157,7 +157,7 @@ class RepositoryAdapter(private val recyclerView: RecyclerView) : RecyclerView.A
             val repository = selectedRepositories[repositoryId]
             selectedSerializedRepositories.add(repository!!.toJson())
         }
-        octodroidPrefs.selectedSerializedRepositories = selectedSerializedRepositories
+        prefs.selectedSerializedRepositories = selectedSerializedRepositories
     }
 }
 
