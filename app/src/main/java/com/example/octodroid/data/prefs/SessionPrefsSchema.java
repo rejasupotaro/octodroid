@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.github.gfx.util.encrypt.EncryptedSharedPreferences;
-import com.rejasupotaro.android.kvs.PrefSchema;
 import com.rejasupotaro.android.kvs.annotations.Key;
 import com.rejasupotaro.android.kvs.annotations.Table;
 
@@ -15,31 +14,30 @@ import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 
 @Table("octodroid_session")
-public class SessionPrefsSchema extends PrefSchema {
-    private static final String DEFAULT_ALGORITHM_MODE = "AES/CBC/PKCS5Padding";
-    private static final String DEFAULT_PROVIDER = "BC";
-
-    private static Cipher getCipher() {
-        try {
-            return Cipher.getInstance(DEFAULT_ALGORITHM_MODE, DEFAULT_PROVIDER);
-        } catch (NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException e) {
-            throw new AssertionError(e);
-        }
-    }
-
-    private static SessionPrefs prefs;
-
+public abstract class SessionPrefsSchema {
     @Key("username")
     String username;
     @Key("password")
     String password;
 
+    private static String DEFAULT_ALGORITHM_MODE = "AES/CBC/PKCS5Padding";
+    private static String DEFAULT_PROVIDER = "BC";
+
+    private static SessionPrefs prefs;
+
     public static synchronized SessionPrefs get(Context context) {
-        if (prefs == null) {
-            SharedPreferences base = context.getSharedPreferences("octodroid_session", Context.MODE_PRIVATE);
-            prefs = new SessionPrefs(new EncryptedSharedPreferences(getCipher(), base, context));
+        if (prefs != null) {
+            return prefs;
         }
-        return prefs;
+
+        try {
+            SharedPreferences base = context.getSharedPreferences("octodroid_session", Context.MODE_PRIVATE);
+            Cipher cipher = Cipher.getInstance(DEFAULT_ALGORITHM_MODE, DEFAULT_PROVIDER);
+            prefs = new SessionPrefs(new EncryptedSharedPreferences(cipher, base, context));
+            return prefs;
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException | NoSuchProviderException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 
