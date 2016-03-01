@@ -10,7 +10,7 @@ import android.widget.EditText
 import butterknife.bindView
 import com.example.octodroid.R
 import com.example.octodroid.data.GitHub
-import com.example.octodroid.data.prefs.SessionPrefsSchema
+import com.example.octodroid.data.prefs.SessionPrefs
 import com.example.octodroid.views.helpers.ProgressDialogHelper
 import com.example.octodroid.views.helpers.ToastHelper
 import rx.subscriptions.Subscriptions
@@ -45,8 +45,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setupActionBar() {
-        supportActionBar.setDisplayHomeAsUpEnabled(true)
-        supportActionBar.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
     private fun login(username: String, password: String) {
@@ -66,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun loginSucceeded(username: String, password: String) {
-        val prefs = SessionPrefsSchema.get(this)
+        val prefs = SessionPrefs.get(this)
         prefs.username = username
         prefs.password = password
 
@@ -92,7 +92,7 @@ class LoginActivity : AppCompatActivity() {
 
         fun launch(context: Context) {
             val intent = Intent(context, LoginActivity::class.java)
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             context.startActivity(intent)
         }
     }

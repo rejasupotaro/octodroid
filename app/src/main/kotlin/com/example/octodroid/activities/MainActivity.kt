@@ -12,6 +12,7 @@ import android.view.View
 import butterknife.bindView
 import com.example.octodroid.R
 import com.example.octodroid.data.SessionManager
+import com.example.octodroid.data.prefs.OctodroidPrefs
 import com.example.octodroid.data.prefs.OctodroidPrefsSchema
 import com.example.octodroid.fragments.RepositoryEventListFragment
 import com.example.octodroid.intent.RequestCode
@@ -86,7 +87,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupViews() {
-        val prefs = OctodroidPrefsSchema.get(this)
+        val prefs = OctodroidPrefs.get(this)
         if (prefs.selectedSerializedRepositories.isEmpty()) {
             emptyViewContainer.visibility = View.VISIBLE
 

@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.example.octodroid.data.GitHub
 import com.example.octodroid.data.prefs.OctodroidPrefs
-import com.example.octodroid.data.prefs.OctodroidPrefsSchema
 import com.example.octodroid.views.components.DividerItemDecoration
 import com.example.octodroid.views.components.LinearLayoutLoadMoreListener
 import com.example.octodroid.views.helpers.ToastHelper
@@ -40,7 +39,7 @@ class RepositoryAdapter(private val recyclerView: RecyclerView) : RecyclerView.A
     init {
         this.context = recyclerView.context
 
-        prefs = OctodroidPrefsSchema.get(context)
+        prefs = OctodroidPrefs.get(context)
         for (serializedRepositories in prefs.selectedSerializedRepositories) {
             val repository = Resource.fromJson(serializedRepositories, Repository::class.java)
             selectedRepositories.put(repository.id, repository)

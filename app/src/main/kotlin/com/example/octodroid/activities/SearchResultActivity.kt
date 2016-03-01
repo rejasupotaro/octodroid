@@ -63,9 +63,9 @@ class SearchResultActivity : AppCompatActivity() {
     }
 
     private fun setupActionBar() {
-        supportActionBar.title = ""
-        supportActionBar.setDisplayHomeAsUpEnabled(true)
-        supportActionBar.setDisplayShowHomeEnabled(true)
+        supportActionBar?.title = ""
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
     private fun setupViews() {
