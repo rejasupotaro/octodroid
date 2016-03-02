@@ -17,7 +17,6 @@ import com.rejasupotaro.octodroid.http.Response
 import com.rejasupotaro.octodroid.models.Repository
 import com.rejasupotaro.octodroid.models.Resource
 import rx.Observable
-import rx.Subscriber
 import rx.subjects.BehaviorSubject
 import java.util.*
 
@@ -68,7 +67,30 @@ class RepositoryAdapter(private val recyclerView: RecyclerView) : RecyclerView.A
         responseSubject = BehaviorSubject.create(GitHub.client().userRepositories(params))
         responseSubject!!.takeUntil(RxView.detaches(recyclerView))
                 .flatMap { r -> r }
-                .subscribe(ResponseSubscriber())
+                .subscribe({ r ->
+                    if (!r.isSuccessful) {
+                        isReachedLast = true
+                        notifyDataSetChanged()
+                        ToastHelper.showError(context)
+                        return@subscribe
+                    }
+
+                    val items = r.entity()
+                    val startPosition = repositories.size
+                    repositories.addAll(items)
+
+                    if (r.hasNext()) {
+                        pagedResponse = r.next()
+                    } else {
+                        isReachedLast = true
+                    }
+
+                    if (startPosition == 0) {
+                        notifyDataSetChanged()
+                    } else {
+                        notifyItemRangeInserted(startPosition, items.size)
+                    }
+                })
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -111,43 +133,6 @@ class RepositoryAdapter(private val recyclerView: RecyclerView) : RecyclerView.A
 
     override fun getItemCount(): Int {
         return repositories.size + if (isReachedLast) 0 else 1
-    }
-
-    private inner class ResponseSubscriber : Subscriber<Response<List<Repository>>>() {
-
-        override fun onCompleted() {
-            // do nothing
-        }
-
-        override fun onError(e: Throwable) {
-            isReachedLast = true
-            notifyDataSetChanged()
-            ToastHelper.showError(context)
-        }
-
-        override fun onNext(r: Response<List<Repository>>) {
-            if (r.entity().isEmpty()) {
-                isReachedLast = true
-                notifyDataSetChanged()
-                return
-            }
-
-            val items = r.entity()
-            val startPosition = repositories.size
-            repositories.addAll(items)
-
-            if (r.hasNext()) {
-                pagedResponse = r.next()
-            } else {
-                isReachedLast = true
-            }
-
-            if (startPosition == 0) {
-                notifyDataSetChanged()
-            } else {
-                notifyItemRangeInserted(startPosition, items.size)
-            }
-        }
     }
 
     fun saveSelectedRepositories() {

@@ -14,7 +14,6 @@ import com.rejasupotaro.octodroid.http.Response
 import com.rejasupotaro.octodroid.models.Repository
 import com.rejasupotaro.octodroid.models.SearchResult
 import rx.Observable
-import rx.Subscriber
 import rx.subjects.BehaviorSubject
 import java.util.*
 
@@ -84,30 +83,20 @@ class SearchResultAdapter(private val recyclerView: RecyclerView) : RecyclerView
         recyclerView.visibility = View.VISIBLE
 
         responseSubject = BehaviorSubject.create(GitHub.client().searchRepositories(query))
-        responseSubject!!.takeUntil(RxView.detaches(recyclerView)).flatMap({ r -> r }).subscribe(ResponseSubscriber())
-    }
+        responseSubject!!.takeUntil(RxView.detaches(recyclerView))
+                .flatMap({ r -> r })
+                .subscribe({ r ->
+                    if (r.isSuccessful) {
+                        ToastHelper.showError(recyclerView.context)
+                        return@subscribe;
+                    }
 
-    private inner class ResponseSubscriber : Subscriber<Response<SearchResult<Repository>>>() {
+                    val items = r.entity().items
+                    val startPosition = repositories.size
+                    repositories.addAll(items)
+                    notifyItemRangeInserted(startPosition, items.size)
 
-        override fun onCompleted() {
-            unsubscribe()
-        }
-
-        override fun onError(e: Throwable) {
-            ToastHelper.showError(recyclerView.context)
-        }
-
-        override fun onNext(r: Response<SearchResult<Repository>>) {
-            if (r.entity().items == null || r.entity().items.isEmpty()) {
-                return
-            }
-
-            val items = r.entity().items
-            val startPosition = repositories.size
-            repositories.addAll(items)
-            notifyItemRangeInserted(startPosition, items.size)
-
-            pagedResponse = r.next()
-        }
+                    pagedResponse = r.next()
+                })
     }
 }

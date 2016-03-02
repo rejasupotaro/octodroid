@@ -22,7 +22,7 @@ class LoginActivity : AppCompatActivity() {
     private var subscription = Subscriptions.empty()
     private var progressDialogHelper: ProgressDialogHelper? = null
 
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         setupActionBar()
@@ -50,18 +50,15 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login(username: String, password: String) {
-        progressDialogHelper!!.show()
+        progressDialogHelper?.show()
         GitHub.client().authorization(username, password)
         subscription = GitHub.client().user().subscribe({ r ->
-            progressDialogHelper!!.dismiss()
+            progressDialogHelper?.dismiss()
             if (r.isSuccessful) {
                 loginSucceeded(username, password)
             } else {
                 ToastHelper.showLoginFailed(this)
             }
-        }, { throwable ->
-            progressDialogHelper!!.dismiss()
-            ToastHelper.showError(this)
         })
     }
 
