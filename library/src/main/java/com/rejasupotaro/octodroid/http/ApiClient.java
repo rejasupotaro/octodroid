@@ -131,7 +131,7 @@ public class ApiClient {
         return new RequestCreator(this, method, String.format("%s?%s", path, params.toString()));
     }
 
-    public com.squareup.okhttp.Response requestInternal(RequestCreator requestCreator) throws IOException {
+    public com.squareup.okhttp.Response request(RequestCreator requestCreator) throws IOException {
         Request.Builder builder = new Request.Builder();
         setUrl(builder, requestCreator);
         setBody(builder, requestCreator);
@@ -153,7 +153,7 @@ public class ApiClient {
         @Override
         public void call(Subscriber<? super com.squareup.okhttp.Response> subscriber) {
             try {
-                com.squareup.okhttp.Response response = apiClient.requestInternal(requestCreator);
+                com.squareup.okhttp.Response response = apiClient.request(requestCreator);
                 subscriber.onNext(response);
             } catch (IOException e) {
                 subscriber.onError(e);
