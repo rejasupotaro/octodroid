@@ -6,7 +6,6 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.rejasupotaro.octodroid.GsonProvider;
 import com.rejasupotaro.octodroid.models.Event;
-import com.rejasupotaro.octodroid.models.Resource;
 import com.squareup.okhttp.Headers;
 
 import java.io.IOException;
@@ -100,6 +99,14 @@ public class Response<T> {
         response.body = body;
         response.pagination = PaginationHeaderParser.parse(response);
 
+        return response;
+    }
+
+    public static <T> Response<T> parse(Throwable unexpectedException, TypeToken<T> type) {
+        Response<T> response = GsonProvider.get().fromJson(
+                "{}",
+                type.getType());
+        response.error = new Error(unexpectedException);
         return response;
     }
 }

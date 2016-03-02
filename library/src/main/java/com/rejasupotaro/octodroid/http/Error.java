@@ -13,6 +13,10 @@ public class Error extends Resource {
     @SerializedName("errors")
     private List<JSONObject> details;
 
+    public Error(Throwable unexpectedException) {
+        this.message = unexpectedException.getMessage();
+    }
+
     public String getMessage() {
         return message;
     }

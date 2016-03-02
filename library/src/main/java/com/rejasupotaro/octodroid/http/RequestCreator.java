@@ -84,19 +84,21 @@ public class RequestCreator {
                 .map(new Func1<com.squareup.okhttp.Response, Response<T>>() {
                     @Override
                     public Response<T> call(com.squareup.okhttp.Response response) {
-                        return parseResponse(response, type);
+                        try {
+                            return Response.parse(response, type);
+                        } catch (IOException e) {
+                            throw new JsonParseException(e);
+                        }
                     }
                 })
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    private <T> Response<T> parseResponse(com.squareup.okhttp.Response response, TypeToken<T> type) {
-        try {
-            return Response.parse(response, type);
-        } catch (IOException e) {
-            throw new JsonParseException(e);
-        }
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorReturn(new Func1<Throwable, Response<T>>() {
+                    @Override
+                    public Response<T> call(Throwable throwable) {
+                        return Response.parse(throwable, type);
+                    }
+                });
     }
 }
 
