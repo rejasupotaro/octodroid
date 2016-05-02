@@ -5,9 +5,9 @@ import com.rejasupotaro.android.kvs.annotations.Table;
 
 @Table(name = "octodroid_session", builder = SessionPrefsBuilder.class)
 public class SessionPrefsSchema {
-    @Key("username")
+    @Key(name = "username")
     String username;
-    @Key("password")
+    @Key(name = "password")
     String password;
 }
 

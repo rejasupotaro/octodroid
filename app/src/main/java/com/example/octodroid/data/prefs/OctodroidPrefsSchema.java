@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Table(name = "octodroid")
 public class OctodroidPrefsSchema {
-    @Key("selected_serialized_serialized_repositories")
-    Set<String> selectedSerializedRepositories = null;
+    @Key(name = "selected_serialized_serialized_repositories")
+    Set<String> selectedSerializedRepositories;
 }
 
